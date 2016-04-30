@@ -1,0 +1,62 @@
+1--------|2--------|3--------|4--------|5--------|6--------|7--------|--
+
+
+The bottom 9 X 1024 words are reserved for I/O
+9,216 words for I/O
+9 sets of 1024 words
+There are 64 x 1024 words of RAM addressable in total
+Numbered 0-63
+0-54 are general purpose RAM
+55-63 are I/O
+
+
+Seg    Purpose    Type      Decimal          Hex
+--------------------------------------------------------
+55     Control    Both      56,816-56,831   $DDF0-$DDFF
+55     Audio      Output    56,832-57,343   $DE00-$DFFF
+56     Network    Input     57,344-58,367   $E000-$E3FF
+57     Network    Output    58,368-59,391   $E400-$E7FF
+58     Storage    Input     59,392-60,415   $E800-$EBFF
+59     Storage    Output    60,416-61,439   $EC00-$EFFF
+60-63  Video      Output    61,440-65,535   $F000-$FFFF
+
+
+Control registers
+-----------------
+55      56,816
+$DDF0   Keyboard input (7 bits) (read only)
+$DDF1   Network status (read only)
+$DDF2   Network destination mask (write only)
+$DDF3   Enable bits
+$DDF4   Storage Read address (7 bits, but reserve 16 for future expansion
+$DDF5   Storage Write address (7 bits, but reserve 16 for future expansion
+$DDF6   Frame interrupt vector
+
+
+Network Status
+--------------
+$DDF1
+4 bits:  4 bits:  Net ID, Net token
+
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+| 8 Unused bits | netID | Token |
+---------------------------------
+
+
+Enable bits
+-----------
+$DDF3 contains the enable bits
+
+bit
+5 Audio output enable         (S)
+4 Network output/write enable (N)
+3 Storage input/read enable   (R)
+2 Storage output/write enable (W)
+1 Video output enable         (V)
+0 Frame interrupt enable      (F)
+
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|   11 Unused bits  |S N R W V F|
+---------------------------------
