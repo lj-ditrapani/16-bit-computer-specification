@@ -16,20 +16,20 @@ with the following:
 Components
 ----------
 
-- CPU:  [cpu.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/cpu.md)
-- Video:  [video.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/video.md)
-- Keyboard:  [keyboard.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/keyboard.md)
-- Storage:  [storage.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/storage.md)
-- Networking:  [networking.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/networking.md)
+- CPU:  [cpu.md](cpu.md)
+- Video:  [video.md](video.md)
+- Keyboard:  [keyboard.md](keyboard.md)
+- Storage:  [storage.md](storage.md)
+- Networking:  [networking.md](networking.md)
 - Audio:  Not yet even in design phase...
 
 
 System
 ------
 
-- IO Map:  [IO Map](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/IO-map.txt)
+- IO Map:  [IO Map](IO-map.txt)
 - Notes on possible physical implementation:
-  [notes/physical-implementation-ideas.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/notes/physical-implementation-ideas.md)
+  [notes/physical-implementation-ideas.md](notes/physical-implementation-ideas.md)
 
 
 Implementations
