@@ -38,7 +38,7 @@ Example of implementation that uses a max of 2 clocks per instruction (8 MHz).
 I/O
 -----------
 
-See [IO Map](https://github.com/lj-ditrapani/16-bit-computer/blob/master/doc/IOmap.txt)
+See [IO Map](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/IO-map.txt)
 
 - Use double buffering for I/O
 
