@@ -12,10 +12,6 @@ with the following:
 - Primitive Networking
 - NES-style audio output
 
-Details on the design can be found in the
-[16-bit-computer.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/16-bit-computer.md)
-file
-
 
 Components
 ----------
@@ -26,6 +22,14 @@ Components
 - Storage:  [storage.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/storage.md)
 - Networking:  [networking.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/networking.md)
 - Audio:  Not yet even in design phase...
+
+
+System
+------
+
+- IO Map:  [IO Map](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/IO-map.txt)
+- Notes on possible physical implementation:
+  [notes/physical-implementation-ideas.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/notes/physical-implementation-ideas.md)
 
 
 Implementations
@@ -50,4 +54,5 @@ Software
 Status
 ------
 
+- Aggregating and re-organizing documentation into one place
 - Doing re-write in scala
