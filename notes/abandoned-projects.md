@@ -1,0 +1,3 @@
+- Computer (abandoned first attempt in CoffeeScript) <https://github.com/lj-ditrapani/original-design-16-bit-computer>
+- Assembler (abandoned rewrite in CoffeeScript) <https://github.com/lj-ditrapani/16-bit-computer-assembler-coffeescript-attempt>
+- CPU (abandened rewrite it TypeScript) <https://github.com/lj-ditrapani/16-bit-cpu-typescript-attempt>

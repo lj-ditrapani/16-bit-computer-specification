@@ -39,8 +39,9 @@ Scala (planned, not yet started):
 - Full Computer: <https://github.com/lj-ditrapani/16-bit-computer-scala>
 
 CoffeeScript:
-- CPU: <https://github.com/lj-ditrapani/16-bit-computer-cpu>
-- Video: <https://github.com/lj-ditrapani/16-bit-computer-video>
+- CPU: <https://github.com/lj-ditrapani/16-bit-computer-cpu-coffeescript>
+- Video: <https://github.com/lj-ditrapani/original-design-16-bit-computer-video>
+- Old, first design, CPU: <https://github.com/lj-ditrapani/original-design-16-bit-computer-cpu>
 
 
 Software
@@ -48,7 +49,6 @@ Software
 
 - Planning to rewrite assembler in scala
 - Assembler (old version in ruby) <https://github.com/lj-ditrapani/original-design-16-bit-computer-assembler>
-- Assembler (abandoned rewrite in CoffeeScript) <https://github.com/lj-ditrapani/16-bit-computer-assembler>
 
 
 Status
