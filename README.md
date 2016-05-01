@@ -20,11 +20,11 @@ file
 Components
 ----------
 
-- CPU:  [cpu.md](https://github.com/lj-ditrapani/16-bit-computer-specification/cpu.md)
-- Video:  [video.md](https://github.com/lj-ditrapani/16-bit-computer-specification/video.md)
-- Keyboard:  [keyboard.md](https://github.com/lj-ditrapani/16-bit-computer-specification/keyboard.md)
-- Storage:  [storage.md](https://github.com/lj-ditrapani/16-bit-computer-specification/storage.md)
-- Networking:  [networking.md](https://github.com/lj-ditrapani/16-bit-computer-specification/networking.md)
+- CPU:  [cpu.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/cpu.md)
+- Video:  [video.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/video.md)
+- Keyboard:  [keyboard.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/keyboard.md)
+- Storage:  [storage.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/storage.md)
+- Networking:  [networking.md](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/networking.md)
 - Audio:  Not yet even in design phase...
 
 
