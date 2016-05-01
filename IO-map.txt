@@ -1,6 +1,19 @@
 1--------|2--------|3--------|4--------|5--------|6--------|7--------|--
 
 
+RAM for I/O
+Words Purpose
+-------------------------------------
+    7 Control
+  505 Unused
+  512 Audio out
+2,048 Network I/O (1K read, 1K write)
+2,048 Storage I/O (1K read, 1K write)
+4,096 Video out
+-------------------------------------
+9,216 Words total (505 words unused)
+
+
 The bottom 9 X 1024 words are reserved for I/O
 9,216 words for I/O
 9 sets of 1024 words
