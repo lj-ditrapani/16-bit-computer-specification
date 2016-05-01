@@ -38,8 +38,6 @@ Example of implementation that uses a max of 2 clocks per instruction (8 MHz).
 I/O
 -----------
 
-See [IO Map](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/master/IO-map.txt)
-
 - Use double buffering for I/O
 
 ```
@@ -47,16 +45,4 @@ See [IO Map](https://github.com/lj-ditrapani/16-bit-computer-specification/blob/
   400 K instructions per frame
     399 K for cpu compute
       1 K instructions cpu sleeps during I/O buffer switching
-
-RAM for I/O
-Words Purpose
--------------------------------------
-    7 Control
-  505 Unused
-  512 Audio out
-2,048 Network I/O (1K read, 1K write)
-2,048 Storage I/O (1K read, 1K write)
-4,096 Video out
--------------------------------------
-9,216 Words total (505 words unused)
 ```
