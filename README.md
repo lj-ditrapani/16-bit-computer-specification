@@ -1,6 +1,6 @@
 <!-- =============================================================== -->
-The ljd 16-bit computer
-=======================
+The ljd 16-bit computer specification
+=====================================
 
 A complete 16-bit computer
 with the following:
@@ -13,8 +13,8 @@ with the following:
 - NES-style audio output
 
 
-Components
-----------
+Component Specifications
+------------------------
 
 - CPU:  [cpu.md](cpu.md)
 - Video:  [video.md](video.md)
@@ -24,8 +24,8 @@ Components
 - Audio:  Not yet even in design phase...
 
 
-System
-------
+System-level Specifications
+---------------------------
 
 - IO Map:  [IO Map](IO-map.txt)
 - Notes on possible physical implementation:
@@ -33,7 +33,7 @@ System
 
 
 Implementations
---------------
+---------------
 
 Scala (planned, not yet started):
 - Full Computer: <https://github.com/lj-ditrapani/16-bit-computer-scala>
