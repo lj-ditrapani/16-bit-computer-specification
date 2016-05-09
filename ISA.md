@@ -137,6 +137,6 @@ Instruction format
        PC   Program counter (instruction pointer)
        UC   Unsigned constant (1st or 2nd nibble)
         0   Always zero, unused
-       DA   Direction and amount shift bits
+       DA   Direction and amount to shift bits
     condV   Value condition bits 0NVP
     condF   Flag condition bits 00VC
