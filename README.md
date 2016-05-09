@@ -35,7 +35,7 @@ System-level Specifications
 Implementations
 ---------------
 
-Scala (planned, not yet started):
+Scala (recently started, in progress):
 - Full Computer: <https://github.com/lj-ditrapani/16-bit-computer-scala>
 
 CoffeeScript:
