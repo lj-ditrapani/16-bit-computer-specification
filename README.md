@@ -27,7 +27,7 @@ Component Specifications
 System-level Specifications
 ---------------------------
 
-- IO Map:  [IO Map](IO-map.txt)
+- I/O Map:  [I/O Map](IO-map.txt)
 - Notes on possible physical implementation:
   [notes/physical-implementation-ideas.md](notes/physical-implementation-ideas.md)
 
