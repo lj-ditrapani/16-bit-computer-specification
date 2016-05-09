@@ -66,25 +66,21 @@ bit
 5 Network output/write enable (N)
 4 Storage input/read enable   (R)
 3 Storage output/write enable (W)
-2 Video built-in tile sets    (B)
+2 Video custom-RAM tile sets  (T)
 1 Video output enable         (V)
 0 Frame interrupt enable      (F)
 
  F E D C B A 9 8 7 6 5 4 3 2 1 0
 ---------------------------------
-| 10 Unused bits  |A N R W B V F|
+| 10 Unused bits  |A N R W T V F|
 ---------------------------------
 
-Enable bit 2: Video built-in tile sets
-There is a ROM with pre-defined tile sets
-for the large, small, and text tiles.
-If this bit is true, the built-in tile sets
-are used fro the video graphics.  If it is
-false, the values in RAM $F000-$FBFF are used
-as the tile sets.
+Enable bit 2: Video custom-RAM tile sets
+There is a ROM with pre-defined tile sets for the large, small, and text tiles.
+If this bit is false, the built-in tile sets are used for the video graphics.
+If it is true, the user-defined values in RAM $F000-$FBFF are used as the tile
+sets.
 
 Enable bit 0: Frame interrupt enable
-If true, jumps program counter (PC) to
-address in $DDF6 Frame interrupt vector
-at the end of each frame.
-If false, the PC is left untouched.
+If true, jumps program counter (PC) to address in $DDF6 Frame interrupt vector
+at the end of each frame.  If false, the PC is left untouched.
