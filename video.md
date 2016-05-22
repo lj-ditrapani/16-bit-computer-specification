@@ -24,8 +24,14 @@ Up to 64 simultaneous colors on screen per frame
 4 layers
 - Background cells (16 x 16, 4 colors)
 - Text character cells (8 x 8, 1 color, color shared from background tile)
-- 64 large sprites (16 x 16, 3 colors)
-- 64 small sprites (8 x 8, 3 colors)
+- 64 large sprites (16 x 16, 3 colors + transparency)
+- 64 small sprites (8 x 8, 3 colors + transparency)
+
+Background cells are the bottom-most layer and therefore always opaque.
+Text char cells are the second layer.
+Large sprites are the 3rd layer.
+Small sprites are the top-most layer.
+Text chars and sprites have transparency.
 
 
 Video Ram
@@ -151,6 +157,20 @@ Total              16 bits = 1 word
 |O|  Tile Index |
 -----------------
 ```
+
+
+Sprites
+-------
+
+There are two layers of sprites, large and small.
+Sprites have a tile index.
+Large sprites index into the large tile set.
+Small sprites index into the Small tile set.
+The indexed tile determines the pixel pattern of the sprite.
+The 00 pattern in the 2-bit per pixel entries of the associated tile represents
+transparency.  The other 3 values lookup colors in the sprite's color pairs.
+In other words, the first color in the sprite's color pair 1 always represents
+transparency, regardless of it's value.
 
 
 Large Sprites
