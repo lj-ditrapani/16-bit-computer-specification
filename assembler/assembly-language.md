@@ -135,8 +135,8 @@ Data Section
 
 The data section allows the programmer to easily define initial values for the
 computer's RAM.  The data section does not effect ROM.
-There are 12 data commands split into two groups
-(8 value commands & 4 block commands):
+There are 13 data commands split into two groups
+(8 value commands & 5 block commands):
 
 value commands:
 - word
@@ -153,6 +153,7 @@ block commands
 - copy
 - tiles
 - scene
+- bg-cells
 
 A value command takes a name argument as its first parameter.
 The name is entered into the symbol table as a key that maps to the current
