@@ -94,8 +94,7 @@ A complete assembly file has 3 sections.
 The Symbols section comes first.  It is delimited by .symbols and .end-symbols
 section markers.  The second section is the data section which is delimited by
 .data and .end-data section markers.  The third and final section is the
-program section which consists of everything after the .end-data
-section marker.
+program section which is delimited by .program and .end-program section markers.
 
 Section markers:
 
@@ -106,7 +105,8 @@ Section markers:
     - .data
     - .end-data
 - Program
-    - Everything after .end-data is the program section.
+    - .program
+    - .end-program
 
 
 Symbols Section
@@ -135,8 +135,10 @@ Data Section
 
 The data section allows the programmer to easily define initial values for the
 computer's RAM.  The data section does not effect ROM.
-There are 9 data commands:
+There are 12 data commands split into two groups
+(8 value commands & 4 block commands):
 
+value commands:
 - word
 - array
 - long-array
@@ -145,9 +147,14 @@ There are 9 data commands:
 - wstr
 - long-str
 - long-wstr
-- move
 
-All commands except for move take a name argument as its first parameter.
+block commands
+- move
+- copy
+- tiles
+- scene
+
+A value command takes a name argument as its first parameter.
 The name is entered into the symbol table as a key that maps to the current
 RAM address.  This allows the RAM cell at the current address to be used like a
 variable in the program section.  To prevent an entry into the symbol table,
@@ -305,6 +312,42 @@ move $0F00      # All RAM cells from current address to $0EFF are set to zero
 move audio
 ```
 
+## copy ##
+Copies binary content of file directly into final assembled binary starting at
+current location.
+
+    copy path/file-name.ext
+    move tiles
+    copy video/mario-tiles.bin
+    copy text/story.txt  # copies data into ram starting at current address
+    copy video-data.bin
+
+
+## tiles ##
+Like copy command, but moves to video address first.
+Cannot be used after assembler moves past video address.
+The file must be in the 'ASCII text tile' format.
+The assembler will parse the text tile file into a binary tile format and then
+copy the resulting 3 KW (6 KB) binary into the video section.  This command can
+only be used once.
+
+    tiles path/main.tiles
+
+
+## scene ##
+Parses file a scene file and produces a 1 KW (2 KB) binary.
+The file must be in the 'ASCII text scene' format.
+The resulting binary is copied into the current ram address.
+This command is often used after a tiles command to place the initial scene of
+the program.
+It can be used multiple ties in other locations in ram to place other scenes for
+the program.
+
+    scene path/level1.scene
+    scene path/level2.scene
+    # bunch of other data
+    tiles path/main.tiles
+    scene path/main.scene
 
 
 Program Section
