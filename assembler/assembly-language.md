@@ -326,7 +326,8 @@ current location.
 ## tiles ##
 Like copy command, but moves to video address first.
 Cannot be used after assembler moves past video address.
-The file must be in the 'ASCII text tile' format.
+The file must be in the
+'[text tile format](assembler/tile-file-format.md)'.
 The assembler will parse the text tile file into a binary tile format and then
 copy the resulting 3 KW (6 KB) binary into the video section.  This command can
 only be used once.
@@ -335,12 +336,13 @@ only be used once.
 
 
 ## scene ##
-Parses file a scene file and produces a 1 KW (2 KB) binary.
-The file must be in the 'ASCII text scene' format.
+Parses file as a scene file and produces a 1 KW (2 KB) binary.
+The file must be in the
+'[text scene format](assembler/scene-file-format.md)'.
 The resulting binary is copied into the current ram address.
 This command is often used after a tiles command to place the initial scene of
 the program.
-It can be used multiple ties in other locations in ram to place other scenes for
+It can be used multiple times in other locations in ram to place other scenes for
 the program.
 
     scene path/level1.scene
@@ -348,6 +350,21 @@ the program.
     # bunch of other data
     tiles path/main.tiles
     scene path/main.scene
+
+
+## bg-cells ##
+Parses file as a bg-cells file and produces a 240 word (480 byte) binary.
+The file must be in the
+'[text bg-cells format](assembler/bg-cells-file-format.md)'.
+The resulting binary is copied into the current ram address.
+It can be used multiple times in other locations in ram to place other bg-cells
+for the program.
+
+    bg-cells path/level1.bgcells
+    bg-cells path/level2.bgcells
+    # bunch of other data
+    tiles path/main.tiles
+    bg-cells path/main.bgcells
 
 
 Program Section
