@@ -2,6 +2,11 @@
 LJD 16-bit CPU Assembly Language
 ================================
 
+An assembly file consists of only printable ASCII characters (includes space)
+and the line feed character (a.k.a. \n).
+In other words, hex values $0A and $20-$7E.
+Tabs and carriage returns are forbidden.
+
 
 Numbers
 ------
