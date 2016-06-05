@@ -1,19 +1,23 @@
-- Must use a 2-pass assembler design:
+- Can do a single pass over symbol & data sections
+- Must do 2 passes over program section
+
+- Can use the below trick to set frame-interrupt-vector or other ROM addresses
+  saved into ram locations.  For a specific example why you would want this:
   The frame-interrupt-vector will usually need to be set by a label in the
-  program section, and that label will need to be referenced at the
-  frame-interrupt-vector address in the .data section.  So the binary for the
-  .data section cannot be generated until the labels in the program section
-  have been parsed.
+  program section. The ROM address at that label will need be written into the
+  RAM address for the frame-interrupt-vector.
 
 
 ```
 .data
     set a bunch of values
-    move frame-interrupt-vector
-    word handle-fiv
 .end
 .program
     init code
+    # Copy ROM address of handle-fiv into RAM address for frame-interrupt-vector
+    WRD frame-interrupt-vector R0
+    WRD handle-fiv R1
+    STR R0 R1
 (handle-fiv)
     main loop
 .end
