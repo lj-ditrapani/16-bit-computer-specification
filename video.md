@@ -8,118 +8,64 @@ Author:  Lyall Jonathan Di Trapani
 Overview
 --------
 
+- 256 x 240 pixel screen
+- 256 character tile set (8 x 12, 1 bpp)
+- 32 x 20 character cells per frame (2 colors)
+- Colors are 8-bits with (3:3:2) RGB color format
+- Up to 16 simultaneous colors on screen per frame
+
+
+Video Rom
+---------
+
+A tile is 96 pixels and uses 1 bit per pixel (bpp).
+The tile set lives in the video section of rom.
+The tile set occupies 1,536 words (256 tiles x 6 words).
+
 ```
-256 x 240 pixel screen
-16 x 15 grid of large (16 x 16) tiles
-32 x 30 text characters (8 x 8)
-Colors are 8-bits with (3:3:2) RGB color format
-Up to 64 simultaneous colors on screen per frame
+                   Words   Address Range   Description
+------------------------------------------------------------------------
+Tiles              1,536   $FA00-$FFFF     256 tiles X 6 words
 ```
-
-3 tiles sets
-- 64 large tiles (16 x 16, 2 bpp)
-- 64 small tiles (8 x 8, 2 bpp)
-- 128 text characters (8 x 8, 1 bpp)
-
-4 layers
-- Background cells (16 x 16, 4 colors)
-- Text character cells (8 x 8, 1 color, color shared from background tile)
-- 64 large sprites (16 x 16, 3 colors + transparency)
-- 64 small sprites (8 x 8, 3 colors + transparency)
-
-Background cells are the bottom-most layer and therefore always opaque.
-Text char cells are the second layer.
-Large sprites are the 3rd layer.
-Small sprites are the top-most layer.
-Text chars and sprites have transparency.
 
 
 Video Ram
 ---------
-```
-4,096 Words (= 8 KB)
 
+```
                    Words   Address Range   Description
 ------------------------------------------------------------------------
-Large tiles        2,048   $F000-$F7FF     64 tiles X 32 words
-Small tiles          512   $F800-$F9FF     64 tiles X 8 words
-Text char tiles      512   $FA00-$FBFF     128 tiles X 4 words
-Background cells     240   $FC00-$FCEF     16 X 15 cells X 1 word
-Text cells           480   $FD00-$FEDF     32 X 30 cells X 0.5 words
-Background colors     16   $FEE0-$FEEF     32 colors X 0.5 words
-Sprite colors         16   $FEF0-$FEFF     32 colors X 0.5 words
-Large sprites        128   $FF00-$FF7F     attribute data for 64 sprites
-Small sprites        128   $FF80-$FFFF     attribute data for 64 sprites
-------------------------------------------------------------------------
-Total              4,096
+Cells                640   $F000-$F27F     32 X 20 cells X 1 word
+Colors                16   $F280-$F28F     16 8-bit colors
 ```
 
 
-Large Tiles
------------
-Each pixel in a tile is represented by 2-bits.
-Each 2-bit value indexes into the selected four colors.
+Character Tile set
+------------------
 
-```
-Size:  32 words
-16 x 16 pixel tiles = 256 pixels
-2-bits per pixel
-Each word contains 8 pixels (a half-row)
-For a given pixel in a tile, bit one selects the color pair,
-and bit zero selects the color.
-00 -> pair 0, color 0
-01 -> pair 0, color 1
-10 -> pair 1, color 0
-11 -> pair 1, color 1
-```
-
-
-Small Tiles
------------
-Each pixel in a tile is represented by 2-bits.
-Each 2-bit value indexes into the selected four colors.
-
-```
-Size:  8 words
-8 x 8 pixel tiles = 64 pixels
-2-bits per pixel
-Each word contains a row of 8 pixels
-For a given pixel in a tile, bit one selects the color pair,
-and bit zero selects the color.
-00 -> pair 0, color 0
-01 -> pair 0, color 1
-10 -> pair 1, color 0
-11 -> pair 1, color 1
-```
-
-
-Text Character Tiles
---------------------
 Each pixel in a tile is represented by 1 bit.
+
 ```
-Size:  4 words
-8 x 8 pixel tiles = 64 pixels
-1 bit per pixel
+Size:  6 words
+8 x 12 pixel tiles = 96 pixels
+1 bit per pixel (1 bpp)
 Each word contains 16 pixels (2 rows)
-If the pixel is 0, it is transparent,
-if it is 1, it takes the 11 (pair 1, color 1) color of the background
-tile on which it is placed.
+If the pixel is 0, it takes the background color of the cell.
+If it is 1, it takes the forground color of the cell.
 ```
 
 
-Background Cells
-----------------
+Character Cell
+--------------
 ```
 Size:  1 word
-Color pairs are indexed into the background colors (not the sprite colors)
+Color value indexes index into the color palette.
 
-                    # of bits
+                        # of bits
 ------------------------------------
-Color pair 1 (cp1)  4
-Color pair 2 (cp2)  4
-X-flip              1
-Y-flip              1
-Large tile index    6
+Background color index  4
+Forground color index   4
+Tile index              6
 ------------------------------------
 Total              16 bits = 1 word
 
@@ -128,128 +74,18 @@ Layout of a grid cell in RAM:
 
  F E D C B A 9 8 7 6 5 4 3 2 1 0
 ---------------------------------
-|  cp1  |  cp2  |X-Y| Tile Index|
+|  BGC  |  FGC  |  Tile Index   |
 ---------------------------------
 ```
 
-Each background tile in the grid cell can be flipped about the x axis or
-the y axis.
 
-
-Text Character Cells
---------------------
+Colors
+------
 
 ```
-Size:  8 bits (1/2 word)
-The cell indexes into the text character tiles.
-The color of the character is taken from the 4th (11) color of the
-background tile over which it is placed.
-
-                    # of bits
-------------------------------------
-Text char tile index    7
-On/off (O)              1
-------------------------------------
-Total              16 bits = 1 word
-
- 7 6 5 4 3 2 1 0
------------------
-|O|  Tile Index |
------------------
-```
-
-
-Sprites
--------
-
-There are two layers of sprites, large and small.
-Sprites have a tile index.
-Large sprites index into the large tile set.
-Small sprites index into the Small tile set.
-The indexed tile determines the pixel pattern of the sprite.
-The 00 pattern in the 2-bit per pixel entries of the associated tile represents
-transparency.  The other 3 values lookup colors in the sprite's color pairs.
-In other words, the first color in the sprite's color pair 1 always represents
-transparency, regardless of it's value.
-
-
-Large Sprites
--------------
-```
-Size:  2 words
-Sprite data:
-
-                    # of bits
-------------------------------------
-Color pair 1 (cp1)  4
-Color pair 2 (cp2)  4
-Mirror flip x (X)   1
-Mirror flip y (Y)   1
-Large tile index    6
-Unused (U)          4
-x position          4
-On/off (O)          1
-Unused (U)          3
-y position          4
-------------------------------------
-Total              32 bits = 2 words
-
-
-Layout of a sprite across 2 RAM cells:
-
- F E D C B A 9 8 7 6 5 4 3 2 1 0       F E D C B A 9 8 7 6 5 4 3 2 1 0
----------------------------------     ---------------------------------
-|  cp1  |  cp2  |X|Y| Tile Index|     |   U   | x-pos |O|  U  | y-pos |
----------------------------------     ---------------------------------
-```
-
-Large sprites can be placed in any cell on a 16x15 grid.
-Only one sprite is displayed per grid cell.
-Therefore, there can be up to 16 large sprites displayed on the same
-row.
-
-Small Sprites
--------------
-```
-Size:  2 words
-Sprite data:
-
-                    # of bits
-------------------------------------
-Color pair 1 (cp1)  4
-Color pair 2 (cp2)  4
-Mirror flip x (X)   1
-Mirror flip y (Y)   1
-Small tile index    6
-Unused (U)          3
-x position          5
-On/off (O)          1
-Unused (U)          2
-y position          5
-------------------------------------
-Total              32 bits = 2 words
-
-
-Layout of a sprite across 2 RAM cells:
-
- F E D C B A 9 8 7 6 5 4 3 2 1 0       F E D C B A 9 8 7 6 5 4 3 2 1 0
----------------------------------     ---------------------------------
-|  cp1  |  cp2  |X|Y| Tile Index|     |  U  |  x-pos  |O| U |  y-pos  |
----------------------------------     ---------------------------------
-```
-
-Small sprites can be placed in any cell on a 32x30 grid.
-Only one sprite is displayed per grid cell.
-Therefore, there can be up to 32 small sprites displayed on the same
-row.
-
-Colors Pairs
-------------
-```
-There are 2 sets of color pairs:  background and sprite
-Each set has 32 colors arranged in 16 pairs
-16 x 2 x 8-bit colors
-4-bit color pair index
+The color pallette contains the 16 colors chosen from the 256
+available 8-bit colors.  The character cells' background and forground
+color number indexes into the list of 16 colors.
 ```
 
 Colors

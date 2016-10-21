@@ -10,7 +10,6 @@ with the following:
 - Keyboard input
 - Storage
 - Primitive Networking
-- NES-style audio output
 
 
 Component Specifications
@@ -21,7 +20,6 @@ Component Specifications
 - Keyboard:  [keyboard.md](keyboard.md)
 - Storage:  [storage.md](storage.md)
 - Networking:  [networking.md](networking.md)
-- Audio:  Not yet even in design phase...
 
 
 System-level Specifications
