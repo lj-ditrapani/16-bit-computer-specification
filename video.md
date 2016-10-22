@@ -12,19 +12,18 @@ Overview
 - 256 character tile set (8 x 12, 1 bpp)
 - 32 x 20 character cells per frame (2 colors)
 - Colors are 8-bits with (3:3:2) RGB color format
-- Up to 16 simultaneous colors on screen per frame
+- Up to 16 simultaneous colors on screen
 
 
 Video Rom
 ---------
 
-A tile is 96 pixels and uses 1 bit per pixel (bpp).
 The tile set lives in the video section of rom.
-The tile set occupies 1,536 words (256 tiles x 6 words).
 
 ```
                    Words   Address Range   Description
 ------------------------------------------------------------------------
+Colors                16   $F900-$F90F     16 8-bit colors
 Tiles              1,536   $FA00-$FFFF     256 tiles X 6 words
 ```
 
@@ -36,14 +35,11 @@ Video Ram
                    Words   Address Range   Description
 ------------------------------------------------------------------------
 Cells                640   $F000-$F27F     32 X 20 cells X 1 word
-Colors                16   $F280-$F28F     16 8-bit colors
 ```
 
 
-Character Tile set
-------------------
-
-Each pixel in a tile is represented by 1 bit.
+Character Tile
+--------------
 
 ```
 Size:  6 words
@@ -51,20 +47,24 @@ Size:  6 words
 1 bit per pixel (1 bpp)
 Each word contains 16 pixels (2 rows)
 If the pixel is 0, it takes the background color of the cell.
-If it is 1, it takes the forground color of the cell.
+The color indexes are 0 based.
+If it is 1, it takes the foreground color of the cell.
+The tile index is 0 based.
 ```
 
 
 Character Cell
 --------------
+
 ```
 Size:  1 word
+The tile index indexes into the character tile set.
 Color value indexes index into the color palette.
 
                         # of bits
 ------------------------------------
 Background color index  4
-Forground color index   4
+Foreground color index  4
 Tile index              6
 ------------------------------------
 Total              16 bits = 1 word
@@ -79,17 +79,19 @@ Layout of a grid cell in RAM:
 ```
 
 
-Colors
-------
+Color Palette
+-------------
 
 ```
-The color pallette contains the 16 colors chosen from the 256
-available 8-bit colors.  The character cells' background and forground
+The color palette contains the 16 colors chosen from the 256
+available 8-bit colors.  The character cells' background and foreground
 color number indexes into the list of 16 colors.
 ```
 
+
 Colors
 ------
+
 ```
 A color is 8 bits in a 3-3-2 RGB format.
 
@@ -108,9 +110,10 @@ Layout of a color
 
 Double Buffering
 ----------------
+
 ```
 This system uses double buffering, so there is actually
-two sets of 4,096 words.  The GPU renders one video RAM
+two sets of 640 word video RAM.  The GPU renders one video RAM
 while the CPU writes the next frame on the other video RAM.
 At the end of each frame, the video RAM sets are swapped.
 ```
