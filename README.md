@@ -7,7 +7,7 @@ with the following:
 - 64 KW ROM for program
 - 64 KW RAM for data
 - Color display
-- Keyboard input
+- Gamepad input
 - Storage
 - Primitive Networking
 
@@ -17,7 +17,7 @@ Component Specifications
 
 - CPU:  [cpu.md](cpu.md)
 - Video:  [video.md](video.md)
-- Keyboard:  [keyboard.md](keyboard.md)
+- Gamepad:  [gamepad.md](gamepad.md)
 - Storage:  [storage.md](storage.md)
 - Networking:  [networking.md](networking.md)
 
