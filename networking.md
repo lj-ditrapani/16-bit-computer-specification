@@ -2,8 +2,12 @@ LJD 16-bit Computer Network
 ===========================
 
 Up to 16 computers networked together at a time.
-Each message sent is delivered to all other computers on the network
-that are enabled in the destination mask.
+They connect to a network hub.
+Each machine has a network ID set by the controller.
+Each message has a network destination which is a 4 bit ID.
+The message is sent to the machine with the matching ID.
+If the destination ID matches the sender's ID, then the message is broadcast to
+to all computers on the network that are enabled in the destination mask.
 Only one message is sent per frame.
 Only the computer with the transmit token can send the message for that
 frame.
@@ -24,6 +28,6 @@ are 4 computers, 0, 1, 2, 3, 0, 1, 2, 3...
 The destination mask write-only control register determines which of
 the 15 other computers receive the message.  Each bit, 0-15
 represents one of the computers on the network who's Net ID matches
-the bit position.  A 1 means the
+the bit position.  A 1 means
 send the transmission to that computer and a 0 means do not send the
 transmission to that computer.
