@@ -18,7 +18,7 @@ Overview
 Video Rom
 ---------
 
-The tile set lives in the video section of rom.
+The tile set and color palette live in the video section of rom.
 
 ```
                    Words   Address Range   Description
