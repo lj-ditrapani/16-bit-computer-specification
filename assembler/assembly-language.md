@@ -48,7 +48,7 @@ R0-R15
 For I/O registers in RAM (defined accord to the I/O map):
 
 ```
-keyboard
+gamepad
 net-status
 net-destination
 enable-bits
@@ -62,15 +62,8 @@ net-out
 storage-in
 storage-out
 video
-large-tiles
-small-tiles
-char-tiles
-background-cells
-text-cells
-background-colors
-sprite-colors
-large-sprites
-small-sprites
+char-cells
+colors
 ```
 
 
