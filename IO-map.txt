@@ -6,50 +6,56 @@ Words Purpose
 -------------------------------------
 2,048 Network I/O (1K read, 1K write)
 2,048 Storage I/O (1K read, 1K write)
-  640 Video out
+  640 Video Cells
   368 Unused
     7 Control
     9 Unused
+   16 Video Color
+  496 Unused
+1,536 Video Tiles
 -------------------------------------
-5,120 Words total (368 words unused)
+7,168 Words total (873 words unused)
 
 
-The bottom 5 X 1024 words are reserved for I/O
-5,120 words for I/O
-5 sets of 1024 words
+The bottom 7 X 1024 words are reserved for I/O
+7,168 words for I/O
+7 sets of 1024 words
 There are 64 x 1024 words of RAM addressable in total
 Numbered 0-63
-0-58 are general purpose RAM
-59-63 are I/O
+0-56 are general purpose RAM
+57-63 are I/O
 
 
 Seg    Purpose    Type      Decimal          Hex
 --------------------------------------------------------
-59     Network    Input     60,416-61,439   $EC00-$EFFF
-60     Network    Output    61,440-62,463   $F000-$F3FF
-61     Storage    Input     62,464-63,487   $F400-$F7FF
-62     Storage    Output    63,488-64,511   $F800-$FBFF
-63     Video      Output    64,512-65,151   $FC00-$FE7F
-63     Unused     Both      65,152-65,519   $FE80-$FFEF
-63     Control    Both      65,520-65,526   $FFF0-$FFF6
-63     Unused     Both      65,527-65,535   $FFF7-$FFFF
+57     Network    Input     58,368-59,391   $E400-$E7FF
+58     Network    Output    59,392-60,415   $E800-$EDFF
+59     Storage    Input     60,416-61,439   $EC00-$EFFF
+60     Storage    Output    61,440-62,463   $F000-$F3FF
+61     Cells      Output    62,464-63,103   $F400-$F67F
+61     Unused     Both      63,104-63,471   $F680-$F7EF
+61     Control    Both      63,472-63,478   $F7F0-$F7F6
+61     Unused     Both      63,479-63,487   $F7F7-$F7FF
+62     Color      None      63,488-63,503   $F800-$F80F
+62     Unused     None      63,504-63,999   $F810-$F9FF
+62-63  Tiles      None      64,000-65,535   $FA00-$FFFF
 
 
 Control registers
 -----------------
-63      65,520-65-526
-$FFF0   Keyboard input (8 bits) (read only)
-$FFF1   Network status (read only)
-$FFF2   Network destination mask (write only)
-$FFF3   Enable bits
-$FFF4   Storage Read address (7 bits, but reserve 16 for future expansion
-$FFF5   Storage Write address (7 bits, but reserve 16 for future expansion
-$FFF6   Frame interrupt vector
+61      63,472-63,478
+$F7F0   Keyboard input (8 bits) (read only)
+$F7F1   Network status (read only)
+$F7F2   Network destination mask (write only)
+$F7F3   Enable bits
+$F7F4   Storage Read address (7 bits, but reserve 16 for future expansion
+$F7F5   Storage Write address (7 bits, but reserve 16 for future expansion
+$F7F6   Frame interrupt vector
 
 
 Network Status
 --------------
-$FFF1
+$F7F1
 4 bits:  4 bits:  Net ID, Net token
 
  F E D C B A 9 8 7 6 5 4 3 2 1 0
@@ -60,7 +66,7 @@ $FFF1
 
 Enable bits
 -----------
-$FFF3 contains the enable bits
+$F7F3 contains the enable bits
 
 bit
 5 Network output/write enable (N)
@@ -82,5 +88,5 @@ If it is true, the user-defined values in RAM $F000-$FBFF are used as the tile
 sets.
 
 Enable bit 0: Frame interrupt enable
-If true, jumps program counter (PC) to address in $FFF6 Frame interrupt vector
+If true, jumps program counter (PC) to address in $F7F6 Frame interrupt vector
 at the end of each frame.  If false, the PC is left untouched.
