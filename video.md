@@ -15,29 +15,21 @@ Overview
 - Up to 16 simultaneous colors on screen
 
 
-Video Rom
----------
-
-
-```
-                   Words   Address Range   Description
-------------------------------------------------------------------------
-Colors                16   $F900-$F90F     16 8-bit colors
-Tiles              1,536   $FA00-$FFFF     256 tiles X 6 words
-```
-
-
 Video Ram
 ---------
+
+See I/O map for address ranges.
 
 The tile set and color palette are not accessible during run time by the CPU.
 The section of RAM reserved for the tile set and color palette is not
 readable or writeable.
 
 ```
-                   Words   Address Range   Description
+                   Words   Description
 ------------------------------------------------------------------------
-Cells                640   $F000-$F27F     32 X 20 cells X 1 word
+Cells                640   32 X 20 cells X 1 word
+Colors                16   16 8-bit colors
+Tiles              1,536   256 tiles X 6 words
 ```
 
 

@@ -6,10 +6,10 @@ Words Purpose
 -------------------------------------
 2,048 Network I/O (1K read, 1K write)
 2,048 Storage I/O (1K read, 1K write)
-  640 Video Cells
-  368 Unused
     7 Control
-    9 Unused
+  249 Unused
+  640 Video Cells
+  128 Unused
    16 Video Color
   496 Unused
 1,536 Video Tiles
@@ -29,13 +29,13 @@ Numbered 0-63
 Seg    Purpose    Type      Decimal          Hex
 --------------------------------------------------------
 57     Network    Input     58,368-59,391   $E400-$E7FF
-58     Network    Output    59,392-60,415   $E800-$EDFF
+58     Network    Output    59,392-60,415   $E800-$EBFF
 59     Storage    Input     60,416-61,439   $EC00-$EFFF
 60     Storage    Output    61,440-62,463   $F000-$F3FF
-61     Cells      Output    62,464-63,103   $F400-$F67F
-61     Unused     Both      63,104-63,471   $F680-$F7EF
-61     Control    Both      63,472-63,478   $F7F0-$F7F6
-61     Unused     Both      63,479-63,487   $F7F7-$F7FF
+61     Control    Both      62,464-62,470   $F400-$F406
+61     Unused     Both      62,471-62,719   $F407-$F4FF
+61     Cells      Output    62,720-63,359   $F500-$F77F
+61     Unused     Both      63,360-63,487   $F780-$F7FF
 62     Color      None      63,488-63,503   $F800-$F80F
 62     Unused     None      63,504-63,999   $F810-$F9FF
 62-63  Tiles      None      64,000-65,535   $FA00-$FFFF
@@ -43,19 +43,18 @@ Seg    Purpose    Type      Decimal          Hex
 
 Control registers
 -----------------
-61      63,472-63,478
-$F7F0   Keyboard input (8 bits) (read only)
-$F7F1   Network status (read only)
-$F7F2   Network destination mask (write only)
-$F7F3   Enable bits
-$F7F4   Storage Read address (7 bits, but reserve 16 for future expansion
-$F7F5   Storage Write address (7 bits, but reserve 16 for future expansion
-$F7F6   Frame interrupt vector
+$F400   Keyboard input (8 bits) (read only)
+$F401   Network status (read only)
+$F402   Network destination mask (write only)
+$F403   Enable bits
+$F404   Storage Read address (7 bits, but reserve 16 for future expansion
+$F405   Storage Write address (7 bits, but reserve 16 for future expansion
+$F406   Frame interrupt vector
 
 
 Network Status
 --------------
-$F7F1
+$F401
 4 bits:  4 bits:  Net ID, Net token
 
  F E D C B A 9 8 7 6 5 4 3 2 1 0
@@ -66,7 +65,7 @@ $F7F1
 
 Enable bits
 -----------
-$F7F3 contains the enable bits
+$F403 contains the enable bits
 
 bit
 5 Network output/write enable (N)
@@ -88,5 +87,5 @@ If it is true, the user-defined values in RAM $F000-$FBFF are used as the tile
 sets.
 
 Enable bit 0: Frame interrupt enable
-If true, jumps program counter (PC) to address in $F7F6 Frame interrupt vector
+If true, jumps program counter (PC) to address in $F406 Frame interrupt vector
 at the end of each frame.  If false, the PC is left untouched.
