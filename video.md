@@ -18,19 +18,31 @@ Overview
 Video Ram
 ---------
 
-See I/O map for address ranges.
+```
+Words   Purpose   Description
+-------------------------------------
+  640   Cells     32 X 20 cells X 1 word
+  128   Unused    N/A
+   16   Color     16 8-bit colors
+  496   Unused    N/A
+1,536   Tiles     256 tiles X 6 words
+```
+
+Video ram memory addresses.
+
+```
+Seg    Purpose    Type      Decimal          Hex
+--------------------------------------------------------
+61     Cells      Output    62,720-63,359   $F500-$F77F
+61     Unused     Both      63,360-63,487   $F780-$F7FF
+62     Color      None      63,488-63,503   $F800-$F80F
+62     Unused     None      63,504-63,999   $F810-$F9FF
+62-63  Tiles      None      64,000-65,535   $FA00-$FFFF
+```
 
 The tile set and color palette are not accessible during run time by the CPU.
 The section of RAM reserved for the tile set and color palette is not
 readable or writeable.
-
-```
-                   Words   Description
-------------------------------------------------------------------------
-Cells                640   32 X 20 cells X 1 word
-Colors                16   16 8-bit colors
-Tiles              1,536   256 tiles X 6 words
-```
 
 
 Character Tile

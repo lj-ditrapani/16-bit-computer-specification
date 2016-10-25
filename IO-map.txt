@@ -1,4 +1,4 @@
-1--------|2--------|3--------|4--------|5--------|6--------|7--------|--
+1--------|2--------|3--------|4--------|5--------|6--------|7--------|8--------|
 
 
 RAM for I/O
@@ -8,11 +8,7 @@ Words Purpose
 2,048 Storage I/O (1K read, 1K write)
     7 Control
   249 Unused
-  640 Video Cells
-  128 Unused
-   16 Video Color
-  496 Unused
-1,536 Video Tiles
+2,816 Video
 -------------------------------------
 7,168 Words total (873 words unused)
 
@@ -34,16 +30,12 @@ Seg    Purpose    Type      Decimal          Hex
 60     Storage    Output    61,440-62,463   $F000-$F3FF
 61     Control    Both      62,464-62,470   $F400-$F406
 61     Unused     Both      62,471-62,719   $F407-$F4FF
-61     Cells      Output    62,720-63,359   $F500-$F77F
-61     Unused     Both      63,360-63,487   $F780-$F7FF
-62     Color      None      63,488-63,503   $F800-$F80F
-62     Unused     None      63,504-63,999   $F810-$F9FF
-62-63  Tiles      None      64,000-65,535   $FA00-$FFFF
+61-63  Video      Output    62,720-65,535   $F500-$FFFF
 
 
 Control registers
 -----------------
-$F400   Keyboard input (8 bits) (read only)
+$F400   Gamepad input (8 bits) (read only)
 $F401   Network status (read only)
 $F402   Network destination mask (write only)
 $F403   Enable bits
