@@ -4,8 +4,9 @@ The ljd 16-bit computer specification
 
 A complete 16-bit computer
 with the following:
-- 64 KW ROM for program
-- 64 KW RAM for data
+- 128 KB Program ROM
+- 128 KB RAM
+- 2 X 3,088 Byte Video ROM
 - Color display
 - Gamepad input
 - Storage
@@ -25,7 +26,8 @@ Component Specifications
 System-level Specifications
 ---------------------------
 
-- I/O Map:  [I/O Map](IO-map.txt)
+- I/O Map:  [IO-map.txt](IO-map.txt)
+- Binary loader: [program-loader.md](program-loader.md)
 - Notes on possible physical implementation:
   [notes/physical-implementation-ideas.md](notes/physical-implementation-ideas.md)
 
