@@ -26,5 +26,14 @@ $FFFE   Frame interrupt enable
 $FFFF   Frame interrupt vector
 
 Frame interrupt enable
+----------------------
+
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|      15 Unused bits         |F|
+---------------------------------
+
+F (bit 0) is the frame interrupt enable bit.
+
 If true, jumps program counter (PC) to address in $FFFF Frame interrupt vector
 at the end of each frame.  If false, the PC is left untouched.
