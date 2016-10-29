@@ -1,22 +1,41 @@
-1 Char per frame
-----------------
-```
-5 letters per word
-6 characters per word (5 letters + space)
-100 words per minute would be 10 char per second or 1 char per frame
-```
+Gamepad
+=======
 
-Design
-------
 ```
-Input is in the form of 7 bit ASCII characters
-A single RAM cell contains the Keyboard input encoded as a 7 bit
-ASCII character
-The Keyboard input RAM cell
-The input is $00 if no character is typed.
-If multiple characters were typed during the previous frame, only the
-first one is registered.
-A registered ASCII character means the user completed the keystroke(s)
-they pressed the key and released the key.
-Input updated once per frame (10 times per second)
+There are 8 buttons
+up, down, left, right, a, b, x, y
+The gamepad register is read only.
+The lower 8 bits of the gamepad register map to
+each of the 8 buttons in order.
+
+U   up
+D   down
+L   left
+R   right
+A   A
+B   B
+X   X
+Y   Y
+
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+| 8 Unused bits |U|D|L|R|A|B|X|Y|
+---------------------------------
+
+0 -> not pressed
+1 -> pressed
+
+The gamepad register is double buffered.
+While the cpu has access to the gamepad register values
+from on the previous frame, the gamepad controller is recording
+the gamepad presses for the current frame.
+
+At the beginning of a frame, the gamepad registers are swapped.
+The gamepad controller sets the new gamepad register to $00; clearing
+out the previous values.
+Then, as the frame progresses, when the user presses a button,
+the gamepad controller sets the corresponding button bit value to 1.
+By the end of the frame, the gamepad controller will have marked
+all buttons that were pressed during that frame as 1,
+and any buttons that were never pressed during the frame as 0.
 ```
