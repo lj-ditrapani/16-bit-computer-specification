@@ -27,7 +27,7 @@ System-level Specifications
 ---------------------------
 
 - I/O Map:  [IO-map.txt](IO-map.txt)
-- Binary loader: [program-loader.md](program-loader.md)
+- Binary program loader: [program-loader.md](program-loader.md)
 - Notes on possible physical implementation:
   [notes/physical-implementation-ideas.md](notes/physical-implementation-ideas.md)
 
