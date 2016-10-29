@@ -12,7 +12,8 @@ Numbers
 ------
 Numbers are integers (no floating point).
 They can be decimal, hexadecimal ($), or binary (%).
-Decimals can be positive or negative.
+Hexadecimal and binary can be zero or positive
+Decimals can be positive, negative or zero.
 
 Examples:
 ```
@@ -48,22 +49,15 @@ R0-R15
 For I/O registers in RAM (defined accord to the I/O map):
 
 ```
-gamepad
 net-status
-net-destination
-enable-bits
-storage-read-address
-storage-write-address
+net-message
+storage-command
+storage-data
+video-cells
+video-enable
+gamepad
+frame-interrupt-enable
 frame-interrupt-vector
-control-registers
-audio
-net-in
-net-out
-storage-in
-storage-out
-video
-char-cells
-colors
 ```
 
 
@@ -86,8 +80,9 @@ Sections
 A complete assembly file has 3 sections.
 
 - Symbols
-- Data (RAM)
-- Program (ROM)
+- Data RAM
+- Video ROM
+- Program ROM
 
 The Symbols section comes first.  It is delimited by .symbols and .end-symbols
 section markers.  The second section is the data section which is delimited by
@@ -100,11 +95,14 @@ Section markers:
     - .symbols
     - .end-symbols
 - Data
-    - .data
-    - .end-data
+    - .data-ram
+    - .end-data-ram
+- Video ROM
+    - .video-rom
+    - .end-video-rom
 - Program
-    - .program
-    - .end-program
+    - .program-rom
+    - .end-program-rom
 
 
 Symbols Section
@@ -308,7 +306,7 @@ The move command zero-fills holes in ram.
 ```
 move $0F00      # All RAM cells from current address to $0EFF are set to zero
                 # and the current address is set to $0F00
-move audio
+move video-cells
 ```
 
 ## copy ##
@@ -316,55 +314,43 @@ Copies binary content of file directly into final assembled binary starting at
 current location.
 
     copy path/file-name.ext
-    move tiles
-    copy video/mario-tiles.bin
+    move story
     copy text/story.txt  # copies data into ram starting at current address
-    copy video-data.bin
+    move video-cells
+    copy video-cells.bin
 
 
-## tiles ##
-Like copy command, but moves to video address first.
-Cannot be used after assembler moves past video address.
-The file must be in the
+Video ROM Section
+=================
+
+The video ROM can contain only 2 commands.
+Up to one instance of the colors command and up to
+one instance of the tiles command.
+
+Colors
+------
+
+Colors is a long-array of 16 colors.
+
+```
+colors
+    0x00 0xFF 0xAA ... thirteen more
+end-colors
+```
+
+Tiles
+-----
+
+The text file must be in the
 '[text tile format](assembler/tile-file-format.md)'.
 The assembler will parse the text tile file into a binary tile format and then
-copy the resulting 3 KW (6 KB) binary into the video section.  This command can
+copy the resulting 1.5 KW (3 KB) binary into the video section.  This command can
 only be used once.
 
-    tiles path/main.tiles
-
-
-## scene ##
-Parses file as a scene file and produces a 1 KW (2 KB) binary.
-The file must be in the
-'[text scene format](assembler/scene-file-format.md)'.
-The resulting binary is copied into the current ram address.
-This command is often used after a tiles command to place the initial scene of
-the program.
-It can be used multiple times in other locations in ram to place other scenes for
-the program.
-
-    scene path/level1.scene
-    scene path/level2.scene
-    # bunch of other data
-    tiles path/main.tiles
-    scene path/main.scene
-
-
-## bg-cells ##
-Parses file as a bg-cells file and produces a 240 word (480 byte) binary.
-The file must be in the
-'[text bg-cells format](assembler/bg-cells-file-format.md)'.
-The resulting binary is copied into the current ram address.
-It can be used multiple times in other locations in ram to place other bg-cells
-for the program.
-
-    bg-cells path/level1.bgcells
-    bg-cells path/level2.bgcells
-    # bunch of other data
-    tiles path/main.tiles
-    bg-cells path/main.bgcells
-
+```
+tiles text path/to/main.tiles
+tiles binary path/to/main.bin
+```
 
 Program Section
 ===============
