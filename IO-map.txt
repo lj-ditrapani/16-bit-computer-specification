@@ -1,83 +1,30 @@
-1--------|2--------|3--------|4--------|5--------|6--------|7--------|8--------|
-
-
 RAM for I/O
+
 Words Purpose
 -------------------------------------
-2,048 Network I/O (1K read, 1K write)
-2,048 Storage I/O (1K read, 1K write)
-    7 Control
-  249 Unused
-2,816 Video
+  128 Network I/O
+1,024 Storage I/O
+1,021 Video
+    1 Gamepad Input
+    2 Frame interrupt
 -------------------------------------
-7,168 Words total (873 words unused)
-
-
-The bottom 7 X 1024 words are reserved for I/O
-7,168 words for I/O
-7 sets of 1024 words
-There are 64 x 1024 words of RAM addressable in total
-Numbered 0-63
-0-56 are general purpose RAM
-57-63 are I/O
+2,176 Words total
 
 
 Seg    Purpose    Type      Decimal          Hex
 --------------------------------------------------------
-57     Network    Input     58,368-59,391   $E400-$E7FF
-58     Network    Output    59,392-60,415   $E800-$EBFF
-59     Storage    Input     60,416-61,439   $EC00-$EFFF
-60     Storage    Output    61,440-62,463   $F000-$F3FF
-61     Control    Both      62,464-62,470   $F400-$F406
-61     Unused     Both      62,471-62,719   $F407-$F4FF
-61-63  Video      Output    62,720-65,535   $F500-$FFFF
+58     Network    I/O       63,360-63,487   $F780-$F7FF
+59     Storage    I/O       63,488-64,511   $F800-$FBFF
+63     Video      Output    64,512-65,532   $FC00-$FFFC
+63     Gamepad    Input     65,533-65,533   $FFFD-$FFFD
+63     Interrupt  Write     65,534-65,535   $FFFE-$FFFF
 
 
-Control registers
+Frame Interrupt
 -----------------
-$F400   Gamepad input (8 bits) (read only)
-$F401   Network status (read only)
-$F402   Network destination mask (write only)
-$F403   Enable bits
-$F404   Storage Read address (7 bits, but reserve 16 for future expansion
-$F405   Storage Write address (7 bits, but reserve 16 for future expansion
-$F406   Frame interrupt vector
+$FFFE   Frame interrupt enable
+$FFFF   Frame interrupt vector
 
-
-Network Status
---------------
-$F401
-4 bits:  4 bits:  Net ID, Net token
-
- F E D C B A 9 8 7 6 5 4 3 2 1 0
----------------------------------
-| 8 Unused bits | netID | Token |
----------------------------------
-
-
-Enable bits
------------
-$F403 contains the enable bits
-
-bit
-5 Network output/write enable (N)
-4 Storage input/read enable   (R)
-3 Storage output/write enable (W)
-2 Video custom-RAM tile sets  (T)
-1 Video output enable         (V)
-0 Frame interrupt enable      (F)
-
- F E D C B A 9 8 7 6 5 4 3 2 1 0
----------------------------------
-|  10 Unused bits   |N R W T V F|
----------------------------------
-
-Enable bit 2: Video custom-RAM tile sets
-There is a ROM with pre-defined tile sets for the large, small, and text tiles.
-If this bit is false, the built-in tile sets are used for the video graphics.
-If it is true, the user-defined values in RAM $F000-$FBFF are used as the tile
-sets.
-
-Enable bit 0: Frame interrupt enable
-If true, jumps program counter (PC) to address in $F406 Frame interrupt vector
+Frame interrupt enable
+If true, jumps program counter (PC) to address in $FFFF Frame interrupt vector
 at the end of each frame.  If false, the PC is left untouched.
