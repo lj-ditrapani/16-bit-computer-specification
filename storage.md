@@ -36,10 +36,10 @@ Storage RAM
 -----------
 
 ```
-Words   Purpose     Address
+Words     Purpose     Address
 --------------------------------
-  1     Command     $F800
-127     Data        $F801-$FBFF
+    1     Command     $F800
+1,023     Data        $F801-$FBFF
 ```
 
 
