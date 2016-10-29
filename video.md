@@ -15,6 +15,24 @@ Overview
 - Up to 16 simultaneous colors on screen
 
 
+Video ROM
+---------
+
+There are two sets of Video ROM, built-in and custom.
+The built-in Video ROM cannot be altered.
+The custom video ROM is user-definable.
+The custom Video ROM can only be set when loading the program;
+it cannot be altered during program execution.
+
+```
+Words   Purpose   Description
+-------------------------------------
+   16   Color     16 8-bit colors
+1,536   Tiles     256 tiles X 6 words
+
+Total: 1,552
+```
+
 Video Ram
 ---------
 
@@ -22,10 +40,8 @@ Video Ram
 Words   Purpose   Description
 -------------------------------------
   640   Cells     32 X 20 cells X 1 word
-  128   Unused    N/A
-   16   Color     16 8-bit colors
-  496   Unused    N/A
-1,536   Tiles     256 tiles X 6 words
+    1   Enable    Enable flags
+  383   Unused    N/A
 ```
 
 Video ram memory addresses.
@@ -33,16 +49,38 @@ Video ram memory addresses.
 ```
 Seg    Purpose    Type      Decimal          Hex
 --------------------------------------------------------
-61     Cells      Output    62,720-63,359   $F500-$F77F
-61     Unused     Both      63,360-63,487   $F780-$F7FF
-62     Color      None      63,488-63,503   $F800-$F80F
-62     Unused     None      63,504-63,999   $F810-$F9FF
-62-63  Tiles      None      64,000-65,535   $FA00-$FFFF
+63     Cells      Output    64,512-65,151   $FC00-$FE7F
+63     Enable     Output    65,152-65,152   $FE80-$FE80
+63     Unused     Both      65,153-65,532   $FE81-$FFFC
 ```
 
-The tile set and color palette are not accessible during run time by the CPU.
-The section of RAM reserved for the tile set and color palette is not
-readable or writeable.
+
+Enable Flags
+-----------------
+
+```
+bit     Purpose                  Symbol
+---------------------------------------
+1       Custom video ROM            (C)
+0       Video output enable         (V)
+
+
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|     14 Unused bits        |C|V|
+---------------------------------
+```
+
+Enable bit 1: Custom video ROM
+
+There is a video ROM with pre-defined tile set & colors.
+If this bit is false, the built-in video ROM is used for the video graphics.
+If it is true, the user-defined values in the custom ROM are used as the tile
+set & colors.
+
+Enable bit 0: Video output enable
+
+If this bit is 0, the video screen displays all black pixels.
 
 
 Character Tile
@@ -119,8 +157,8 @@ Double Buffering
 ----------------
 
 ```
-This system uses double buffering, so there is actually
-two sets of 640 word video RAM.  The GPU renders one video RAM
+This system uses double buffering, so there are actually
+two sets of 641 word video RAM.  The GPU renders one video RAM
 while the CPU writes the next frame on the other video RAM.
 At the end of each frame, the video RAM sets are swapped.
 ```
