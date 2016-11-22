@@ -41,7 +41,7 @@ Words   Purpose   Description
 -------------------------------------
   640   Cells     32 X 20 cells X 1 word
     1   Enable    Enable flags
-  383   Unused    N/A
+  380   Unused    N/A
 ```
 
 Video ram memory addresses.
