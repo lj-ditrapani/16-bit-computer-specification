@@ -96,7 +96,7 @@ overflow, and carry flags.
     0000    jump if carry and overflow are *NOT* set
     0010    jump if overflow set (regardless of carry)
     0001    jump if carry set (regardless of overflow)
-    0011    jump if carry or overflow is set
+    0011    jump if overflow or carry is set
 
 Normally, you want to handle carry or overflow situations differently, hence
 0010 and 0001.
