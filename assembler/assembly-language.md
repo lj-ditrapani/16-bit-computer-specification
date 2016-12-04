@@ -49,10 +49,6 @@ R0-R15
 For I/O registers in RAM (defined accord to the I/O map):
 
 ```
-net-status
-net-message
-storage-command
-storage-data
 video-cells
 video-enable
 gamepad

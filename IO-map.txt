@@ -2,19 +2,15 @@ RAM for I/O
 
 Words Purpose
 -------------------------------------
-  128 Network I/O
-1,024 Storage I/O
 1,021 Video
     1 Gamepad Input
     2 Frame interrupt
 -------------------------------------
-2,176 Words total
+1,024 Words total
 
 
 Seg    Purpose    Type      Decimal          Hex
 --------------------------------------------------------
-58     Network    I/O       63,360-63,487   $F780-$F7FF
-59     Storage    I/O       63,488-64,511   $F800-$FBFF
 63     Video      Output    64,512-65,532   $FC00-$FFFC
 63     Gamepad    Input     65,533-65,533   $FFFD-$FFFD
 63     Interrupt  Write     65,534-65,535   $FFFE-$FFFF
