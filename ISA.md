@@ -138,5 +138,5 @@ Instruction format
        UC   Unsigned constant (1st or 2nd nibble)
         0   Always zero, unused
        DA   Direction and amount to shift bits
-    condV   Value condition bits 0NVP
+    condV   Value condition bits 0NZP
     condF   Flag condition bits 00VC

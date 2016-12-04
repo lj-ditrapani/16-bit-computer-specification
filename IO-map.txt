@@ -25,6 +25,8 @@ Frame Interrupt
 $FFFE   Frame interrupt enable
 $FFFF   Frame interrupt vector
 
+The frame interrupt addresses are not double buffered.
+
 Frame interrupt enable
 ----------------------
 
