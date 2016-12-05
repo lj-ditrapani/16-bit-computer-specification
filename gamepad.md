@@ -3,7 +3,7 @@ Gamepad
 
 ```
 There are 8 buttons
-up, down, left, right, a, b, x, y
+up, down, left, right, a, s, d, f
 The gamepad register is read only.
 The lower 8 bits of the gamepad register map to
 each of the 8 buttons in order.
@@ -13,13 +13,13 @@ D   down
 L   left
 R   right
 A   A
-B   B
-X   X
-Y   Y
+S   S
+D   D
+F   F
 
  F E D C B A 9 8 7 6 5 4 3 2 1 0
 ---------------------------------
-| 8 Unused bits |U|D|L|R|A|B|X|Y|
+| 8 Unused bits |U|D|L|R|A|S|D|F|
 ---------------------------------
 
 0 -> not pressed
