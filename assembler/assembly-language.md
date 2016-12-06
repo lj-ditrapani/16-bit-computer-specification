@@ -82,8 +82,10 @@ A complete assembly file has 3 sections.
 
 The Symbols section comes first.  It is delimited by .symbols and .end-symbols
 section markers.  The second section is the data section which is delimited by
-.data and .end-data section markers.  The third and final section is the
-program section which is delimited by .program and .end-program section markers.
+.data and .end-data section markers.  The third section is the Video ROM
+section, delimited by .video-rom and .end-video-rom markers.  The fourth and
+final section is the program section which is delimited by .program and
+.end-program section markers.
 
 Section markers:
 
@@ -128,7 +130,7 @@ Data Section
 The data section allows the programmer to easily define initial values for the
 computer's RAM.  The data section does not effect ROM.
 There are 13 data commands split into two groups
-(8 value commands & 5 block commands):
+(8 value commands & 2 block commands):
 
 value commands:
 - word
@@ -143,9 +145,6 @@ value commands:
 block commands
 - move
 - copy
-- tiles
-- scene
-- bg-cells
 
 A value command takes a name argument as its first parameter.
 The name is entered into the symbol table as a key that maps to the current
@@ -321,7 +320,7 @@ Video ROM Section
 
 The video ROM can contain only 2 commands.
 Up to one instance of the colors command and up to
-one instance of the tiles command.
+one instance of the copy command.
 
 Colors
 ------
@@ -334,25 +333,27 @@ colors
 end-colors
 ```
 
-Tiles
+Copy
 -----
 
-The text file must be in the
-'[text tile format](assembler/tile-file-format.md)'.
-The assembler will parse the text tile file into a binary tile format and then
-copy the resulting 1.5 KW (3 KB) binary into the video section.  This command can
-only be used once.
+This command is identical to the copy command defined in the Data section,
+with the additional restriction that the file copied in must be exactly
+1.5 KW (3 KB).  You can define a tile file in the proper format:
+'[text tile format](assembler/tile-file-format.md)'.  Then use this assembler
+with --tiles to convert the file to the binary format required.  Use the
+resulting file as the argument to this copy command.  The binary will be copied
+into the video ROM section reserved for the tile set.
+This command can only be used once.
 
 ```
-tiles text path/to/main.tiles
-tiles binary path/to/main.bin
+copy path/to/custom-tiles.bin
 ```
 
 Program Section
 ===============
 
-The program section defines the instructions that go into ROM.
-It does not effect RAM.
+The program section defines the instructions that go into the program ROM.
+It does not effect RAM or video ROM.
 Lines in the program section can be one of 3 types:
 
 - label
@@ -484,7 +485,7 @@ SPC     Add 3 to current program counter (PC) and save result to register
 ```
 
 The table below provides examples of the 7 pseudo instructions with
-the corresponding translated true instructions in the right column.
+the corresponding translated real instructions in the right column.
 Assume PC is $1980 for the SPC instruction translation.
 
 ```

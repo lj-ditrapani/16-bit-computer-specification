@@ -9,10 +9,17 @@
 
 
 ```
-.data
+.symbols
+.end-symbols
+
+.data-ram
     set a bunch of values
-.end
-.program
+.end-data-ram
+
+.video-rom
+.end-video-rom
+
+.program-rom
     init code
     # Copy ROM address of handle-fiv into RAM address for frame-interrupt-vector
     WRD frame-interrupt-vector R0
@@ -20,7 +27,7 @@
     STR R0 R1
 (handle-fiv)
     main loop
-.end
+.end-program-rom
 ```
 
 - any amount of whitespace before any command is ok

@@ -31,10 +31,9 @@ System-level Specifications
 Implementations
 ---------------
 
-Scala (Working with CPU and Video; missing gamepad):
-- Full Computer: <https://github.com/lj-ditrapani/16-bit-computer-scala>
+- Complete computer emulator: <https://github.com/lj-ditrapani/16-bit-computer-scala>
 
-CoffeeScript:
+Individual components:
 - CPU: <https://github.com/lj-ditrapani/16-bit-computer-cpu-coffeescript>
 - Old, first design, Video: <https://github.com/lj-ditrapani/original-design-16-bit-computer-video>
 - Old, first design, CPU: <https://github.com/lj-ditrapani/original-design-16-bit-computer-cpu>
@@ -43,5 +42,5 @@ CoffeeScript:
 Software
 --------
 
-- Planning to rewrite assembler in scala
+- Rewriting assembler in scala (ASCII tiles to bin tiles transformer is working so far)
 - Assembler (old version in ruby) <https://github.com/lj-ditrapani/original-design-16-bit-computer-assembler>
