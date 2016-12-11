@@ -1,8 +1,9 @@
-<!-- ====|=========|=========|=========|=========|=========|=========|===== -->
+<!-- ====|=========|=========|=========|=========|=========|=========|====== -->
 LJD 16-bit CPU Assembly Language
 ================================
 
-An assembly file consists of only printable ASCII characters (includes space)
+An assembly file consists of only printable ASCII characters
+(which includes space, hex $20)
 and the line feed character (a.k.a. \n).
 In other words, hex values $0A and $20-$7E.
 Tabs and carriage returns are forbidden.
@@ -65,7 +66,7 @@ Use # to comment a line.
 # this is a comment
 END   # comment at end of line
 ```
-Comments can be placed on any lines except on string related .data commands.
+Comments can be placed on any lines except on string related .data-ram commands.
 Specifically, comments cannot appear on (w)str lines and on lines within a
 long-(w)str command.
 
@@ -76,31 +77,34 @@ Sections
 A complete assembly file has 4 sections.
 
 - Symbols
-- Data RAM
-- Video ROM
 - Program ROM
+- Video ROM
+- Data RAM
 
-The Symbols section comes first.  It is delimited by .symbols and .end-symbols
-section markers.  The second section is the data section which is delimited by
-.data and .end-data section markers.  The third section is the Video ROM
-section, delimited by .video-rom and .end-video-rom markers.  The fourth and
-final section is the program section which is delimited by .program and
-.end-program section markers.
+The Symbols section comes first.  It is delimited by
+.symbols and .end-symbols section markers.
+The second section is the program section which is delimited by
+.program-rom and .end-program-rom section markers.
+The third section is the Video ROM section, delimited by
+.video-rom and .end-video-rom markers.
+The fourth and final section is the data section which is delimited by
+.data-ram and .end-data-ram section markers.
+
 
 Section markers:
 
 - Symbols
     - .symbols
     - .end-symbols
-- Data
-    - .data-ram
-    - .end-data-ram
+- Program ROM
+    - .program-rom
+    - .end-program-rom
 - Video ROM
     - .video-rom
     - .end-video-rom
-- Program
-    - .program-rom
-    - .end-program-rom
+- Data RAM
+    - .data-ram
+    - .end-data-ram
 
 
 Symbols Section
@@ -124,15 +128,206 @@ Examples:
 The symbols can be used anywhere a number is expected.
 
 
+Program Section
+===============
+
+The program section defines the instructions that go into the program ROM.
+It does not effect RAM or video ROM.
+Lines in the program section can be one of 3 types:
+
+- label
+- instruction
+- pseudo instruction
+
+
+Labels
+------
+```
+Labels are symbols surrounded with ()
+(label_name)
+labels go on separate lines by themselves
+The value of a label is the ROM memory address of the line below it
+
+One label per line
+
+Use a label to name an address to be used for jumps/branches.
+Also, use a label to define the interrupt vector address.
+That label can then be used in the .data-ram section to refer to
+the interrupt vector address.
+```
+
+
+Instructions
+------------
+
+These are the actual 16 hardware instructions.  They map 1-to-1 to the real
+CPU instructions.
+
+```
+END
+HBY i8 R
+LBY i8 R
+LOD R  R
+STR R  R
+ADD R  R  R
+SUB R  R  R
+ADI R  i4 R
+SBI R  i4 R
+AND R  R  R
+ORR R  R  R
+XOR R  R  R
+NOT R  R
+SHF R  D  A  R
+BRV R  value-condition R
+BRF flag-condition R
+
+Legend
+---------------------------------------------------------------------
+i4                  4-bit unsigned integer
+i8                  8-bit unsigned integer
+R                   Register number 0-15 (R0-R15 & RA-RF are symbols)
+D                   Direction (L or R)
+A                   Shift amount (1-8)
+value-condition     any combination of [NZP]
+flag-condition      any single character of [-CV]
+---------------------------------------------------------------------
+```
+
+
+### Instruction Examples ###
+
+Examples of how to write the different instructions with the assembled
+hexadecimal output in the comments on the right.
+```
+Set high byte of RA to 255
+HBY $FF RA      #  $1FFA
+HBY 255 R10     #  $1FFA
+
+Set low byte of R5 to 16
+LBY $10 R5      #  $2105
+LBY 16 R5       #  $2105
+
+Load R3 with value at memory address in R9
+LOD R9 R3       #  $3903
+
+Store at the memory address in RF the value of R1
+STR RF R1       #  $4F10
+
+Add value in RE to value in R6 and store in RA
+ADD RE R6 RA    #  $5E6A
+ADD R14 R6 R10  #  $5E6A
+
+Same format for SUB, AND, ORR, XOR as ADD
+
+Add value in R3 to 15 and store in R0
+ADI R3 $F R0    #  $73F0
+ADI R3 15 R0    #  $73F0
+
+Same format for SBI as ADI
+
+Not value in RA and store in RB
+NOT RA RB       #  $CA0B
+
+Shift the value in R7 left by 2 and store in RA
+SHF R7 L 2 RA   #  $D71A
+SHF R7 L 2 R10  #  $D71A
+
+Shift the value in R5 right by 7 and store in R0
+SHF R5 R 7 R0   #  $D5E0
+
+If value in R7 is negative or zero, PC = value in RB
+BRV R7 NZ RB    #  $E7B6
+If both carry and overflow flags are *NOT* set, jump to address in R8
+BRF - RB        #  $E0B8
+If carry flag is set, jump to address in R8
+BRF C RB        #  $E0B9
+If overflow flag is set, jump to address in R8
+BRF V RB        #  $E0BA
+```
+
+
+Pseudo Instructions
+-------------------
+
+Pseudo instructions are instructions that do not have actual hardware
+implementations but instead are assembled into one or more actual hardware
+instructions.  They provide a shorthand for common operations and make the
+assembly code more clear and concise.
+
+```
+name    Description
+--------------------------------------------------------------------------
+CPY     Copy value in one register to another
+NOP     Perform no operation
+WRD     Copy word (16-bit integer) into register
+INC     Increment contents of register by 1
+DEC     Decrement contents of register by 1
+JMP     Unconditional jump to address in register
+SPC     Add 3 to current program counter (PC) and save result to register
+```
+
+The table below provides examples of the 7 pseudo instructions with
+the corresponding translated real instructions in the right column.
+Assume PC is $1980 for the SPC instruction translation.
+
+```
+pseudo        |   Actual assembly instructions
+------------------------------------------------
+CPY R1 R2     |   ADI R1 0 R2
+NOP           |   ADI R0 0 R0
+WRD $1234 R7  |   HBY $12 R7    LBY $34 R7
+INC R3        |   ADI R3 1 R3
+DEC R3        |   SBI R3 1 R3
+JMP R3        |   BRV R0 NZP R3
+SPC R5        |   HBY $19 R5    LBY $83 R5
+```
+
+
+Video ROM Section
+=================
+
+The video ROM can contain only 2 commands.
+Up to one instance of the colors command and up to
+one instance of the tile-set-copy command.
+
+Colors
+------
+
+Colors is a long-array of 16 colors.
+See the .data-ram section for the long-array specification.
+
+```
+colors
+    0x00 0xFF 0xAA ... thirteen more
+end-colors
+```
+
+Tile Set Copy
+-------------
+
+This command is identical to the copy command defined in the Data RAM section,
+with the additional restriction that the file copied in must be exactly
+1.5 KW (3 KB).  You can define an ASCII tile file in the proper format:
+'[text tile format](assembler/tile-file-format.md)'.  Then use the assembler
+with --tiles to convert the file to the binary format required.  Use the
+resulting file as the argument to this copy command.  The binary will be copied
+into the video ROM section reserved for the tile set.
+This command can only be used once in the .video-rom section.
+
+```
+tile-set-copy path/to/custom-tiles.bin
+```
+
+
 Data Section
 ============
 
 The data section allows the programmer to easily define initial values for the
 computer's RAM.  The data section does not effect ROM.
 There are 13 data commands split into two groups
-(8 value commands & 2 block commands):
+(8 Value commands & 2 Block commands):
 
-value commands:
+Value commands:
 - word
 - array
 - long-array
@@ -142,7 +337,7 @@ value commands:
 - long-str
 - long-wstr
 
-block commands
+Block commands
 - move
 - copy
 
@@ -302,6 +497,14 @@ The move command zero-fills holes in ram.
 move $0F00      # All RAM cells from current address to $0EFF are set to zero
                 # and the current address is set to $0F00
 move video-cells
+
+move frame-interrupt-enable         # Move to the predefined interrupt enable
+                                    # address
+WRD $0001                           # Set the register to true; enable interrupt
+move frame-interrupt-vector         # Move to interrupt vector address
+WRD _ my_frame_interrupt_vector     # Set the interrupt vector to the label
+                                    # my_frame_interrupt_vector set in the
+                                    # .program-rom section
 ```
 
 ## copy ##
@@ -313,189 +516,3 @@ current location.
     copy text/story.txt  # copies data into ram starting at current address
     move video-cells
     copy video-cells.bin
-
-
-Video ROM Section
-=================
-
-The video ROM can contain only 2 commands.
-Up to one instance of the colors command and up to
-one instance of the copy command.
-
-Colors
-------
-
-Colors is a long-array of 16 colors.
-
-```
-colors
-    0x00 0xFF 0xAA ... thirteen more
-end-colors
-```
-
-Copy
------
-
-This command is identical to the copy command defined in the Data section,
-with the additional restriction that the file copied in must be exactly
-1.5 KW (3 KB).  You can define a tile file in the proper format:
-'[text tile format](assembler/tile-file-format.md)'.  Then use this assembler
-with --tiles to convert the file to the binary format required.  Use the
-resulting file as the argument to this copy command.  The binary will be copied
-into the video ROM section reserved for the tile set.
-This command can only be used once.
-
-```
-copy path/to/custom-tiles.bin
-```
-
-Program Section
-===============
-
-The program section defines the instructions that go into the program ROM.
-It does not effect RAM or video ROM.
-Lines in the program section can be one of 3 types:
-
-- label
-- instruction
-- pseudo instruction
-
-
-Labels
-------
-```
-Labels are symbols surrounded with ()
-(label_name)
-labels go on separate lines by themselves
-The value of a label is the ROM memory address of the line below it
-
-One label per line
-
-Use a label to name an address to be used for jumps/branches.
-```
-
-
-Instructions
-------------
-
-These are the actual 16 hardware instructions.  They map 1-to-1 to the real
-CPU instructions.
-
-```
-END
-HBY i8 R
-LBY i8 R
-LOD R  R
-STR R  R
-ADD R  R  R
-SUB R  R  R
-ADI R  i4 R
-SBI R  i4 R
-AND R  R  R
-ORR R  R  R
-XOR R  R  R
-NOT R  R
-SHF R  D  A  R
-BRV R  value-condition R
-BRF flag-condition R
-
-Legend
----------------------------------------------------------------------
-i4                  4-bit unsigned integer
-i8                  8-bit unsigned integer
-R                   Register number 0-15 (R0-R15 & RA-RF are symbols)
-D                   Direction (L or R)
-A                   Shift amount (1-8)
-value-condition     any combination of [NZP]
-flag-condition      any single character of [-CV]
----------------------------------------------------------------------
-```
-
-
-### Instruction Examples ###
-
-Examples of how to write the different instructions with the assembled
-hexadecimal output in the comments on the right.
-```
-Set high byte of RA to 255
-HBY $FF RA      #  $1FFA
-HBY 255 R10     #  $1FFA
-
-Set low byte of R5 to 16
-LBY $10 R5      #  $2105
-LBY 16 R5       #  $2105
-
-Load R3 with value at memory address in R9
-LOD R9 R3       #  $3903
-
-Store at the memory address in RF the value of R1
-STR RF R1       #  $4F10
-
-Add value in RE to value in R6 and store in RA
-ADD RE R6 RA    #  $5E6A
-ADD R14 R6 R10  #  $5E6A
-
-Same format for SUB, AND, ORR, XOR as ADD
-
-Add value in R3 to 15 and store in R0
-ADI R3 $F R0    #  $73F0
-ADI R3 15 R0    #  $73F0
-
-Same format for SBI as ADI
-
-Not value in RA and store in RB
-NOT RA RB       #  $CA0B
-
-Shift the value in R7 left by 2 and store in RA
-SHF R7 L 2 RA   #  $D71A
-SHF R7 L 2 R10  #  $D71A
-
-Shift the value in R5 right by 7 and store in R0
-SHF R5 R 7 R0   #  $D5E0
-
-If value in R7 is negative or zero, PC = value in RB
-BRV R7 NZ RB    #  $E7B6
-If both carry and overflow flags are *NOT* set, jump to address in R8
-BRF - RB        #  $E0B8
-If carry flag is set, jump to address in R8
-BRF C RB        #  $E0B9
-If overflow flag is set, jump to address in R8
-BRF V RB        #  $E0BA
-```
-
-
-Pseudo Instructions
--------------------
-
-Pseudo instructions are instructions that do not have actual hardware
-implementations but instead are assembled into one or more actual hardware
-instructions.  They provide a shorthand for common operations and make the
-assembly code more clear and concise.
-
-```
-name    Description
---------------------------------------------------------------------------
-CPY     Copy value in one register to another
-NOP     Perform no operation
-WRD     Copy word (16-bit integer) into register
-INC     Increment contents of register by 1
-DEC     Decrement contents of register by 1
-JMP     Unconditional jump to address in register
-SPC     Add 3 to current program counter (PC) and save result to register
-```
-
-The table below provides examples of the 7 pseudo instructions with
-the corresponding translated real instructions in the right column.
-Assume PC is $1980 for the SPC instruction translation.
-
-```
-pseudo        |   Actual assembly instructions
-------------------------------------------------
-CPY R1 R2     |   ADI R1 0 R2
-NOP           |   ADI R0 0 R0
-WRD $1234 R7  |   HBY $12 R7    LBY $34 R7
-INC R3        |   ADI R3 1 R3
-DEC R3        |   SBI R3 1 R3
-JMP R3        |   BRV R0 NZP R3
-SPC R5        |   HBY $19 R5    LBY $83 R5
-```
