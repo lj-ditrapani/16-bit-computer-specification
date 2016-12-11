@@ -73,7 +73,7 @@ long-(w)str command.
 Sections
 --------
 
-A complete assembly file has 3 sections.
+A complete assembly file has 4 sections.
 
 - Symbols
 - Data RAM
