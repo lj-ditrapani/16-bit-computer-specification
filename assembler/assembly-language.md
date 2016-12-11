@@ -305,14 +305,15 @@ end-colors
 Tile Set Copy
 -------------
 
-This command is identical to the copy command defined in the Data RAM section,
-with the additional restriction that the file copied in must be exactly
+Copies binary content of file directly into video rom section of final
+assembled binary starting at the tiles address.
+The file copied in must be exactly
 1.5 KW (3 KB).  You can define an ASCII tile file in the proper format:
-'[text tile format](assembler/tile-file-format.md)'.  Then use the assembler
+[text tile format](assembler/tile-file-format.md).  Then use the assembler
 with --tiles to convert the file to the binary format required.  Use the
 resulting file as the argument to this copy command.  The binary will be copied
 into the video ROM section reserved for the tile set.
-This command can only be used once in the .video-rom section.
+This command can only be used once.
 
 ```
 tile-set-copy path/to/custom-tiles.bin
@@ -325,7 +326,7 @@ Data Section
 The data section allows the programmer to easily define initial values for the
 computer's RAM.  The data section does not effect ROM.
 There are 13 data commands split into two groups
-(8 Value commands & 2 Block commands):
+(8 Value commands & 1 Block command):
 
 Value commands:
 - word
@@ -337,13 +338,12 @@ Value commands:
 - long-str
 - long-wstr
 
-Block commands
+Block command:
 - move
-- copy
 
 A value command takes a name argument as its first parameter.
 The name is entered into the symbol table as a key that maps to the current
-RAM address.  This allows the RAM cell at the current address to be used like a
+RAM address.  This allows the RAM cell address to be used like a
 variable in the program section.  To prevent an entry into the symbol table,
 set the name to `_`.  If the name is `_`, then nothing is entered
 into the symbol table.
@@ -351,11 +351,14 @@ into the symbol table.
 
 ## word ##
 Sets the current address in the RAM to specified 16-bit value.
+The value can be a symbol defined in the symbol table.
+
 ```
 word name initValue     # put initValue at current address in RAM
-                        # name now maps to current address in symbol table
+                        # & SymbolTable[name] maps to current RAM address
 
-word x 42               # x now refers to RAM address which contains value 42
+word x 42               # RAM cell at current address contains 42
+                        # & SymbolTable[x] maps to current RAM address
 
 word _ 99               # The value at current address is 99, but nothing is
                         # added to the symbol table
@@ -444,7 +447,7 @@ after the str command to add a newline after the string.
 ## wstr ##
 wstr stands for wide string.  It is just like the str command
 except a character takes up one 16-bit word.  So a wstr takes up twice as much
-storage.  However it can accommodate 16-bit Unicode characters.
+storage.
 
 
 ## long-str ##
@@ -506,13 +509,3 @@ WRD _ my_frame_interrupt_vector     # Set the interrupt vector to the label
                                     # my_frame_interrupt_vector set in the
                                     # .program-rom section
 ```
-
-## copy ##
-Copies binary content of file directly into final assembled binary starting at
-current location.
-
-    copy path/file-name.ext
-    move story
-    copy text/story.txt  # copies data into ram starting at current address
-    move video-cells
-    copy video-cells.bin
