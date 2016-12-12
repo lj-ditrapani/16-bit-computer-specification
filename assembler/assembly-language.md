@@ -293,13 +293,31 @@ one instance of the tile-set-copy command.
 Colors
 ------
 
-Colors is a long-array of 16 colors.
-See the .data-ram section for the long-array specification.
+Colors is 16 entries long.  Each entry is on its own line and consists of a
+symbol name and 3 numbers representing an 8-bit RGB value.
+The first number is the red component and is 3 bits wide (so any value 0-7).
+The second number is the green component and is also 3 bits wide.
+The 3rd number is the blue component and is 2 bits wide (so any value 0-3).
+Comments and empty lines may also appear in the colors block.
+The symbol name is used to create an entry in the symbol table that maps
+to the value of the zero-based index into the colors array.
+This allows you to refer to the index by the color name when defining
+video cells.
+If you do not wish to create an entry in the symbol table, use an underscore.
 
 ```
 colors
-    0x00 0xFF 0xAA ... thirteen more
-end-colors
+    black 0 0 0     # black maps to 0 in symbol table
+    white 7 7 3     # white maps to 1 in symbol table
+    red   7 0 0     # red maps to 2 in symbol table
+    green 0 7 0     # index 3
+    blue  0 0 3     # index 4
+    cyan  0 7 3
+    grey  2 2 1
+
+    _     4 4 2     # This one doesn't get a name in the symbol table
+    # ... 8 more similar lines
+end
 ```
 
 Tile Set Copy
