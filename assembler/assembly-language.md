@@ -521,9 +521,9 @@ move video-cells
 
 move frame-interrupt-enable         # Move to the predefined interrupt enable
                                     # address
-WRD $0001                           # Set the register to true; enable interrupt
+word $0001                          # Set the register to true; enable interrupt
 move frame-interrupt-vector         # Move to interrupt vector address
-WRD _ my_frame_interrupt_vector     # Set the interrupt vector to the label
+word _ my_frame_interrupt_vector    # Set the interrupt vector to the label
                                     # my_frame_interrupt_vector set in the
                                     # .program-rom section
 ```
