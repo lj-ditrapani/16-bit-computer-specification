@@ -33,14 +33,17 @@ Implementations
 
 - Complete computer emulator: <https://github.com/lj-ditrapani/16-bit-computer-scala>
 
-Individual components:
+Other projects implementing only individual components:
 - CPU: <https://github.com/lj-ditrapani/16-bit-computer-cpu-coffeescript>
-- Old, first design, Video: <https://github.com/lj-ditrapani/original-design-16-bit-computer-video>
-- Old, first design, CPU: <https://github.com/lj-ditrapani/original-design-16-bit-computer-cpu>
+- Video (old, first design, incompatible with spec): <https://github.com/lj-ditrapani/original-design-16-bit-computer-video>
+- CPU (old, first design, incompatible with spec): <https://github.com/lj-ditrapani/original-design-16-bit-computer-cpu>
 
 
 Software
 --------
 
-- Rewriting assembler in scala (ASCII tiles to bin tiles transformer is working so far)
+- Rewriting assembler in scala
+    - ASCII tiles to bin tiles transformer is working
+    - Can assemble instructions in program-rom section
+      (symbols, labels, data & video rom not implemented yet)
 - Assembler (old version in ruby) <https://github.com/lj-ditrapani/original-design-16-bit-computer-assembler>
