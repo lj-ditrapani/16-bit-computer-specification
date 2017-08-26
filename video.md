@@ -110,7 +110,7 @@ Color value indexes index into the color palette.
 ------------------------------------
 Background color index  4
 Foreground color index  4
-Tile index              6
+Tile index              8
 ------------------------------------
 Total              16 bits = 1 word
 
