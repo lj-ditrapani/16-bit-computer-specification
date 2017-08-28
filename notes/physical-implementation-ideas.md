@@ -3,8 +3,9 @@ General
 -------
 
 - 16-bit CPU
-- ROM 64 KWords = 128 KB = 1 M-bit
-- RAM 64 KWords = 128 KB = 1 M-bit
+- Program ROM 64 KWords = 128 KB = 1 M-bit
+- Data ROM 32 KWords = 64 KB = 512 K-bit
+- RAM 32 KWords = 64 KB = 512 K-bit
 - 4 Million instructions per second (MIPS)
 - Physical implementations should meet 4 MIPS performance.  So if the
   implementation requires 4 clocks pre instruction, then the clock
@@ -43,6 +44,6 @@ I/O
 ```
 4 Million instructions per second
   400 K instructions per frame
-    399 K for cpu compute
-      1 K instructions cpu sleeps during I/O buffer switching
+    360 K for cpu compute
+     40 K instructions cpu sleeps during I/O buffer switching
 ```
