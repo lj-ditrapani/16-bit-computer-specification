@@ -9,128 +9,118 @@ Overview
 --------
 
 - 256 x 240 pixel screen
-- 256 character tile set (8 x 12, 1 bpp)
-- 32 x 20 character cells per frame (2 colors)
+- Large tile set: 256 tiles (16 x 16, 2 bpp)
+- Small tile set: 256 tiles (8 x 16, 1 bpp)
+- 3 layers:
+    - Background layer: 16 x 15 large cells per frame
+    - Text layer: 32 x 15 small cells per frame
+    - Forground layer: 16 x 15 large cells per frame
 - Colors are 8-bits with (3:3:2) RGB color format
-- Up to 16 simultaneous colors on screen
+- Up to 64 simultaneous colors on screen
 
 
 Video ROM
 ---------
 
-There are two sets of Video ROM, built-in and custom.
-The built-in Video ROM cannot be altered.
-The custom video ROM is user-definable.
-The custom Video ROM can only be set when loading the program;
-it cannot be altered during program execution.
-
 ```
-Words   Purpose   Description
--------------------------------------
-   16   Color     16 8-bit colors
-1,536   Tiles     256 tiles X 6 words
+Words   Purpose         Description
+----------------------------------------------------------------
+   32   Colors          64 8-bit colors; 16 groups of 4 colors
+8,192   Large Tiles     256 16 x 16 2 bpp tiles
+2,048   Small Tiles     256 8 x 16 1 bpp tiles
 
-Total: 1,552
+Total: 10,272
 ```
+
 
 Video Ram
 ---------
 
 ```
-Words   Purpose   Description
--------------------------------------
-  640   Cells     32 X 20 cells X 1 word
-    1   Enable    Enable flags
-  380   Unused    N/A
+Words   Purpose             Description
+--------------------------------------------------------------------------
+   64   Color set indexes   256 large tile color indexes; 4 bits per index
+  240   Text Cells          32 x 15 text cells x 0.5 word
+  120   Foreground Cells    16 x 15 cells x 0.5 word
+  120   Background Cells    16 x 15 cells x 0.5 word
+
+Total: 544 words
 ```
 
 Video ram memory addresses.
 
 ```
-Seg    Purpose    Type      Decimal          Hex
---------------------------------------------------------
-63     Cells      Output    64,512-65,151   $FC00-$FE7F
-63     Enable     Output    65,152-65,152   $FE80-$FE80
-63     Unused     Both      65,153-65,532   $FE81-$FFFC
+Purpose                 Decimal          Hex
+---------------------------------------------------------------------
+Color set               64,960-65,023   $FDC0-$FDFF
+Text Cells              65,024-65,263   $FE00-$FEEF
+Foreground Cells        65,280-65,399   $FF00-$FF77
+Background Cells        65,408-65,527   $FF80-$FFF7
 ```
 
 
-Enable Flags
------------------
+Color Set Entry
+---------------
+
+A color set entry consists of a set of 4 8-bit colors.
+Each entry corresponds to a large tile.
+Entry 0 is the color set for tile 0.
+Entry 1 is the color set for tile 1, and so forth.
+The color entry set defines the 4 color pallet that the tile will
+be painted with where ever it is placed on the cell grid.
+The colors are labeled in order, from left to right, 0-3.
+
+The 4 colors take up 2 16-bit words in memory:
 
 ```
-bit     Purpose                  Symbol
----------------------------------------
-1       Custom video ROM            (C)
-0       Video output enable         (V)
-
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|    color 0    |   color 1     |
+---------------------------------
 
  F E D C B A 9 8 7 6 5 4 3 2 1 0
 ---------------------------------
-|     14 Unused bits        |C|V|
+|    color 2    |   color 3     |
 ---------------------------------
 ```
 
-Enable bit 1: Custom video ROM
 
-There is a video ROM with pre-defined tile set & colors.
-If this bit is false, the built-in video ROM is used for the video graphics.
-If it is true, the user-defined values in the custom ROM are used as the tile
-set & colors.
-
-Enable bit 0: Video output enable
-
-If this bit is 0, the video screen displays all black pixels.
-
-
-Character Tile
+Large Tile
 --------------
 
 ```
-Size:  6 words
-8 x 12 pixel tiles = 96 pixels
+Size:  32 words
+16 x 16 pixel tiles = 256 pixels
+2 bits per pixel (2 bpp)
+Each word contains 8 pixels (1/2 row)
+The pixel value serves as a lookup key into the tile's corresponding color set entry.
+So, if the pixel is 0, it takes color 0.
+So, if the pixel is 1, it takes color 1.
+So, if the pixel is 2, it takes color 2.
+So, if the pixel is 3, it takes color 3.
+```
+
+
+Small Tile
+--------------
+
+```
+Size:  8 words
+8 x 16 pixel tiles = 128 pixels
 1 bit per pixel (1 bpp)
 Each word contains 16 pixels (2 rows)
-If the pixel is 0, it takes the background color of the cell.
-The color indexes are 0 based.
-If it is 1, it takes the foreground color of the cell.
+If the pixel is 0, it takes color 0 from the background cell beneath it.
+If it is 1, it takes color 3 from the background cell beneath it.
 The tile index is 0 based.
 ```
 
 
-Character Cell
---------------
+Background Cell and Foreground Cell
+----------------------------------
 
 ```
-Size:  1 word
-The tile index indexes into the character tile set.
-Color value indexes index into the color palette.
-
-                        # of bits
-------------------------------------
-Background color index  4
-Foreground color index  4
-Tile index              8
-------------------------------------
-Total              16 bits = 1 word
-
-
-Layout of a grid cell in RAM:
-
- F E D C B A 9 8 7 6 5 4 3 2 1 0
----------------------------------
-|  BGC  |  FGC  |  Tile Index   |
----------------------------------
-```
-
-
-Color Palette
--------------
-
-```
-The color palette contains the 16 colors chosen from the 256
-available 8-bit colors.  The character cells' background and foreground
-color number indexes into the list of 16 colors.
+Size:  1/2 word
+The one byte value indexes into the large tile set.
 ```
 
 
@@ -150,15 +140,4 @@ Layout of a color
 -----------------
 |R R R|G G G|B B|
 -----------------
-```
-
-
-Double Buffering
-----------------
-
-```
-This system uses double buffering, so there are actually
-two sets of 641 word video RAM.  The GPU renders one video RAM
-while the CPU writes the next frame on the other video RAM.
-At the end of each frame, the video RAM sets are swapped.
 ```
