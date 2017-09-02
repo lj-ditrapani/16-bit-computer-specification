@@ -7,6 +7,7 @@ An assembly file consists of only printable ASCII characters
 and the line feed character (a.k.a. \n).
 In other words, hex values $0A and $20-$7E.
 Tabs and carriage returns are forbidden.
+Each line is limited to 80 characters in length.
 
 
 Numbers
@@ -51,9 +52,7 @@ For I/O registers in RAM (defined accord to the I/O map):
 
 ```
 video-cells
-video-enable
 gamepad
-frame-interrupt-enable
 frame-interrupt-vector
 ```
 
@@ -66,7 +65,7 @@ Use # to comment a line.
 # this is a comment
 END   # comment at end of line
 ```
-Comments can be placed on any lines except on string related .data-ram commands.
+Comments can be placed on any lines except on string related .data commands.
 Specifically, comments cannot appear on (w)str lines and on lines within a
 long-(w)str command.
 
@@ -77,18 +76,18 @@ Sections
 A complete assembly file has 4 sections.
 
 - Symbols
-- Program ROM
-- Video ROM
-- Data RAM
+- Program
+- Video
+- Data
 
 The Symbols section comes first.  It is delimited by
 .symbols and .end-symbols section markers.
-The second section is the program section which is delimited by
-.program-rom and .end-program-rom section markers.
-The third section is the Video ROM section, delimited by
-.video-rom and .end-video-rom markers.
-The fourth and final section is the data section which is delimited by
-.data-ram and .end-data-ram section markers.
+The second section is the Program section which is delimited by
+.program and .end-program section markers.
+The third section is the Video section, delimited by
+.video and .end-video markers.
+The fourth and final section is the Data section which is delimited by
+.data and .end-data section markers.
 
 
 Section markers:
@@ -97,14 +96,14 @@ Section markers:
     - .symbols
     - .end-symbols
 - Program ROM
-    - .program-rom
-    - .end-program-rom
+    - .program
+    - .end-program
 - Video ROM
-    - .video-rom
-    - .end-video-rom
-- Data RAM
-    - .data-ram
-    - .end-data-ram
+    - .video
+    - .end-video
+- Data ROM
+    - .data
+    - .end-data
 
 
 Symbols Section
@@ -132,7 +131,7 @@ Program Section
 ===============
 
 The program section defines the instructions that go into the program ROM.
-It does not effect RAM or video ROM.
+It does not effect data ROM or video ROM.
 Lines in the program section can be one of 3 types:
 
 - label
@@ -152,7 +151,7 @@ One label per line
 
 Use a label to name an address to be used for jumps/branches.
 Also, use a label to define the interrupt vector address.
-That label can then be used in the .data-ram section to refer to
+That label can then be used in the .data section to refer to
 the interrupt vector address.
 ```
 
@@ -283,58 +282,23 @@ SPC R5        |   HBY $19 R5    LBY $83 R5
 ```
 
 
-Video ROM Section
+Video Section
 =================
 
-The video ROM can contain only 2 commands.
-Up to one instance of the colors command and up to
-one instance of the tile-set-copy command.
+The video ROM can contain only and exactly 1 instance of 1 command.
 
-Colors
-------
-
-Colors is 16 entries long.  Each entry is on its own line and consists of a
-symbol name and 3 numbers representing an 8-bit RGB value.
-The first number is the red component and is 3 bits wide (so any value 0-7).
-The second number is the green component and is also 3 bits wide.
-The 3rd number is the blue component and is 2 bits wide (so any value 0-3).
-Comments and empty lines may also appear in the colors block.
-The symbol name is used to create an entry in the symbol table that maps
-to the value of the zero-based index into the colors array.
-This allows you to refer to the index by the color name when defining
-video cells.
-If you do not wish to create an entry in the symbol table, use an underscore.
-
-```
-colors
-    black 0 0 0     # black maps to 0 in symbol table
-    white 7 7 3     # white maps to 1 in symbol table
-    red   7 0 0     # red maps to 2 in symbol table
-    green 0 7 0     # index 3
-    blue  0 0 3     # index 4
-    cyan  0 7 3
-    grey  2 2 1
-
-    _     4 4 2     # This one doesn't get a name in the symbol table
-    # ... 8 more similar lines
-end
-```
-
-Tile Set Copy
--------------
+Video ROM copy
+--------------
 
 Copies binary content of file directly into video rom section of final
-assembled binary starting at the tiles address.
+assembled binary.  The binary should have the 64 colors first and
+then the large tiles followed by the small tiles.
 The file copied in must be exactly
-1.5 KW (3 KB).  You can define an ASCII tile file in the proper format:
-[text tile format](assembler/tile-file-format.md).  Then use the assembler
-with --tiles to convert the file to the binary format required.  Use the
-resulting file as the argument to this copy command.  The binary will be copied
-into the video ROM section reserved for the tile set.
+10,272 W (64 B + 20 KB).
 This command can only be used once.
 
 ```
-tile-set-copy path/to/custom-tiles.bin
+video-rom-copy path/to/video-rom.bin
 ```
 
 
@@ -342,41 +306,33 @@ Data Section
 ============
 
 The data section allows the programmer to easily define initial values for the
-computer's RAM.  The data section does not effect ROM.
-There are 13 data commands split into two groups
-(8 Value commands & 1 Block command):
+computer's data ROM.  The data section does not effect the program ROM.
+There are 4 data commands.
 
 Value commands:
 - word
 - array
-- long-array
 - fill-array
 - str
-- wstr
-- long-str
-- long-wstr
 
-Block command:
-- move
-
-A value command takes a name argument as its first parameter.
+A data command takes a name argument as its first parameter.
 The name is entered into the symbol table as a key that maps to the current
-RAM address.  This allows the RAM cell address to be used like a
+data ROM address.  This allows the data ROM cell address to be used like a
 variable in the program section.  To prevent an entry into the symbol table,
 set the name to `_`.  If the name is `_`, then nothing is entered
 into the symbol table.
 
 
 ## word ##
-Sets the current address in the RAM to specified 16-bit value.
+Sets the current address in the data ROM to specified 16-bit value.
 The value can be a symbol defined in the symbol table.
 
 ```
-word name initValue     # put initValue at current address in RAM
-                        # & SymbolTable[name] maps to current RAM address
+word name initValue     # put initValue at current address in data ROM
+                        # & SymbolTable[name] maps to current data ROM address
 
-word x 42               # RAM cell at current address contains 42
-                        # & SymbolTable[x] maps to current RAM address
+word x 42               # Data ROM cell at current address contains 42
+                        # & SymbolTable[x] maps to current data ROM address
 
 word _ 99               # The value at current address is 99, but nothing is
                         # added to the symbol table
@@ -384,33 +340,19 @@ word _ 99               # The value at current address is 99, but nothing is
 
 
 ## array ##
-Array reserves multiple consecutive 16-bit slots in RAM and sets the
+Array reserves multiple consecutive 16-bit slots in data ROM and sets the
 slots to specific values.  The values are all listed on the same line.
-Use long-array for multi-line arrays.
 ```
 array name [list of whitespace delimited unsigned integers]
 array my_ints 1 2 3
 array beep %0101_1100 $FEED $FACE 42
-```
-
-
-## long-array ##
-
-If you need more than one line worth of values, use long-array instead of
-array.  The `end` keyword on a line by itself ends the long-array.
-```
-long-array indecies
-    $F0 $F1 $F2 $F3     # First 4 words
-    $F4 $F5 $F6 $F7     # Last 4 words
-end
-```
-
-Array with 9 mixed-representation numbers; 3 per line.
-```
-long-array foo
-    %0101_0000_1111_1010 $FEED 16
-    %1111_0000_1111_1010 $FACE 32
-    %0000_1111_1111_0101 $BACE 64
+# Array with 8 hex values
+array long $F0 $F1 $F2 $F3     # First 4 words
+array _    $F4 $F5 $F6 $F7     # Last 4 words
+# Array with 9 mixed-representation numbers; 3 per line.
+array foo %0101_0000_1111_1010 $FEED 16
+array _   %1111_0000_1111_1010 $FACE 32
+array _   %0000_1111_1111_0101 $BACE 64
 end
 ```
 
@@ -454,76 +396,14 @@ str hello Hello World
 str greet Hello Joe
 # You can use " in strings
 str _ She said "hi"
+# Entering a long string
+str story This is the first sentence of the story
+str _     and it need a newline now.
+word _ 10
+str _     This is the second sentence after the
+str _     first newline.
 ```
 The str command, name, and the string must fit on a single line.
-Use the long-(w)str command for multi-line strings.
 You cannot embed newlines in a str string.
-Use the long-(w)str to embed newlines in a string or put `word _ 10`
-after the str command to add a newline after the string.
-
-
-## wstr ##
-wstr stands for wide string.  It is just like the str command
-except a character takes up one 16-bit word.  So a wstr takes up twice as much
-storage.
-
-
-## long-str ##
-Begins a multi-line string.  The binary value generated is in the same
-format as that generated by the str command; the length of the string
-followed by the character codes of the string---2 characters per word.
-The `end` keyword on a line by itself ends the long-str.
-
-Format:
-
-    long-str name (keep-newlines|strip-newlines)
-
-With keep-newlines, the '\n' char is appended to each line
-
-    long-str string1 keep-newlines
-    line one
-    line two
-    line three
-    end
-
-With strip-newlines, the newlines at the end of each line are stripped.
-Newlines cannot appear in strip-newlines long-strs.
-
-    long-str string2 strip-newlines
-    line one
-    still line one
-    still line one
-    end
-
-
-## long-wstr ##
-Just like the long-str command, but uses the wide string format.
-A character takes up one 16-bit word.
-
-    long-wstr string1 keep-newlines
-    line one
-    line two
-    end
-
-
-## move ##
-Assembler moves current RAM address to specified address during assembly.
-Can only move forward in address space from current address,
-not backwards.  Cannot use symbols that refer to labels. The argument
-must be a number, a pre-defined symbol, a symbol defined
-in the .symbols section, or a symbol defined by a previous data command.
-The value is an unsigned 16-bit integer.
-The move command zero-fills holes in ram.
-```
-move $0F00      # All RAM cells from current address to $0EFF are set to zero
-                # and the current address is set to $0F00
-move video-cells
-
-move frame-interrupt-enable         # Move to the predefined interrupt enable
-                                    # address
-word $0001                          # Set the register to true; enable interrupt
-move frame-interrupt-vector         # Move to interrupt vector address
-word _ my_frame_interrupt_vector    # Set the interrupt vector to the label
-                                    # my_frame_interrupt_vector set in the
-                                    # .program-rom section
-```
+Use `word _ 10` on the next line after the str command to add a
+newline after the string.
