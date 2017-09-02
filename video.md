@@ -52,10 +52,10 @@ Video ram memory addresses.
 ```
 Purpose                 Decimal          Hex
 ---------------------------------------------------------------------
-Color set               64,960-65,023   $FDC0-$FDFF
-Text Cells              65,024-65,263   $FE00-$FEEF
-Foreground Cells        65,280-65,399   $FF00-$FF77
-Background Cells        65,408-65,527   $FF80-$FFF7
+Color set               64,704-64,767   $FCC0-$FCFF
+Text Cells              64,768-65,007   $FD00-$FDEF
+Foreground Cells        65,024-65,143   $FE00-$FE77
+Background Cells        65,152-65,271   $FE80-$FEF7
 ```
 
 

@@ -1,18 +1,14 @@
 RAM for I/O
 
+The last 1024 Words of ram are reserved for I/O registers.
+
 Purpose         Words   Decimal          Hex
 --------------------------------------------------------
-Net+Hdd           256   64,512-64,767   $FC00-$FCFF
-Unused            192   64,768-64,959   $FD00-$FDBF
-Video             304   64,960-65,263   $FDC0-$FEEF
-Audio              10   65,264-65,273   $FEF0-$FEF9
-Unused              6   65,274-65,279   $FEFA-$FEFF       
-Video             248   65,280-65,527   $FF00-$FFF7
-Unused              6   65,528-65,533   $FFF8-$FFFD       
-Gamepad             1   65,534-65,534   $FFFE-$FFFE
-FIV                 1   65,535-65,535   $FFFF-$FFFF
-
-Total           1,024
+FIV                 1   64,512-64,512   $FC00-$FC00
+Gamepad             1   64,576-64,576   $FC40-$FC40
+Audio              16   64,640-64,655   $FC80-$FC8F
+Video             576   64,704-65,279   $FCC0-$FEFF
+Net+Hdd           256   65,280-65,535   $FF00-$FFFF
 
 * FIV = Frame interrupt vector
 
@@ -22,14 +18,16 @@ Frame Interrupt Vector (FIV)
 The frame interrupt RAM cell is not double buffered.
 
 At the beginning of each frame, the GPU sets the program counter (PC)
-to the address found in $FFFF.
+to the address found in $FC00.
 
 
 Double Buffering
 ----------------
 
+The ram section $FC40-$FFFF is double buffered.
+
 This system uses double buffering, so there are actually
-two sets of 1,023 word I/O RAM (the FIV is not double buffered).
+two sets of 960 word I/O RAM (the FIV is not double buffered).
 For a single frame, double buffering allows each I/O device to
 have complete access to the RAM it needs while the CPU can
 read/write to its own I/O RAM.  At the end of the frame, the
@@ -40,3 +38,9 @@ to the RAM the cpu was using previously.
 For example, the GPU renders one video RAM
 while the CPU writes the next frame on the other video RAM.
 At the end of each frame, the video RAM sets are swapped.
+
+
+Video
+-----
+
+See video.md file for more details on the Video RAM I/O.
