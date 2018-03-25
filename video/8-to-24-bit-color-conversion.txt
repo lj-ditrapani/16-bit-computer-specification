@@ -1,25 +1,11 @@
-Mapping 8 bit color to 24 bit color
-R:G:B (3:3:2)
+Mapping 6 bit color to 24 bit color
+R:G:B (2:2:2)
 
 
 Take the bits and repeatedly copy the pattern starting at the
 most-significant bit of the 8-bit component until all 8 bits are filled.
 
-
-3-bit color component for Red, Green
-2 1 0               position
------
-a b c               value
------
-
-Resulting 8-bit transformation
-7 6 5 4 3 2 1 0     position
----------------
-a b c a b c a b     value
----------------
-
-
-2-bit color component for Blue
+2-bit color component
 1 0                 position
 ---
 a b                 value

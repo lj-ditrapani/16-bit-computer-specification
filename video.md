@@ -15,7 +15,7 @@ Overview
     - Background layer: 16 x 15 large cells per frame
     - Text layer: 32 x 15 small cells per frame
     - Forground layer: 16 x 15 large cells per frame
-- Colors are 8-bits with (3:3:2) RGB color format
+- Colors are 6-bits with (2:2:2) RGB color format
 - Up to 64 simultaneous colors on screen
 
 
@@ -62,7 +62,7 @@ Background Cells        65,152-65,271   $FE80-$FEF7
 Color Set Entry
 ---------------
 
-A color set entry consists of a set of 4 8-bit colors.
+A color set entry consists of a set of 4 6-bit colors.
 Each entry corresponds to a large tile.
 Entry 0 is the color set for tile 0.
 Entry 1 is the color set for tile 1, and so forth.
@@ -128,7 +128,7 @@ Colors
 ------
 
 ```
-A color is 8 bits in a 3-3-2 RGB format.
+A color is 6 bits in a 2-2-2 RGB format.
 
 R Red color component
 G Green color component
@@ -138,7 +138,7 @@ Layout of a color
 
  7 6 5 4 3 2 1 0
 -----------------
-|R R R|G G G|B B|
+|0 0|R R|G G|B B|
 -----------------
 ```
 

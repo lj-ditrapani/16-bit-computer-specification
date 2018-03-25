@@ -1,19 +1,3 @@
-
-3-bit to 8-bit color component conversion
-
-  3-bit  |     8-bit        
-dec bin  |   bin     dec hex
-------------------------------
-  0 000  |  00000000   0  00
-  1 001  |  00100100  36  24
-  2 010  |  01001001  73  49
-  3 011  |  01101101 109  6d
-  4 100  |  10010010 146  92
-  5 101  |  10110110 182  b6
-  6 110  |  11011011 219  db
-  7 111  |  11111111 255  ff
-
-
 2-bit to 8-bit color component conversion
 
   2-bit |     8-bit        
