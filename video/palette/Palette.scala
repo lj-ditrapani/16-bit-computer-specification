@@ -61,7 +61,11 @@ object Main {
   def square(col: Int, row: Int, color: Color): Unit = {
     for (y <- 0.until(width)) {
       for (x <- 0.until(width)) {
-        img.setRGB(col * width + y, row * width + x, color.getRGB())
+        if (y == width - 1 || x == width - 1) {
+          img.setRGB(col * width + y, row * width + x, Color.black.getRGB())
+        } else {
+          img.setRGB(col * width + y, row * width + x, color.getRGB())
+        }
       }
     }
   }
