@@ -52,9 +52,7 @@ object Main {
     fourByFour(Light, Left, South)
     fourByFour(Lightest, Right, South)
     val pngFile = new File("palette.png")
-    val gifFile = new File("palette.gif")
     ImageIO.write(img, "png", pngFile)
-    ImageIO.write(img, "gif", gifFile)
     (): Unit
   }
 

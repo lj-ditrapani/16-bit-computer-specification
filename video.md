@@ -141,3 +141,9 @@ Layout of a color
 |R R R|G G G|B B|
 -----------------
 ```
+
+
+Color Palette
+-------------
+
+![palette.png](video/palette/palette.png)
