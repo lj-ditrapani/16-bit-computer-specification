@@ -14,6 +14,10 @@ Catridge:
 - 64 KB Data ROM
 - 20 KB + 64 B Video ROM
 
+Screenshot:
+
+![video/example-screen.png](video/example-screen.png)
+
 
 Component Specifications
 ------------------------
