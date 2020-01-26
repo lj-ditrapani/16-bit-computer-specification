@@ -1,46 +1,39 @@
 RAM for I/O
+===========
 
-The last 2 1024 Words of ram are reserved for I/O registers.
-Only the first set of 1024 addresses ($F800-$FBFF) are
-accessible by the CPU.
-The last 1024 addresses ($FC00-$FFFF) are not accessible.
-Reading these addresses returns random values and writing these
-addresses does nothing.
+1024 Words of ram are reserved for I/O registers ($F800-$FBFF).
+The last 1024 addresses ($FC00-$FFFF) are not usable.
 
 Purpose         Words   Decimal          Hex
 --------------------------------------------------------
-FIV                 1   63,488-63,488   $F800-$F800
-Gamepad             1   63,504-63,504   $F810-$F810
-Keyboard            3   63,505-63,507   $F811-$f813
+Gamepad             1   63,488-63,488   $F800-$F800
+Keyboard            3   63,489-63,491   $F801-$f803
 Audio              16   63,520-63,535   $F820-$F82F
 Color sets         64   63,552-63,615   $F840-$F87F
 LinkHub+Disk      128   63,616-63,743   $F880-$F8FF
 Video             768   63,744-64,511   $F900-$FBFF
 
-* FIV = Frame interrupt vector
-
 
 Frame Interrupt Vector (FIV)
 ----------------------------
-The frame interrupt RAM cell is copied to the second buffer by the
-I/O device on each frame.
 
-At the beginning of each frame, the GPU sets the program counter (PC)
-to the address found in $FC00.
+The computer starts executing with the PC set to $0000.
+At the beginning of each frame after the first, the GPU
+sets the program counter (PC) to $0400.
 
 
 Double Buffering
 ----------------
 
-The ram section $F800-$FBFF is double buffered.
+The 2kb I/O ram section is double buffered.
 
 This system uses double buffering, so there are actually
-two sets of 1024 words I/O RAM.
+two sets of 1024 words of I/O RAM.
 For a single frame, double buffering allows the I/O device to
 have complete access to the RAM it needs while the CPU can
 read/write to its own I/O RAM.  At the end of the frame, the
 RAM sets are swapped.  The cpu gets access to the RAM the I/O
-device as using previously, and the I/O device gets access
+device was using previously, and the I/O device gets access
 to the RAM the cpu was using previously.
 
 For example, the GPU renders one video RAM

@@ -95,10 +95,10 @@ Size:  32 words
 Each word contains 8 pixels (1/2 row)
 The pixel value serves as a lookup key into the tile's corresponding color set entry.
 For a large tile used in the background layer, colors are as follows:
-So, if the pixel is 0, it takes color 0.
-So, if the pixel is 1, it takes color 1.
-So, if the pixel is 2, it takes color 2.
-So, if the pixel is 3, it takes color 3.
+If the pixel is 0, it takes color 0.
+If the pixel is 1, it takes color 1.
+If the pixel is 2, it takes color 2.
+If the pixel is 3, it takes color 3.
 For a large tile used in the foreground layer, colors are looked up in
 the same fashion, except if the pixel is set to 0, the pixel is
 transparent.  In other words, the color selected for the background
