@@ -14,7 +14,7 @@ Overview
 - 3 layers:
     - Background layer: 16 x 15 large cells per frame
     - Forground layer: 16 x 15 large cells per frame
-    - Text layer: 32 x 15 small cells per frame
+    - Text layer: 32 x 30 small cells per frame
 - Colors are 6-bits with (2:2:2) RGB color format
 - Up to 64 simultaneous colors on screen
 
@@ -26,8 +26,8 @@ Video ROM
 Words   Purpose         Description
 ----------------------------------------------------------------
    32   Colors          64 8-bit colors; 16 groups of 4 colors
-8,192   Large Tiles     256 16 x 16 2 bpp tiles
-1,024   Small Tiles     256 8 x 8 1 bpp tiles
+8,192   Large Tiles     256 16 x 16 2 bpp tiles (32 W / tile)
+1,024   Small Tiles     256 8 x 8 1 bpp tiles (4 W / tile)
 
 Total: 9,248 words
 ```
