@@ -29,7 +29,7 @@ Words   Purpose         Description
 8,192   Large Tiles     256 16 x 16 2 bpp tiles
 1,024   Small Tiles     256 8 x 8 1 bpp tiles
 
-Total: 9,248
+Total: 9,248 words
 ```
 
 

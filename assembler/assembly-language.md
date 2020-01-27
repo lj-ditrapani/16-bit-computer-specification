@@ -290,7 +290,7 @@ Copies binary content of file directly into video rom section of final
 assembled binary.  The binary should have the 64 colors first and
 then the large tiles followed by the small tiles.
 The file copied in must be exactly
-10,272 W (64 B + 20 KB).
+9,248 W (64 B + 18 KB = 18,496 B).
 This command can only be used once.
 
 ```

@@ -8,7 +8,7 @@ General
 - RAM 32 KWords = 64 KB = 512 K-bit
 - 4 Million instructions per second (MIPS)
 - Physical implementations should meet 4 MIPS performance.  So if the
-  implementation requires 4 clocks pre instruction, then the clock
+  implementation requires 4 clocks per instruction, then the clock
   should run at 16 MHz.  If the implementation only requires 2 clocks
   per instruction, the clock should run at 8 MHz.
 
@@ -45,5 +45,8 @@ I/O
 4 Million instructions per second
   400 K instructions per frame
     360 K for cpu compute
-     40 K instructions cpu sleeps during I/O buffer switching
+     40 K instructions cpu sleeps during I/O buffer switching & setting PC = FIV
+100 ms / frame
+90 ms cpu active compute
+10 ms for buffer stwiching and setting PC = FIV
 ```

@@ -6,7 +6,7 @@ A complete catridge-based 16-bit computer
 with the following:
 - 60 KB General RAM
 - 2 KB I/O RAM (double buffered)
-- Color display 256 x 240 pixels
+- Color display (256 x 240 pixels)
 - Gamepad input
 
 Catridge:
