@@ -27,7 +27,8 @@ $D7E0           $ represents a hex value
 ```
 
 Underscores in numbers are ignored.
-A negative decimal value is encoded as 16, 8 or 4-bit two's complement.
+A negative decimal value is encoded as 16, 8 or 4-bit two's complement
+depending on where it is used.
 
 
 Symbols
@@ -44,15 +45,15 @@ The symbol table is initialized with the following symbols already defined.
 For CPU registers (defined as 0-15):
 
 ```
-R0-RF
-R0-R15
+R0-R9 & RA-RF
 ```
 
-For I/O registers in RAM (defined accord to the I/O map):
+For I/O registers in RAM (defined according to the I/O map):
 
 ```
-video-cells
 gamepad
+color-sets
+video-cells
 frame-interrupt-vector
 ```
 
@@ -65,9 +66,9 @@ Use # to comment a line.
 # this is a comment
 END   # comment at end of line
 ```
-Comments can be placed on any lines except on string related .data commands.
-Specifically, comments cannot appear on (w)str lines and on lines within a
-long-(w)str command.
+Comments can be placed on a line by itself, or after any command except after a
+str .data command.  A comment on a str line will be treated as part of the
+content of the string.
 
 
 Sections
@@ -150,9 +151,6 @@ The value of a label is the ROM memory address of the line below it
 One label per line
 
 Use a label to name an address to be used for jumps/branches.
-Also, use a label to define the interrupt vector address.
-That label can then be used in the .data section to refer to
-the interrupt vector address.
 ```
 
 
@@ -184,7 +182,7 @@ Legend
 ---------------------------------------------------------------------
 i4                  4-bit unsigned integer
 i8                  8-bit unsigned integer
-R                   Register number 0-15 (R0-R15 & RA-RF are symbols)
+R                   Register number 0-15 (R0-R9 & RA-RF are symbols)
 D                   Direction (L or R)
 A                   Shift amount (1-8)
 value-condition     any combination of [NZP]
@@ -200,7 +198,7 @@ hexadecimal output in the comments on the right.
 ```
 Set high byte of RA to 255
 HBY $FF RA      #  $1FFA
-HBY 255 R10     #  $1FFA
+HBY 255 RA      #  $1FFA
 
 Set low byte of R5 to 16
 LBY $10 R5      #  $2105
@@ -214,7 +212,6 @@ STR RF R1       #  $4F10
 
 Add value in RE to value in R6 and store in RA
 ADD RE R6 RA    #  $5E6A
-ADD R14 R6 R10  #  $5E6A
 
 Same format for SUB, AND, ORR, XOR as ADD
 
@@ -224,19 +221,18 @@ ADI R3 15 R0    #  $73F0
 
 Same format for SBI as ADI
 
-Not value in RA and store in RB
+`Not` value in RA and store in RB
 NOT RA RB       #  $CA0B
 
 Shift the value in R7 left by 2 and store in RA
 SHF R7 L 2 RA   #  $D71A
-SHF R7 L 2 R10  #  $D71A
 
 Shift the value in R5 right by 7 and store in R0
 SHF R5 R 7 R0   #  $D5E0
 
 If value in R7 is negative or zero, PC = value in RB
 BRV R7 NZ RB    #  $E7B6
-If both carry and overflow flags are *NOT* set, jump to address in R8
+If both carry and overflow flags are **NOT** set, jump to address in R8
 BRF - RB        #  $E0B8
 If carry flag is set, jump to address in R8
 BRF C RB        #  $E0B9
@@ -305,11 +301,11 @@ video-rom-copy path/to/video-rom.bin
 Data Section
 ============
 
-The data section allows the programmer to easily define initial values for the
+The data section allows the programmer to easily define values for the
 computer's data ROM.  The data section does not effect the program ROM.
 There are 4 data commands.
 
-Value commands:
+Data commands:
 - word
 - array
 - fill-array
@@ -388,6 +384,7 @@ The generated binary of the str command consists of the 16-bit length
 of the string followed by the characters of the string in each
 subsequent word, two per word.
 There is no null terminating character in the binary.
+
 ```
 # The string "Hello World" set to the hello symbol
 str hello Hello World
@@ -398,11 +395,12 @@ str greet Hello Joe
 str _ She said "hi"
 # Entering a long string
 str story This is the first sentence of the story
-str _     and it need a newline now.
+str _     and it needs a newline now.
 word _ 10
 str _     This is the second sentence after the
 str _     first newline.
 ```
+
 The str command, name, and the string must fit on a single line.
 You cannot embed newlines in a str string.
 Use `word _ 10` on the next line after the str command to add a
