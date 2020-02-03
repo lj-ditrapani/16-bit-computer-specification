@@ -8,12 +8,15 @@ Author:  Lyall Jonathan Di Trapani
 Overview
 --------
 
+The Video Display Processor (VDP) is responsible
+for generating the video signal.
+
 - 256 x 240 pixel screen
 - Large tile set: 256 tiles (16 x 16, 2 bpp)
 - Small tile set: 256 tiles (8 x 8, 1 bpp)
 - 3 layers:
     - Background layer: 16 x 15 large cells per frame
-    - Forground layer: 16 x 15 large cells per frame
+    - Foreground layer: 16 x 15 large cells per frame
     - Text layer: 32 x 30 small cells per frame
 - Colors are 6-bits with (2:2:2) RGB color format
 - Up to 64 simultaneous colors on screen

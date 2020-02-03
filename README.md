@@ -2,18 +2,20 @@
 The ljd 16-bit computer specification
 =====================================
 
-A complete catridge-based 16-bit computer
+A complete cartridge-based 16-bit computer
 with the following:
-- 60 KB General RAM
+- 60 KB General Purpose RAM
 - 2 KB I/O RAM (double buffered)
 - Color display (256 x 240 pixels)
 - Gamepad input
 
-Catridge:
-- 96 pin connector
+Cartridge:
+- 100 pin connector
 - 128 KB Program ROM
 - 64 KB Data ROM
 - 18 KB + 64 B Video ROM
+
+![Block Diagram](block-diagram.txt)
 
 Screenshot:
 
