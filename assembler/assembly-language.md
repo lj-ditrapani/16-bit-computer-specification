@@ -176,7 +176,6 @@ XOR R  R  R
 NOT R  R
 SHF R  D  A  R
 BRV R  value-condition R
-BRF flag-condition R
 
 Legend
 ---------------------------------------------------------------------
@@ -186,7 +185,6 @@ R                   Register number 0-15 (R0-R9 & RA-RF are symbols)
 D                   Direction (L or R)
 A                   Shift amount (1-8)
 value-condition     any combination of [NZP]
-flag-condition      any single character of [-CV]
 ---------------------------------------------------------------------
 ```
 
@@ -232,12 +230,6 @@ SHF R5 R 7 R0   #  $D5E0
 
 If value in R7 is negative or zero, PC = value in RB
 BRV R7 NZ RB    #  $E7B6
-If both carry and overflow flags are **NOT** set, jump to address in R8
-BRF - RB        #  $E0B8
-If carry flag is set, jump to address in R8
-BRF C RB        #  $E0B9
-If overflow flag is set, jump to address in R8
-BRF V RB        #  $E0BA
 ```
 
 

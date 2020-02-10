@@ -1,0 +1,16 @@
+Overall Map             Size    Adresses
+============================================
+Cartridge Program ROM   32 KW   $0000-$7FFFF
+Cartridge Data ROM      16 KW   $8000-$BFFFF
+RAM                     16 KW   $C000-$FFFFF
+
+Cartridge Data ROM Map
+============================================
+General Data          7,136 W   $8000-$9BDF
+Video ROM             9,248 W   $9BE0-$BFFF
+
+RAM Map
+============================================
+General RAM             14 KW   $C000-$F7FF
+Working copy I/O         1 KW   $F800-$FBFF
+Actual I/O registers     1 KW   $FC00-$FFFF
