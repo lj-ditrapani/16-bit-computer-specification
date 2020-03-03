@@ -8,9 +8,15 @@ Purpose         Words   Decimal          Hex
 Gamepad             1   64,512-64,512   $FC00-$FC00
 Keyboard            3   64,513-64,515   $FC01-$fC03
 Audio              16   64,544-64,559   $FC20-$FC2F
-Color sets         64   64,576-64,639   $FC40-$FC7F
 LinkHub+Disk      128   64,640-64,767   $FC80-$FCFF
-Video             768   64,768-65,535   $FD00-$FFFF
+   32   Colors              64 8-bit colors; 16 groups of 4 colors
+   64   Color set indexes   256 large tile color indexes; 4 bits per index
+  375   Foreground Cells    30 x 25 cells x 0.5 word
+  375   Background Cells    30 x 25 cells x 0.5 word
+2,048   Tiles               256 8 x 8 2 bpp tiles (8 W / tile)
+
+Total: 2,894 words
+```
 
 
 Frame Interrupt (FI)
