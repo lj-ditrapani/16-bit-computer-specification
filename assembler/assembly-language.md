@@ -60,7 +60,6 @@ For I/O registers in RAM (defined according to the I/O map):
 gamepad
 color-sets
 video-cells
-frame-interrupt-vector
 ```
 
 
@@ -76,7 +75,7 @@ Each line in an assembly file consists of one of the following:
 - Instruction
 - Pseudo Instructions
 - Data Command
-- Video copy command
+- Video ROM copy command
 
 Each type of line is explained below.
 
@@ -135,29 +134,36 @@ One label per line
 Use a label to name an address to be used for jumps/branches.
 ```
 
+There is one special label, main, that is fixed at address $0100.
+Use the main label to "push" the assembler's memory address counter
+up to $0100.  $0100 is the entry to the main loop of your program.
+ROM cells that are skipped because of the main label are zero-filled.
+The main label must appear at or before address $0100.
+The main label cannot appear after address $0100.
+
 
 Instructions
 ------------
 
 The instructions define the instructions that go into the cartridge ROM.
 These are the actual 15 hardware instructions.  They map 1-to-1 to the real
-CPU instructions.
+CPU instructions. (See ISA.md for instruction definition and details.)
 
 ```
 END
-HBY i8 R
-LBY i8 R
-LOD R  R
-STR R  R
-ADD R  R  R
-SUB R  R  R
-ADI R  i4 R
-SBI R  i4 R
-AND R  R  R
-ORR R  R  R
-XOR R  R  R
-NOT R  R
-SHF R  D  A  R
+HBY i8  R
+LBY i8  R
+LOD  R  R
+STR  R  R
+ADD  R  R  R
+SUB  R  R  R
+ADI  R i4  R
+SBI  R i4  R
+AND  R  R  R
+ORR  R  R  R
+XOR  R  R  R
+NOT  R  R
+SHF  R  D  A  R
 
 Legend
 ---------------------------------------------------------------------
