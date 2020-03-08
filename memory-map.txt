@@ -4,13 +4,64 @@ Cartridge Program ROM   32 KW   $0000-$7FFFF
 Cartridge Data ROM      16 KW   $8000-$BFFFF
 RAM                     16 KW   $C000-$FFFFF
 
-Cartridge Data ROM Map
-============================================
-General Data          7,136 W   $8000-$9BDF
-Video ROM             9,248 W   $9BE0-$BFFF
 
 RAM Map
 ============================================
 General RAM             14 KW   $C000-$F7FF
 Working copy I/O         1 KW   $F800-$FBFF
 Actual I/O registers     1 KW   $FC00-$FFFF
+
+
+RAM for I/O
+===========
+
+The last 1024 Words of ram are reserved for I/O registers.
+
+Purpose         Words   Hex Decimal
+--------------------------------------------------------
+Gamepad                 1   $FC00-$FC00     64,512-64,512
+Keyboard                3   $FC01-$fC03     64,513-64,515
+Audio                  16   $FC20-$FC2F     64,544-64,559
+LinkHub+Disk          128   $FC80-$FCFF     64,640-64,767
+Foreground Palettes     8
+Background Palettes     8
+Color Cells            49
+Tile Cells            750
+Tiles               2,048
+
+Total: 3,011 words
+```
+
+
+Frame Interrupt (FI)
+----------------------------
+
+The computer starts executing with the PC set to $0000.
+At the beginning of each frame after the first, the VDP
+sets the program counter (PC) to $0400.
+
+
+Reading and writing to the I/O RAM
+----------------------------------
+
+The program should keep a working copy of the I/O
+data in $F800-$FBFF.  The program should not change
+the contents of I/O RAM at any time during the frame
+but only at the begining of the frame.
+The main loop (starting at $0400) should copy the read
+I/O registers to the working copy and then write the
+next frame's screen data from the working copy
+to the I/O registers.
+The VDP asserts the Frame Interrupt (FI) during the
+monitor's vertical sync when the VDP is not reading or
+writing the I/O RAM.
+Once everything has been copied, the CPU can use the
+remaining time of the frame to
+use the copied game pad input to update the game state
+and compute a new set of screen data.
+
+
+Video
+-----
+
+See video.md file for more details on the Video RAM I/O.
