@@ -54,12 +54,23 @@ For CPU registers (defined as 0-15):
 R0-R9 & RA-RF
 ```
 
-For I/O registers in RAM (defined according to the I/O map):
+Special areas in RAM (defined according to the memory map):
 
 ```
+tiles
+io-registers-1
+io-registers-2
+```
+
+Offsets for I/O RAM (defined according to the memory map):
+
+```
+status
 gamepad
-color-sets
-video-cells
+foreground-palettes
+background-palettes
+color-cells
+tile-cells
 ```
 
 
@@ -75,7 +86,6 @@ Each line in an assembly file consists of one of the following:
 - Instruction
 - Pseudo Instructions
 - Data Command
-- Video ROM copy command
 
 Each type of line is explained below.
 
@@ -361,22 +371,3 @@ The .str command, name, and the string must fit on a single line.
 You cannot embed newlines in a .str string.
 Use `word _ 10` on the next line after the .str command to add a
 newline after the string.
-
-
-Video ROM copy
---------------
-
-There can be at most 1 instance of the .video-rom-copy command.
-If it is used, it must appear as the last command of the file.
-Comments and/or whitespace may come after the video-rom-copy command.
-
-Copies binary content of file directly into video rom section of final
-assembled binary.  The binary should have the 64 colors first and
-then the large tiles followed by the small tiles.
-The file copied in must be exactly
-9,248 W (64 B + 18 KB = 18,496 B).
-This command can only be used once.
-
-```
-video-rom-copy path/to/video-rom.bin
-```

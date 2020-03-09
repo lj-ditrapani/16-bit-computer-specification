@@ -43,7 +43,7 @@ Frame Interrupt (FI)
 
 The computer starts executing with the PC set to $0000.
 At the beginning of each frame after the first, the VDP
-sets the program counter (PC) to $0400.
+sets the program counter (PC) to $0100.
 
 
 Reading and writing to the I/O RAM
@@ -53,7 +53,7 @@ The program should keep a working copy of the I/O
 data in $F800-$FBFF.  The program should not change
 the contents of I/O RAM at any time during the frame
 but only at the begining of the frame.
-The main loop (starting at $0400) should copy the read
+The main loop (starting at $0100) should copy the read
 I/O registers to the working copy and then write the
 next frame's screen data from the working copy
 to the I/O registers.
