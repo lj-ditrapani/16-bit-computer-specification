@@ -7,29 +7,35 @@ RAM                     16 KW   $C000-$FFFFF
 
 RAM Map
 ============================================
-General RAM             14 KW   $C000-$F7FF
-Working copy I/O         1 KW   $F800-$FBFF
-Actual I/O registers     1 KW   $FC00-$FFFF
+General RAM             12 KW   $C000-$EFFF
+Tiles                    2 KW   $F000-$F7FF
+I/O registers 1          1 KW   $F800-$FBFF
+I/O registers 2          1 KW   $FC00-$FFFF
 
 
 RAM for I/O
 ===========
 
-The last 1024 Words of ram are reserved for I/O registers.
+The last 2048 Words of ram are reserved for I/O registers.
+They are split into two 1024 Word buffers
+named I/O registers 1 and I/O registers 2.
 
-Purpose         Words   Hex Decimal
---------------------------------------------------------
-Gamepad                 1   $FC00-$FC00     64,512-64,512
-Keyboard                3   $FC01-$fC03     64,513-64,515
-Audio                  16   $FC20-$FC2F     64,544-64,559
-LinkHub+Disk          128   $FC80-$FCFF     64,640-64,767
-Foreground Palettes     8
-Background Palettes     8
-Color Cells            49
-Tile Cells            750
-Tiles               2,048
+Purpose             Words   Offset  I/O 1           I/O 2
+---------------------------------------------------------------
+LinkHub+Disk          128   $0000   $F800-$F87F     $FC00-$FC7F
+Status                  1   $0080   $F880-$F880     $FC80-$FC80
+Gamepad                 1   $0081   $F881-$F881     $FC81-$FC81
+Keyboard                3   $0082   $F882-$F884     $FC82-$FC84
+Unused                 43   $0085   $F885-$F8AF     $FC85-$FCAF
+Audio                  16   $00B0   $F8B0-$F8BF     $FCB0-$FCBF
+Foreground Palettes     8   $00C0   $F8C0-$F8C7     $FCC0-$FCC7
+Background Palettes     8   $00C8   $F8C8-$F8CF     $FCC8-$FCCF
+Color Cells            52   $00D0   $F8D0-$F903     $FCD0-$FD03
+Unused                 12   $0104   $F904-$F90F     $FD04-$FD0F
+Tile Cells            750   $0112   $F910-$FBFD     $FD10-$FFFD
+Unused                  2   $0104   $FBFE-$FBFF     $FFFE-$FFFF
 
-Total: 3,011 words
+Total: 1,024 words
 ```
 
 
