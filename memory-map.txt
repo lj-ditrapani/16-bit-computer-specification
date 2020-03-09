@@ -36,7 +36,6 @@ Tile Cells            750   $0112   $F910-$FBFD     $FD10-$FFFD
 Unused                  2   $0104   $FBFE-$FBFF     $FFFE-$FFFF
 
 Total: 1,024 words
-```
 
 
 Frame Interrupt (FI)
