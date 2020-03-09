@@ -1,0 +1,5 @@
+- update bouble buffering in memory map
+- update assembly language spec
+    - pre-defined symbols
+    - no more video file
+    - need to move

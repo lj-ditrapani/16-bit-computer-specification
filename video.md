@@ -172,7 +172,7 @@ Layout of a color
 ```
 
 
-Availbale Colors
+Available Colors
 ----------------
 
 ![palette.png](video/palette/palette.png)
