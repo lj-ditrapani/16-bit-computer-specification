@@ -18,29 +18,31 @@ BRV R0 Z R6
 END
 
 (init)
-# Copy colors over to background-palette 0
-WRD $F800 R7
+WRD io-registers-1 R5
 WRD $0001 R1
-(color-loop)
+(screen-setup)
+# Copy colors over to background-palette 0
 WRD colors R6
-WRD background-palettes R5
-ADD R7 R5 R7
+WRD background-palettes R7
+ADD R5 R7 R7
 LOD R6 R0
 STR R0 R7
 ADI R6 1 R6
 ADI R7 1 R7
 LOD R6 R0
 STR R0 R7
+# TODO set color cells to all 0
+# TODO set tile cells to all 0 except HI in middle
+# TODO set tiles set 0 = blank, ascii H, I & space
 SBI R1 1 R1
-WRD color-loop R3
+WRD io-registers-2 R5
+WRD screen-setup R3
 BRV R1 Z R3
 # Set ram($C000) = 1 so we don't run initialization again
 WRD $0001 R0
 WRD $C000 R7
 STR R0 R7
 END
-
-
 
 (colors)
 #    Dark blue | Magenta
