@@ -174,6 +174,7 @@ ORR  R  R  R
 XOR  R  R  R
 NOT  R  R
 SHF  R  D  A  R
+BRV  R  C  R
 
 Legend
 ---------------------------------------------------------------------
@@ -182,7 +183,7 @@ i8                  8-bit unsigned integer
 R                   Register number 0-15 (R0-R9 & RA-RF are symbols)
 D                   Direction (L or R)
 A                   Shift amount (1-8)
-value-condition     any combination of [NZP]
+C                   any combination of [NZP]
 ---------------------------------------------------------------------
 ```
 
@@ -203,8 +204,8 @@ LBY 16 R5       #  $2105
 Load R3 with value at memory address in R9
 LOD R9 R3       #  $3903
 
-Store at the memory address in RF the value of R1
-STR RF R1       #  $4F10
+Store the value of R1 at the memory address in RF
+STR R1 RF       #  $4F10
 
 Add value in RE to value in R6 and store in RA
 ADD RE R6 RA    #  $5E6A
@@ -225,6 +226,9 @@ SHF R7 L 2 RA   #  $D71A
 
 Shift the value in R5 right by 7 and store in R0
 SHF R5 R 7 R0   #  $D5E0
+
+If value in R7 is negative or zero, PC = value in RB
+BRV R7 NZ RB    #  $E7B6
 ```
 
 
