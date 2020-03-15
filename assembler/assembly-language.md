@@ -37,7 +37,7 @@ depending on where it is used.
 
 Symbols
 -------
-Labels and variables are named with symbols.
+Labels, variables, and consts are named with symbols.
 Symbols start with a letter and can contain letters, numbers, - and \_.
 The assembler uses a symbol table to keep track of the symbols and their
 corresponding numeric values.

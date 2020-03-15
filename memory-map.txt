@@ -1,4 +1,4 @@
-Overall Map             Size    Adresses
+Overall Map             Size    Addresses
 ============================================
 Cartridge Program ROM   32 KW   $0000-$7FFFF
 Cartridge Data ROM      16 KW   $8000-$BFFFF
@@ -49,21 +49,20 @@ sets the program counter (PC) to $0100.
 Reading and writing to the I/O RAM
 ----------------------------------
 
-The program should keep a working copy of the I/O
-data in $F800-$FBFF.  The program should not change
-the contents of I/O RAM at any time during the frame
-but only at the begining of the frame.
-The main loop (starting at $0100) should copy the read
-I/O registers to the working copy and then write the
-next frame's screen data from the working copy
-to the I/O registers.
-The VDP asserts the Frame Interrupt (FI) during the
-monitor's vertical sync when the VDP is not reading or
-writing the I/O RAM.
-Once everything has been copied, the CPU can use the
-remaining time of the frame to
-use the copied game pad input to update the game state
-and compute a new set of screen data.
+There are 2 sets of I/O registers, named 1 & 2.
+This allows the cpu to work on one set of I/O registers while the VDP
+uses the other set to draw the current frame and update the gamepad
+input.  The VDP controls which I/O register set the CPU uses and which
+one the VDP works on.  Right before sending the Frame Interrupt to the
+CPU, the VDP sets the status register for both I/O register sets to
+tell the CPU which register set the CPU must use.  The CPU's main loop
+should first check a status register to determine which I/O register
+set to use.  This setup allows a form of double buffering.  The VPD
+swaps the register set on each frame.
+
+For example, the VDP renders the screen from one I/O register set
+while the CPU writes the next frame on the other I/O register set.
+At the end of each frame, the I/O register sets are swapped.
 
 
 Video

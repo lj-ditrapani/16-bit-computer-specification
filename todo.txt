@@ -1,1 +1,9 @@
-- update bouble buffering in memory map
+Ideas
+-----
+- Rename END to IDL?
+- Rename BRV to BRN
+    - never support carry or overflow
+    - or could accomodate carry only, but not overflow
+    - would want carry+overflow for calculator, spread sheet, accounting, BigInt
+- Keep BRV and add BRF back in
+    - to allow carry & overflow
