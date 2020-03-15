@@ -113,11 +113,11 @@ content of the string.
 Const Command
 -------------
 
-Use the const command to enter a symbol into the symbol table. 
+Use the .const command to enter a symbol into the symbol table.
 
 Format:
 
-    const var_name value
+    .const var_name value
 
 `var_name` becomes a key in the symbol table that maps to value.
 The value is stored as a 16-bit integer.  If the value is negative,
@@ -125,8 +125,8 @@ it is stored as a two's complement 16-bit integer.
 
 Examples:
 
-    const x -7
-    const winning_number 42
+    .const x -7
+    .const winning_number 42
 
 The symbols can be used anywhere a number is expected.
 

@@ -1,5 +1,5 @@
 # Initialize ram($C000) = 0
-const has_initialized $C000
+.const has_initialized $C000
 WRD $0000 R0
 WRD has_initialized R7
 STR R0 R7
@@ -8,9 +8,9 @@ END
 (main)
 # If ram($C000) == 0, then we should initialize system, else do nothing
 WRD has_initialized R7
-LOD R7 R0
+LOD R7 R1
 WRD init R6
-BRV R0 Z R6
+BRV R1 Z R6
 # Normally, your game loop would go here
 # Check the status register to see which I/O register buffer to use (1 or 2).
 # Check the gamepad input from the active I/O register
@@ -20,16 +20,17 @@ END
 
 (init)
 # Register names
-const screen_count 1
-const dataR 2
-const counter 3
-const temp 4
-const io_registers 5
-const from_addr 6
-const to_addr 7
-const func 8
-const loop 9
-WRD io_registers_1 R5
+.const screen_count 1
+.const dataR 2
+.const counter 3
+.const temp 4
+.const io_registers 5
+.const from_addr 6
+.const to_addr 7
+.const func 8
+.const loop 9
+.const return $A
+WRD io_registers_1 io_registers
 WRD $0002 screen_count
 (screen_setup)
 # Copy colors over to background_palette 0
@@ -75,30 +76,57 @@ STR dataR to_addr
 INC to_addr
 INC dataR
 STR dataR to_addr
-# TODO set tiles set 0 = blank, ascii H, I
-WRD write_tile func
-# set source & dest registers for blank tile
-JMP func
-# set source & dest registers for H tile
-JMP func
-# set source & dest registers for I tile
-JMP func
 # Repeat for io_registers_2 (unless we just did 2nd run)
 DEC screen_count
 WRD io_registers_2 io_registers
 WRD screen_setup func
-BRV screen_count Z func
+BRV screen_count NP func
+
+# set tiles 0 = blank, ascii H, I
+WRD write_tile func
+
+# set source & dest registers for blank tile
+WRD blank_tile from_addr
+CPY tiles to_addr
+SPC return
+JMP func
+
+# set source & dest registers for H tile
+WRD blank_tile from_addr
+# ascii H = 72
+# $F000 + (8 * 72) = 62016
+WRD 62016 to_addr
+SPC return
+JMP func
+
+# set source & dest registers for I tile
+WRD blank_tile from_addr
+# ascii I = 73
+# $F000 + (8 * 73) = 62024
+WRD 62024 to_addr
+SPC return
+JMP func
+
 # Set ram($C000) = 1 so we don't run initialization again
 ADI R0 1 dataR
 WRD has_initialized to_addr
 STR dataR to_addr
 END
 
-# Expects certain registers to be set
-# location of tile data
-# position in tile ram
+# Expects from_addr register to be set to source address (tile in ROM)
+# Expects to_addr register to be set to destination address (tile in RAM)
 (write_tile)
 # writes tile data from ROM to tile set RAM
+ADI R0 8 counter
+WRD tile_loop loop
+(tile_loop)
+LOD from_addr dataR
+STR dataR to_addr
+INC from_addr
+INC to_addr
+DEC counter
+BRV counter NP loop
+JMP return
 
 (colors)
 #    Dark blue | Magenta
