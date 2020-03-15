@@ -58,8 +58,8 @@ Special areas in RAM (defined according to the memory map):
 
 ```
 tiles
-io-registers-1
-io-registers-2
+io_registers_1
+io_registers_2
 ```
 
 Offsets for I/O RAM (defined according to the memory map):
@@ -67,10 +67,10 @@ Offsets for I/O RAM (defined according to the memory map):
 ```
 status
 gamepad
-foreground-palettes
-background-palettes
-color-cells
-tile-cells
+foreground_palettes
+background_palettes
+color_cells
+tile_cells
 ```
 
 
