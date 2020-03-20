@@ -1,3 +1,19 @@
+- Cycle count
+    - separate
+        - true physical implementation options
+            - ram access ns
+            - copy stuff to vdp
+        - required physical specs
+            - clocks per instruction
+            - clocks per frame
+            - copy stuff to vdp (what can be changed)
+        - or just don't touch stuff you shouldn't
+            - so that multiple implementations work
+    - move physcal impl -> system timing
+    - Bus access is interleaved between CPU & VDP
+        - even clocks = CPU, odd clocks = VDP
+- Pin out
+
 Ideas
 -----
 - Rename END to IDL?
@@ -7,3 +23,4 @@ Ideas
     - would want carry+overflow for calculator, spread sheet, accounting, BigInt
 - Keep BRV and add BRF back in
     - to allow carry & overflow
+    - could define it, but just have BRF unimplemented for a while?

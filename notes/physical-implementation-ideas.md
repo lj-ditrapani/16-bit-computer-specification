@@ -3,20 +3,13 @@ General
 -------
 
 - 16-bit CPU
-- Program ROM 64 KWords = 128 KB = 1 M-bit
-- Data ROM 32 KWords = 64 KB = 512 K-bit
-- RAM 32 KWords = 64 KB = 512 K-bit
+- Program ROM 32 KWords = 64 KB = 512 M-bit
+- Data ROM 16 KWords = 32 KB = 256 K-bit
+- RAM 16 KWords = 32 KB = 256 K-bit
 - 8 MHz clock
 - 4 clocks per LOD or STR instruction
 - 2 clocks for all other instructions
-- 2-4 Million instructions per second (MIPS)
-- It can do 4 million memory accesses (reads or writes) per second.
-- Physical implementations should meet above 2-4 MIPS performance.  So if the
-  implementation requires max 4 clocks per instruction, then the clock
-  should run at 8 MHz.  If the implementation requires max 8 clocks
-  per instruction, the clock should run at 16 MHz.
 
-Example of implementation that uses a max of 2 clocks per instruction (8 MHz).
 
 ```
     Triple ported register file
@@ -45,76 +38,48 @@ Example of implementation that uses a max of 2 clocks per instruction (8 MHz).
 I/O
 -----------
 
-```
-4 Million instructions per second
-  400 K instructions per frame
-    360 K for cpu compute
-     40 K instructions cpu sleeps during I/O buffer switching & setting PC = FIV
-100 ms / frame
-90 ms cpu active compute
-10 ms for buffer stwiching and setting PC = FIV
+CPU executes 80,000 or 80,002 clocks per frame
+    - vdp sends wait signal at end of clock 79,000
+    - cpu finishes current instruction before going into wait
+    - +2 to finish a pending instruction
+    - vdp waits until clock 80,002 before starting any work
 
-8 Million clocks per second
-  133 K clocks per frame
-    120 K for cpu compute
-     13 K clocks cpu sleeps during setting PC = FIV
+```
+59.9 frames per second
 16.6 ms / frame
 15.0 ms cpu active compute
- 1.6 ms for setting PC = FIV
+ 1.6 ms cpu wait (buffer for flexibility in physical implementation)
 
 5.369318 Million clocks per second
    89 K clocks per frame
     80 K for cpu compute
-     8.9 K clocks cpu sleeps during setting PC = FIV
+     8.9 K clocks cpu sleeps to allow VDP free reign on bus
 16.6 ms / frame
 15.0 ms cpu active compute
  1.6 ms for setting PC = FIV
-```
+
+clock period > 186 ns
 
 Memory:
- 2 MHz  500 ns
- 2.66 MHz  375 ns
- 3 MHz  333 ns
- 4 MHz  250 ns
- 5.369318 186 ns
- 8 MHz  125 ns
-10 MHz  100 ns
- 5.369   186.2 ns
- 1 / 60 / (261 * 340) = 187.8 ns
+RAM and ROM must have acces time of 150 ns or faster to allow for one access per clock.
+Allows at least 36 ns of stable data lines.
+150 ns dynamic and static ram existed in the 80s.
 
-261 lines
-340 pixels
+With overscan, h-blank, and v-blank, screen is
+262 lines
+341 pixels
 
-21.477272 MHz ÷ 4
-5.369318 MHz cpu & ppu
-2.684659
-8 memory reads every 16 pixels
+During v-blank:
+Copy over 16 color palettes (16 words) from ram
 
-At startup:
-Copy over 64 color sets (32 words) from rom
+4 memory reads every 8 pixels
 
-Every 16 pixels, read in:
-cell: fg tile index & bg tile index
-fg color set index
-bg color set index
+Every 8 pixels, read in:
+- color cell: fg & bg color palette
+- tile cell: fg tile index & bg tile index
+- fg 8-pixel tile row
+- bg 8-pixel tile row
 
-solder iron
-digital multimeter
-2-channel oscilloscope
-logic analyzer 
-
-
-Video:
-Could do 16 color
-4 bit per pixel 256x240 frame buffer
-32 kW rom
-16 kW ram
-15 kW video ram
-1 kW IO ram
-
-Harder to program/smaller programs/more expensive (more ram)/hard to update full screen/hard to animate large areas
-Easier to explain/more flexible/cheaper video hardware
-
-256 8x8 1 bit per pixel
-1 kW tile                       ram or rom; choose
-1 kW grid (index + fg + bg)     ram
+Use shift registers to prefil next 8-pixels' data during current
+8-pixels' rendering.
+```
