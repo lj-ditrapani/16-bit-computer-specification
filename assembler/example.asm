@@ -5,7 +5,7 @@ WRD has_initialized R7
 STR R0 R7
 END
 
-(main)
+[main]
 # If ram($C000) == 0, then we should initialize system, else do nothing
 WRD has_initialized R7
 LOD R7 R1

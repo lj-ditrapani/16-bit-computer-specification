@@ -54,7 +54,14 @@ For CPU registers (defined as 0-15):
 R0-R9 & RA-RF
 ```
 
-Special areas in RAM (defined according to the memory map):
+Main: a memory address in ROM.  The PC is set to this address when the frame interrupt is triggered.
+This is the address of the main loop of your program.
+
+```
+main $0100
+```
+
+The starting addresse of special areas in RAM (defined according to the memory map):
 
 ```
 tiles
@@ -83,6 +90,7 @@ Each line in an assembly file consists of one of the following:
 - Comment
 - Const Command
 - Label
+- Main Loop Marker
 - Instruction
 - Pseudo Instructions
 - Data Command
@@ -144,12 +152,25 @@ One label per line
 Use a label to name an address to be used for jumps/branches.
 ```
 
-There is one special label, main, that is fixed at address $0100.
-Use the main label to "push" the assembler's memory address counter
-up to $0100.  $0100 is the entry to the main loop of your program.
-ROM cells that are skipped because of the main label are zero-filled.
-The main label must appear at or before address $0100.
-The main label cannot appear after address $0100.
+
+Main Loop Marker
+----------------
+
+The main loop marker is fixed at address $0100.
+Use the main loop marker to increase the assembler's memory address counter
+to $0100.  $0100 is the entry to the main loop of your program.
+ROM cells that are skipped because of the main loop marker are zero-filled.
+The main loop marker must appear at or before address $0100.
+The main loop marker cannot appear after address $0100.
+The main loop marker looks like a label, except it uses [] instead of ().
+
+```
+# Intialization code
+# ...
+[main]
+# Main loop code
+# ...
+```
 
 
 Instructions
