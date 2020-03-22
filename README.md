@@ -33,6 +33,12 @@ System-level Specifications
   [notes/physical-implementation-ideas.md](notes/physical-implementation-ideas.md)
 
 
+Assembly Language
+-----------------
+- Assembly language specification: [assembler/assembly-language.md](assembler/assembly-language.md)
+- Assembly language example: [assembler/example.asm](assembler/example.asm)
+
+
 Implementations
 ---------------
 
