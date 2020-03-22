@@ -11,8 +11,6 @@ with the following:
 Cartridge:
 - 96 KB ROM
 
-![Block Diagram](block-diagram.txt)
-
 Screenshot:
 
 ![video/example-screen.png](video/example-screen.png)
@@ -29,6 +27,7 @@ Component Specifications
 System-level Specifications
 ---------------------------
 
+- Block Diagram: [block-diagram.txt](block-diagram.txt)
 - Memory Map:  [memory-map.txt](memory-map.txt)
 - Notes on possible physical implementation:
   [notes/physical-implementation-ideas.md](notes/physical-implementation-ideas.md)

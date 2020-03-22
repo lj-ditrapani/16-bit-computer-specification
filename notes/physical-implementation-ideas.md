@@ -6,9 +6,6 @@ General
 - Program ROM 32 KWords = 64 KB = 512 M-bit
 - Data ROM 16 KWords = 32 KB = 256 K-bit
 - RAM 16 KWords = 32 KB = 256 K-bit
-- 8 MHz clock
-- 4 clocks per LOD or STR instruction
-- 2 clocks for all other instructions
 
 
 ```
@@ -35,28 +32,40 @@ General
 ```
 
 
-I/O
------------
+Video
+-----
 
-CPU executes 80,000 or 80,002 clocks per frame
-    - vdp sends wait signal at end of clock 79,000
-    - cpu finishes current instruction before going into wait
-    - +2 to finish a pending instruction
-    - vdp waits until clock 80,002 before starting any work
+There is a single system bus.
+While the CPU is active, the VDP and CPU share the system bus.
+Bus access is interleaved between CPU & VDP
+The CPU gets to use the system bus on the even clocks.
+The VDP gets to use the system bus on the odd clocks.
+When the CPU is in wait mode, the VDP gets full access
+to the system bus on both even and odd clocks.
 
 ```
-59.9 frames per second
 16.6 ms / frame
 15.0 ms cpu active compute
  1.6 ms cpu wait (buffer for flexibility in physical implementation)
 
+VGA
+1/60.00 = 16.666.. ms
+NTSC
+1/60.1 = 16.638 ms
+```
+
+NTSC Implementation
+
+```
+CPU & VDP clock = 5.369318 MHz
+60.1 frames per second
 5.369318 Million clocks per second
    89 K clocks per frame
     80 K for cpu compute
      8.9 K clocks cpu sleeps to allow VDP free reign on bus
-16.6 ms / frame
+16.638 ms / frame
 15.0 ms cpu active compute
- 1.6 ms for setting PC = FIV
+ 1.638 ms cpu wait; vdp owns bus on both even AND odd clocks
 
 clock period > 186 ns
 
@@ -68,9 +77,12 @@ Allows at least 36 ns of stable data lines.
 With overscan, h-blank, and v-blank, screen is
 262 lines
 341 pixels
+16.6389 ms / frame
+63.5073 us / line
+186.238 ns / pixel
 
 During v-blank:
-Copy over 16 color palettes (16 words) from ram
+VDP copies over 16 color palettes (16 words) from ram
 
 4 memory reads every 8 pixels
 
