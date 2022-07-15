@@ -1,23 +1,21 @@
 System Timing
 =============
 
-- 4 clocks per LOD or STR instruction
-- 2 clocks for all other instructions
-- Frames per second: 60
+- System runs at 4 MHz
+- Each CPU instruction executes in exactly 4 clocks
+- System execution is divided into 100 ms frames
+- CPU runs at 10 frames-per-second
+- The VDP is always active.  The CPU is active 75% of the time.
+- While the CPU is active, the bus is shared between VDP and CPU.  CPU can use the bus on odd clocks.  VDP can use the bus on even clocks.
+- When the CPU is sleeping (25% of the time), the VDP has full access to the buss.
+- For the first 75 ms of a frame, the CPU is active.  The last 25 ms of a frame, the CPU is sleeping.
+- The VDP uses the frame interrupt line (FI) to control the CPU
 
-CPU executes 79,998 or 80,000 clocks per frame depending on the instructions.
-- The VDP counts clocks for each frame, starting at 1.
-- VDP sends wait signal to CPU during clock 79,998
-- CPU finishes current instruction before going into wait mode
-- The current CPU instruction completes at the end of clock 79,998
-  for a 2 cycle instruction, or 80,000 for a 4 cycle instruction.
-- VDP waits until clock 80,000 completes
-  before starting the work for the next frame.
-- The VDP releases the CPU from wait mode in time to maintain 60 frames per second.
-  The VDP starts counting clocks again from 1 once the CPU is active again.
+       100 ms frame
+    --------------------------------
+    |        75 ms          | 25 ms|
+    --------------------------------
+      cpu active              cpu off
 
-A correct implementation must chose a CPU frequency and
-the amount of time the VDP puts the CPU in wait mode
-in order that the above properties hold true.
-
-The CPU executes 1.2-2.4 million instructions per second (MIPS).
+- The cpu is active for 300K clocks per frame, therefore it can execute up to 75K instructions per frame.
+- CPU performance is 0.75 million instructions per second (MIPS)

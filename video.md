@@ -28,7 +28,7 @@ Words   Purpose                 Description
 ------------------------------------------------------------------------------
     8   Foregroud Palettes      16 6-bit colors; 4 groups of 4 colors
     8   Background Palettes     16 6-bit colors; 4 groups of 4 colors
-   52   Color Cells             15 x 13 grid; 2 bits/cell; 4 words per row x 13
+   52   Color Cells             15 x 13 grid; 4 bits/cell; 4 words per row x 13
   750   Tile Cells              30 x 25 cells x 1 word
 2,048   Tiles                   256 8 x 8 2 bpp tiles (8 W / tile)
 
@@ -88,7 +88,8 @@ Color Cells
 
 The screen is split into a 15 x 13 grid of 16 x 16 pixel regions
 called color cells.
-Four tile cells fit in each color cell (2 x 2 tiles in each color cell).
+Four tile cells fit in each color cell region
+(2 x 2 tiles in each color cell).
 The color cell determines which foreground color palette and which
 background color palette is active for the 16 x 16 color cell region.
 

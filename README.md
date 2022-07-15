@@ -29,6 +29,7 @@ System-level Specifications
 
 - Block Diagram: [block-diagram.txt](block-diagram.txt)
 - Memory Map:  [memory-map.txt](memory-map.txt)
+- Timing: [timing.md](timing.md)
 - Notes on possible physical implementation:
   [notes/physical-implementation-ideas.md](notes/physical-implementation-ideas.md)
 

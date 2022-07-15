@@ -15,7 +15,7 @@ General RAM             24 KW   $8000-$DFFF
 Tiles                    2 KW   $E000-$E7FF
 I/O registers            1 KW   $E800-$EBFF
 Unused/future use        1 KW   $EC00-$EFFF
-Revserved for VDP use    4 KW   $F000-$FFFF
+Reserved for VDP use    4 KW   $F000-$FFFF
 
 
 RAM for I/O registers
@@ -44,8 +44,13 @@ Frame Interrupt (FI)
 
 The computer starts executing with the program counter
 PC set to $0000.
-At the beginning of each frame after the first, the VDP
-sets the program counter (PC) to $0100.
+At the end of the 75 ms CPU active time for each frame,
+the VDP sets the FI to high.  This causes the CPU to
+stop execution and sleep.
+At the end of the frame (after the next 25 ms VDP phase),
+the VDP sets the FI back to low.
+When the FI goes from high to low, the CPU sets the
+program counter (PC) to $0100 and starts running again.
 
 
 Reading and writing to the I/O RAM
