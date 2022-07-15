@@ -1,31 +1,40 @@
-              +--------------------+
-              |     Cartridge      |
-              |  +--------------+  |
-              |  |     ROM      |  |
-              |  |     48KW     |  |
-              |  +--------------+  |
-              |     | |      |     |
-              +-+  A| |D     |E1 +-+
-                |   | |      |   |
-                +---|-|------|---+
-                    | |      |
-+--------------+    | |      ^    +------------------------------+
-|              |    | |           |            Console           |
-|              +----|-|-----------+                              |
-|                   | |                V                         |
-|                   | |                |E2                       |
-| +--------------+  | |  +--------------+       +--------------+ |
-| |             A|--| |  |              |       |              | |
-| |             D|--|-|  |              |       |              | |
-| |              |  | |  |      RAM     |       |   VDP        |-|-> Video signal output
-| |  16-bit CPU  |  |-|--|A     16KW    |      A|   Video      | |
-| |              |  | |--|D             |  /----|   Display    |-|-< Game pad input
-| |            FI|  | |  |              |  | /--|   Processor  | |
-| +--------------+  | |  +--------------+  | | D+--------------+ |
-|               |   | |                    | |              FI|  |
-| +-----+->E1   ^   |-|--------------------/ |                |  |
-| | CS  |->E2       | |----------------------/                V  |
-| +-----+-<A15                                                   |
+              +-------------------------------------+
+              |     Cartridge                       |
+              |                                     |
+              |          +-----------------+        |
+              |     /----|EN   PRG ROM    A|--\     |
+              |     |    |      64KW      D|--|-\   |
+              |     |    +-----------------+  | |   |
+              |     |                         | |   |
+              |     |    +-----------------+  | |   |
+              |     | /--|EN   DATA ROM   A|--| |   |
+              |     | |  |      32KW      D|--|-|   |
+              |     | |  +-----------------+  | |   |
+              |     | |                       | |   |
+              |     | |                      A| |D  |
+              +-+ PE| |DOE                    | | +-+
+                |   | |                       | | |
+                +---|-|-----------------------|-|-+
+                    | |                      / /
++--------------+    | |                     / /    +-------------+
+|              |    | |                    / /     |     Console |
+|              +----|-|--------------------|-|-----+             |
+|      ^            | |              V     | |     ^   ^   ^     |
+|      |            | |              |DAE  | |     |   |   |     |
+| +--------------+  | |  +--------------+  | |  +--------------+ |
+| |  DAE       PE|--/ |  |           EN |  | |  | PE DOE DAE   | |
+| |           DOE|----/  |      DATA    |  | |  |              | |
+| |              |       |      RAM     |  | |  |              |-|-> Video signal output
+| |  16-bit CPU  |  /----|A     32KW    |  | | A|   VDP        | |
+| |              |  | /--|D             |  |-|--|   Video      |-|-< Game pad input
+| |             A|--| |  |              |  | |--|   Display    | |
+| |             D|--|-|  |              |  | | D|   Processor  | |
+| |            FI|  | |  |              |  | |  |            FI| |
+| +--------------+  | |  +--------------+  | |  +--------------+ |
+|               |   | |                    | |                |  |
+|               ^   \-|--------------------/ |                |  |
+|                     \----------------------/                V  |
+|                                                                |
 +----------------------------------------------------------------+
 
 
@@ -34,8 +43,10 @@ W = 16-bit word
 1 KW = 2 KB
 A bus = 16 wire address lines
 D bus = 16 wire data lines
-CS = Chip select
-E1 line = 1 wire enable line from chip select for ROM
-E2 line = 1 wire enable line from chip select for RAM
-A15 = Line 15 (highest order bit) from address bus
+PE line = 1 wire enable line for PRG ROM chip
+DOE line = 1 wire enable line for DATA ROM chip
+DAE line = 1 wire enable line for DATA RAM chip
+Both CPU & VDP can assert the PE, DOE, and DAE
+lines depending on which one is in control
+EN = chip enable input
 FI = frame interrupt (from VDP to CPU)
