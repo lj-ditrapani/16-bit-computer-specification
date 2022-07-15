@@ -1,39 +1,40 @@
-Overall Map             Size    Addresses
+Program Map             Size    Addresses
 ============================================
-Cartridge Program ROM   32 KW   $0000-$7FFFF
-Cartridge Data ROM      16 KW   $8000-$BFFFF
-RAM                     16 KW   $C000-$FFFFF
+Cartridge Program ROM   64 KW   $0000-$FFFF
 
 
-RAM Map
+Data Map                Size    Addresses
 ============================================
-General RAM             12 KW   $C000-$EFFF
-Tiles                    2 KW   $F000-$F7FF
-I/O registers 1          1 KW   $F800-$FBFF
-I/O registers 2          1 KW   $FC00-$FFFF
+Cartridge Data ROM      32 KW   $0000-$7FFF
+Console RAM             32 KW   $8000-$FFFF
 
 
-RAM for I/O
-===========
+Console RAM Map
+============================================
+General RAM             24 KW   $8000-$DFFF
+Tiles                    2 KW   $E000-$E7FF
+I/O registers            1 KW   $E800-$EBFF
+Unused/future use        1 KW   $EC00-$EFFF
+Revserved for VDP use    4 KW   $F000-$FFFF
 
-The last 2048 Words of ram are reserved for I/O registers.
-They are split into two 1024 Word buffers
-named I/O registers 1 and I/O registers 2.
 
-Purpose             Words   Offset  I/O 1           I/O 2
----------------------------------------------------------------
-LinkHub+Disk          128   $0000   $F800-$F87F     $FC00-$FC7F
-Status                  1   $0080   $F880-$F880     $FC80-$FC80
-Gamepad                 1   $0081   $F881-$F881     $FC81-$FC81
-Keyboard                3   $0082   $F882-$F884     $FC82-$FC84
-Unused                 43   $0085   $F885-$F8AF     $FC85-$FCAF
-Audio                  16   $00B0   $F8B0-$F8BF     $FCB0-$FCBF
-Foreground Palettes     8   $00C0   $F8C0-$F8C7     $FCC0-$FCC7
-Background Palettes     8   $00C8   $F8C8-$F8CF     $FCC8-$FCCF
-Color Cells            52   $00D0   $F8D0-$F903     $FCD0-$FD03
-Unused                 12   $0104   $F904-$F90F     $FD04-$FD0F
-Tile Cells            750   $0112   $F910-$FBFD     $FD10-$FFFD
-Unused                  2   $0104   $FBFE-$FBFF     $FFFE-$FFFF
+RAM for I/O registers
+=====================
+
+Purpose             Words   Offset  I/O
+-----------------------------------------------
+LinkHub+Disk          128   $0000   $E800-$E87F
+Status                  1   $0080   $E880-$E880
+Gamepad                 1   $0081   $E881-$E881
+Keyboard                3   $0082   $E882-$E884
+Unused                 43   $0085   $E885-$E8AF
+Audio                  16   $00B0   $E8B0-$E8BF
+Foreground Palettes     8   $00C0   $E8C0-$E8C7
+Background Palettes     8   $00C8   $E8C8-$E8CF
+Color Cells            52   $00D0   $E8D0-$E903
+Unused                 12   $0104   $E904-$E90F
+Tile Cells            750   $0112   $E910-$EBFD
+Unused                  2   $0104   $EBFE-$EBFF
 
 Total: 1,024 words
 
@@ -41,7 +42,8 @@ Total: 1,024 words
 Frame Interrupt (FI)
 ----------------------------
 
-The computer starts executing with the PC set to $0000.
+The computer starts executing with the program counter
+PC set to $0000.
 At the beginning of each frame after the first, the VDP
 sets the program counter (PC) to $0100.
 
@@ -49,20 +51,18 @@ sets the program counter (PC) to $0100.
 Reading and writing to the I/O RAM
 ----------------------------------
 
-There are 2 sets of I/O registers, named 1 & 2.
-This allows the cpu to work on one set of I/O registers while the VDP
-uses the other set to draw the current frame and update the gamepad
-input.  The VDP controls which I/O register set the CPU uses and which
-one the VDP works on.  Right before sending the Frame Interrupt to the
-CPU, the VDP sets the status register for both I/O register sets to
-tell the CPU which register set the CPU must use.  The CPU's main loop
-should first check a status register to determine which I/O register
-set to use.  This setup allows a form of double buffering.  The VPD
-swaps the register set on each frame.
-
-For example, the VDP renders the screen from one I/O register set
-while the CPU writes the next frame on the other I/O register set.
-At the end of each frame, the I/O register sets are swapped.
+The VDP copies the output registers of the I/O registers to the VDP
+section of ram during the 25% VDP portion of each frame.
+The VDP copies the input registers from VDP section of ram to the I/O
+registers during the 25% VDP portion of each frame.
+The VDP can take up 2 two frames to copy over the tiles, so changes
+to tile ram can take an extra frame before they are reflected on
+screen.  When modifying tile ram, you should wait a frame before
+trying to use the tile in the tile cells.
+The VDP uses the reserved VDP section of ram to render the screen
+contents.
+This is a form of double buffering, allowing the CPU to freely modify
+the I/O registers without messing up the current video rendering.
 
 
 Video
