@@ -15,7 +15,7 @@ General RAM             24 KW   $8000-$DFFF
 Tiles                    2 KW   $E000-$E7FF
 I/O registers            1 KW   $E800-$EBFF
 Unused/future use        1 KW   $EC00-$EFFF
-Reserved for VDP use    4 KW   $F000-$FFFF
+Reserved for VDP use     4 KW   $F000-$FFFF
 
 
 RAM for I/O registers
@@ -24,10 +24,9 @@ RAM for I/O registers
 Purpose             Words   Offset  I/O
 -----------------------------------------------
 LinkHub+Disk          128   $0000   $E800-$E87F
-Status                  1   $0080   $E880-$E880
-Gamepad                 1   $0081   $E881-$E881
-Keyboard                3   $0082   $E882-$E884
-Unused                 43   $0085   $E885-$E8AF
+Gamepad                 1   $0080   $E880-$E880
+Keyboard                3   $0081   $E881-$E883
+Unused                 44   $0084   $E884-$E8AF
 Audio                  16   $00B0   $E8B0-$E8BF
 Foreground Palettes     8   $00C0   $E8C0-$E8C7
 Background Palettes     8   $00C8   $E8C8-$E8CF
