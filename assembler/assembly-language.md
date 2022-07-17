@@ -65,14 +65,7 @@ The starting addresse of special areas in RAM (defined according to the memory m
 
 ```
 tiles
-io_registers_1
-io_registers_2
-```
-
-Offsets for I/O RAM (defined according to the memory map):
-
-```
-status
+io_registers
 gamepad
 foreground_palettes
 background_palettes
@@ -137,6 +130,7 @@ Examples:
     .const winning_number 42
 
 The symbols can be used anywhere a number is expected.
+The .const command does not generate any actual machine code.
 
 
 Labels
@@ -150,6 +144,7 @@ The value of a label is the ROM memory address of the line below it
 One label per line
 
 Use a label to name an address to be used for jumps/branches.
+Labels do not generate any actual machine code.
 ```
 
 
@@ -294,7 +289,7 @@ Data Commands
 -------------
 
 The data commands allow the programmer to easily define values in the
-cartridge ROM.  There are 4 data commands.
+cartridge DATA ROM.  There are 4 data commands.
 
 Data commands:
 - .word
@@ -316,13 +311,13 @@ Sets the current address in the data ROM to specified 16-bit value.
 The value can be a symbol defined in the symbol table.
 
 ```
-.word name initValue     # put initValue at current address in data ROM
+.word name initValue    # put initValue at current address in data ROM
                         # & SymbolTable[name] maps to current data ROM address
 
-.word x 42               # Data ROM cell at current address contains 42
+.word x 42              # Data ROM cell at current address contains 42
                         # & SymbolTable[x] maps to current data ROM address
 
-.word _ 99               # The value at current address is 99, but nothing is
+.word _ 99              # The value at current address is 99, but nothing is
                         # added to the symbol table
 ```
 
@@ -385,14 +380,14 @@ There is no null terminating character in the binary.
 # You can use " in strings
 .str _ She said "hi"
 # Entering a long string
-.str story This is the first sentence of the story
-.str _     and it needs a newline now.
-.word _ 10
-.str _     This is the second sentence after the
-.str _     first newline.
+.str line1 This is the first sentence of
+.str line2 the story.
+.str line3 This is the second sentence
+.str line4 of the story.
 ```
 
 The .str command, name, and the string must fit on a single line.
+The string length must be less than or equal to 30 (the screen width).
 You cannot embed newlines in a .str string.
-Use `word _ 10` on the next line after the .str command to add a
-newline after the string.
+You should break up text into the individual lines as you would
+like to display them in the program.
