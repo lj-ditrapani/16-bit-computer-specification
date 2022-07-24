@@ -18,7 +18,7 @@ Instruction Meaning
     9 AND    And: logical and two values
     A ORR    Or: logical or two values
     B XOR    exclusive or: exclusive or two values
-    C NOT    Not: logical not value
+    C NOR    Nor: logical nor two values
     D SHF    Shift: shift bits in register in direction and by amount
     E BRV    Branch on value (negative, zero, positive)
     F ---    Not used
@@ -32,14 +32,14 @@ Instruction operation
     2 LBY    immd8 -> RD[07-00]
     3 LOD    ram[RS1] -> RD
     4 STR    RS2 -> ram[RS1]
-    5 ADD    RS1 + RS2 -> RD
-    6 SUB    RS1 - RS2 -> RD
+    5 ADD    RS1 +   RS2 -> RD
+    6 SUB    RS1 -   RS2 -> RD
     7 ADI    RS1 + immd4 -> RD
     8 SBI    RS1 - immd4 -> RD
     9 AND    RS1 and RS2 -> RD
-    A ORR    RS1 or RS2 -> RD
+    A ORR    RS1 or  RS2 -> RD
     B XOR    RS1 xor RS2 -> RD
-    C NOT    ! RS1 -> RD
+    C NOR    RS1 nor RS2 -> RD
     D SHF    RS1 shifted by immd4 -> RD
     E BRV    if (RS1 matches NZP) then (RS2 -> PC)
     F ---    Not used
@@ -102,7 +102,7 @@ Instruction format
     9 AND    - RRW-   RS1 RS2  RD
     A ORR    - RRW-   RS1 RS2  RD
     B XOR    - RRW-   RS1 RS2  RD
-    C NOT    - R-W-   RS1   0  RD
+    C NOR    - RRW-   RS1 RS2  RD
     D SHF    - R-W-   RS1  DA  RD
     E BRV    - RR-W   RS1 RS2  cond
     F ---    - ----

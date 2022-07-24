@@ -188,7 +188,7 @@ SBI  R i4  R
 AND  R  R  R
 ORR  R  R  R
 XOR  R  R  R
-NOT  R  R
+ROR  R  R  R
 SHF  R  D  A  R
 BRV  R  C  R
 
@@ -234,8 +234,8 @@ ADI R3 15 R0    #  $73F0
 
 Same format for SBI as ADI
 
-`Not` value in RA and store in RB
-NOT RA RB       #  $CA0B
+`Nor` value in RA with RB and store in RC
+NOR RA RB RC    #  $CABC
 
 Shift the value in R7 left by 2 and store in RA
 SHF R7 L 2 RA   #  $D71A
@@ -264,6 +264,7 @@ NOP     Perform no operation
 WRD     Copy word (16-bit integer) into register
 INC     Increment contents of register by 1
 DEC     Decrement contents of register by 1
+NOT     Invert bits of source register and save to destination register
 JMP     Unconditional jump to address in register
 SPC     Add 3 to current program counter (PC) and save result to register
 ```
@@ -280,6 +281,7 @@ NOP           |   ADI R0 0 R0
 WRD $1234 R7  |   HBY $12 R7    LBY $34 R7
 INC R3        |   ADI R3 1 R3
 DEC R3        |   SBI R3 1 R3
+NOT R1 R2     |   NOR R1 R1 R2
 JMP R3        |   BRV R0 NZP R3
 SPC R5        |   HBY $19 R5    LBY $83 R5
 ```
