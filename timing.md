@@ -11,11 +11,13 @@ System Timing
 - For the first 75 ms of a frame, the CPU is active.  The last 25 ms of a frame, the CPU is sleeping.
 - The VDP uses the frame interrupt line (FI) to control the CPU
 
+```
        100 ms frame
     --------------------------------
     |        75 ms          | 25 ms|
     --------------------------------
       cpu active              cpu off
+```
 
 - The cpu is active for 300K clocks per frame, therefore it can execute up to 75K instructions per frame.
 - CPU performance is 0.75 million instructions per second (MIPS)
