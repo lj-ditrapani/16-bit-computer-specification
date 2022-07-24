@@ -4,18 +4,12 @@ The ljd 16-bit computer specification
 
 A complete cartridge-based 16-bit computer
 with the following:
-- 60 KB General Purpose RAM
-- 2 KB I/O RAM (double buffered)
-- Color display (256 x 240 pixels)
+- 64 KB RAM
+- Color display
 - Gamepad input
 
 Cartridge:
-- 100 pin connector
-- 128 KB Program ROM
-- 64 KB Data ROM
-- 18 KB + 64 B Video ROM
-
-![Block Diagram](block-diagram.txt)
+- 192 KB ROM
 
 Screenshot:
 
@@ -33,9 +27,17 @@ Component Specifications
 System-level Specifications
 ---------------------------
 
-- I/O Map:  [IO-map.txt](IO-map.txt)
+- Block Diagram: [block-diagram.txt](block-diagram.txt)
+- Memory Map:  [memory-map.txt](memory-map.txt)
+- Timing: [timing.md](timing.md)
 - Notes on possible physical implementation:
   [notes/physical-implementation-ideas.md](notes/physical-implementation-ideas.md)
+
+
+Assembly Language
+-----------------
+- Assembly language specification: [assembler/assembly-language.md](assembler/assembly-language.md)
+- Assembly language example: [assembler/example.asm](assembler/example.asm)
 
 
 Implementations

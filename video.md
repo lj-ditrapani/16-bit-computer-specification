@@ -11,71 +11,67 @@ Overview
 The Video Display Processor (VDP) is responsible
 for generating the video signal.
 
-- 256 x 240 pixel screen
-- Large tile set: 256 tiles (16 x 16, 2 bpp)
-- Small tile set: 256 tiles (8 x 8, 1 bpp)
-- 3 layers:
-    - Background layer: 16 x 15 large cells per frame
-    - Foreground layer: 16 x 15 large cells per frame
-    - Text layer: 32 x 30 small cells per frame
+- 240 x 200 pixel screen
+- Tile set: 256 tiles (8 x 8, 2 bpp)
+- 2 layers:
+    - Background layer: 30 x 25 cells per frame
+    - Foreground layer: 30 x 25 cells per frame
 - Colors are 6-bits with (2:2:2) RGB color format
-- Up to 64 simultaneous colors on screen
+- Up to 28 simultaneous colors on screen
 
 
-Video ROM
+Video RAM
 ---------
 
 ```
-Words   Purpose         Description
-----------------------------------------------------------------
-   32   Colors          64 8-bit colors; 16 groups of 4 colors
-8,192   Large Tiles     256 16 x 16 2 bpp tiles (32 W / tile)
-1,024   Small Tiles     256 8 x 8 1 bpp tiles (4 W / tile)
+Words   Purpose                 Description
+------------------------------------------------------------------------------
+    8   Foregroud Palettes      16 6-bit colors; 4 groups of 4 colors
+    8   Background Palettes     16 6-bit colors; 4 groups of 4 colors
+   52   Color Cells             15 x 13 grid; 4 bits/cell; 4 words per row x 13
+  750   Tile Cells              30 x 25 cells x 1 word
+2,048   Tiles                   256 8 x 8 2 bpp tiles (8 W / tile)
 
-Total: 9,248 words
+Total: 2,866 words
 ```
 
 
-Video Ram
----------
+Foreground Color Palette
+------------------------
+
+A foreground color palette consists of a set of 3 6-bit colors.
+There are 4 foreground color palettes.
+The colors are labeled in order, from left to right, 0-3.
+
+The 3 colors take up 2 16-bit words in memory:
 
 ```
-Words   Purpose             Description
---------------------------------------------------------------------------
-   64   Color set indexes   256 large tile color indexes; 4 bits per index
-  480   Text Cells          32 x 30 text cells x 0.5 word
-  120   Foreground Cells    16 x 15 cells x 0.5 word
-  120   Background Cells    16 x 15 cells x 0.5 word
+Size: 2 words
 
-Total: 784 words
-```
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|    Unused     |   color 1     |
+---------------------------------
 
-Video ram memory addresses.
-
-```
-Purpose                 Decimal          Hex
----------------------------------------------------------------------
-Color sets              63,552-63,615   $F840-$F87F
-Background Cells        63,744-63,863   $F900-$F7F7
-Foreground Cells        63,872-63,991   $F980-$F9F7
-Text Cells              64,000-64,479   $FA00-$FBDF
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|    color 2    |   color 3     |
+---------------------------------
 ```
 
 
-Color Set Entry
----------------
+Background Color Palette
+------------------------
 
-A color set entry consists of a set of 4 6-bit colors.
-Each entry corresponds to a large tile.
-Entry 0 is the color set for tile 0.
-Entry 1 is the color set for tile 1, and so forth.
-The color entry set defines the 4 color palette that the tile will
-be painted with where ever it is placed on the cell grid.
+A background color palette consists of a set of 4 6-bit colors.
+There are 4 background color palettes.
 The colors are labeled in order, from left to right, 0-3.
 
 The 4 colors take up 2 16-bit words in memory:
 
 ```
+Size: 2 words
+
  F E D C B A 9 8 7 6 5 4 3 2 1 0
 ---------------------------------
 |    color 0    |   color 1     |
@@ -87,60 +83,74 @@ The 4 colors take up 2 16-bit words in memory:
 ---------------------------------
 ```
 
+Color Cells
+-----------
 
-Large Tile
---------------
+The screen is split into a 15 x 13 grid of 16 x 16 pixel regions
+called color cells.
+Four tile cells fit in each color cell region
+(2 x 2 tiles in each color cell).
+The color cell determines which foreground color palette and which
+background color palette is active for the 16 x 16 color cell region.
 
 ```
-Size:  32 words
-16 x 16 pixel tiles = 256 pixels
+Size 1/4 word (= 4 bits)
+
+The first 2 bits of a color cell define the foreground palette and
+the second 2 bits define the background palette.
+
+Four color cell definitions fit in one word.
+
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|  cc0  |  cc1  |  cc2  |  cc3  |
+---------------------------------
+```
+
+There are 15 color cells per row.
+A row of color cells needs 4 words.  There are 13 rows.  So 4 * 13 = 52 words.
+The least significant nibble of the last word in a row is unused.
+
+
+Tile Cell
+---------
+
+The screen is split into a 30 x 25 grid of 8 x 8 pixel regions called tile cells.
+A foreground tile and background tile is selected for each cell.
+A tile cell contains a foreground tile index followed by a background tile index.
+Each index is a one byte value that points to a single tile in the tile set.
+
+```
+Size:  1 word
+
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|  fg index     |   bg index    |
+---------------------------------
+```
+
+
+Tile
+----
+
+```
+Size:  8 words
+8 x 8 pixel tiles = 64 pixels
 2 bits per pixel (2 bpp)
-Each word contains 8 pixels (1/2 row)
-The pixel value serves as a lookup key into the tile's corresponding color set entry.
-For a large tile used in the background layer, colors are as follows:
+Each word contains 8 pixels (1 row)
+The pixel value serves as a lookup key into the active color palette
+of the cell location the tile is placed within.
+For a tile used in the background layer, colors are as follows:
 If the pixel is 0, it takes color 0.
 If the pixel is 1, it takes color 1.
 If the pixel is 2, it takes color 2.
 If the pixel is 3, it takes color 3.
-For a large tile used in the foreground layer, colors are looked up in
+For a tile used in the foreground layer, colors are looked up in
 the same fashion, except if the pixel is set to 0, the pixel is
-transparent.  In other words, the color selected for the background
-tile pixel at that location is used instead of color 0.
+transparent.  In other words, color 0 of the active background palette
+for that location is used instead.
 So tiles placed in the foreground layer only use 3 colors (1-3) from
 their palette, because color 0 is transparent.
-```
-
-
-Small Tile
---------------
-
-```
-Size:  8 words
-8 x 16 pixel tiles = 128 pixels
-1 bit per pixel (1 bpp)
-Each word contains 16 pixels (2 rows)
-If the pixel is 0, it is transparent and shows the color of the
-forground pixel beneath it.
-If it is 1, it takes color 3 from tile in the background cell
-beneath it.
-```
-
-
-Background Cell and Foreground Cell
-----------------------------------
-
-```
-Size:  1/2 word
-The one byte value indexes into the large tile set.
-```
-
-
-Text Cell
----------
-
-```
-Size:  1/2 word
-The one byte value indexes into the small tile set.
 ```
 
 
@@ -163,7 +173,7 @@ Layout of a color
 ```
 
 
-Color Palette
--------------
+Available Colors
+----------------
 
 ![palette.png](video/palette/palette.png)
