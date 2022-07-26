@@ -58,7 +58,7 @@ NTSC
 
 NTSC Implementation
 
-The VDP could still output 60 fps for NTSC or VGA format to a CRT while continuing the 10 frame/second system contract.  The VDP would just output the same screen 6 times in a row before moving on.  Since the VDP has its own dedicated ram, the CPU and VDP can work independently.
+The VDP could still output 60 fps for NTSC or VGA format to a CRT while continuing the 10 frame/second system contract.  The VDP would just output the same screen 6 times in a row before moving on.  Since the VDP has its own reserved ram section, the CPU and VDP can work independently.
 
 ```
 CPU & VDP clock = 4 MHz
@@ -76,21 +76,25 @@ Allows at least 50 ns of stable data lines.
 
 With overscan, h-blank, and v-blank, screen is
 262 lines
-341 pixels
+341 pixels (240 visible, 101 hidden/buffer)
 16.6389 ms / frame
 63.5073 us / line
 186.238 ns / pixel
 
+Time to render 8 pixels = 1489.904 ns
+Time to read one (of 3) words = 496ns
+
 During v-blank:
 VDP copies over 8 color palettes (16 words) from ram
+During h-blank:
+VDP copies over all 16 color cells for current raster line (4 words) from ram
 
-6 memory reads every 16 pixels
+3 memory reads every 8 pixels
 
-Every 16 pixels, read in:
-- color cell: fg & bg color palette
-- tile cell: fg tile index & bg tile index
-- 2x fg 8-pixel tile row
-- 2x bg 8-pixel tile row
+Every 8 pixels, read in:
+- 1x tile cell: fg tile index & bg tile index
+- 1x fg 8-pixel tile row
+- 1x bg 8-pixel tile row
 
 Use shift registers to prefil next 8-pixels' data during current
 8-pixels' rendering.
