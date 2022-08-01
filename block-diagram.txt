@@ -50,3 +50,45 @@ Both CPU & VDP can assert the PE, DOE, and DAE
 lines depending on which one is in control
 EN = chip enable input
 FI = frame interrupt (from VDP to CPU)
+
+CPU package: 8 lines + 16 address + 16 data = 40 pins
+address x 16
+data x 16
++5v
+gnd
+clk
+frame_int
+prgEnable
+dataEnable
+ramEnable
+w/r
+
+Cartridge: 5 + 16 addr + 16 data = 38 pins
+address x 16
+data x 16
++5v
+gnd
+clk
+prgEnable
+dataEnable
+
+If we had 2 busses:
+===================
+
+CPU package: 16*4 + 7 = 71 pins
++5v
+gnd
+clk
+frame_int
+dataEnable (invert A15)
+w/r
+reset
+# A15 is also ramEnable
+
+Cartridge: 16*4 + 4 = 68 pins (NorhAmerican NES had 72)
+address x 16
+data x 16
++5v
+gnd
+clk
+dataEnable (invert A15)
