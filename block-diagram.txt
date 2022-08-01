@@ -43,52 +43,47 @@ W = 16-bit word
 1 KW = 2 KB
 A bus = 16 wire address lines
 D bus = 16 wire data lines
-PE line = 1 wire enable line for PRG ROM chip
 DOE line = 1 wire enable line for DATA ROM chip
 DAE line = 1 wire enable line for DATA RAM chip
-Both CPU & VDP can assert the PE, DOE, and DAE
+Both CPU can assert the DOE and DAE
+VDP can assert the DAE
 lines depending on which one is in control
 EN = chip enable input
 FI = frame interrupt (from VDP to CPU)
 
-CPU package: 8 lines + 16 address + 16 data = 40 pins
-address x 16
-data x 16
+CPU package: 8 lines + 16*4 = 72 pins
+address x 16 x 2
+data x 16 x 2
 +5v
 gnd
 clk
 frame_int
-prgEnable
-dataEnable
-ramEnable
-w/r
-
-Cartridge: 5 + 16 addr + 16 data = 38 pins
-address x 16
-data x 16
-+5v
-gnd
-clk
-prgEnable
-dataEnable
-
-If we had 2 busses:
-===================
-
-CPU package: 16*4 + 7 = 71 pins
-+5v
-gnd
-clk
-frame_int
-dataEnable (invert A15)
+dataRomEnable
+dataRamEnable
 w/r
 reset
-# A15 is also ramEnable
 
-Cartridge: 16*4 + 4 = 68 pins (NorhAmerican NES had 72)
+Cartridge: 4 lines + 16*4 = 68 pins
+address x 16 x 2
+data x 16 x 2
++5v
+gnd
+clk
+dataRomEnable
+
+VDP package: 16 + 16 + 14 = 46 pins
 address x 16
 data x 16
 +5v
 gnd
 clk
-dataEnable (invert A15)
+frame_int
+dataRamEnable
+w/r
+reset
+video R
+video G
+video B
+vsync
+hsync
+gamepad 2 lines
