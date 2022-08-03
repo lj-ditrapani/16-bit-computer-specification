@@ -1,3 +1,18 @@
+1983 Version
+-------------------------------
+
+4 MHz
+single bus
+0.960 mips cpu
+All instructions take exactly 4 cycles to execute.
+1 Fetch
+2 execute
+3 memory read/write
+4 Idle
+The VDP can use the data bus during cycle 2 and 4 of each instruction (every other cycle).
+Uses only DIP chips of 64 pins or less
+
+
               +-------------------------------------+
               |     Cartridge                       |
               |                                     |
@@ -19,16 +34,16 @@
 +--------------+    | |                     / /    +-------------+
 |              |    | |                    / /     |     Console |
 |              +----|-|--------------------|-|-----+             |
-|      ^            | |              V     | |     ^   ^   ^     |
-|      |            | |              |DAE  | |     |   |   |     |
+|      ^            | |              V     | |     ^             |
+|      |            | |              |DAE  | |     |             |
 | +--------------+  | |  +--------------+  | |  +--------------+ |
-| |  DAE       PE|--/ |  |           EN |  | |  | PE DOE DAE   | |
-| |           DOE|----/  |      DATA    |  | |  |              | |
-| |              |       |      RAM     |  | |  |              |-|-> Video signal output
-| |  16-bit CPU  |  /----|A     32KW    |  | | A|   VDP        | |
-| |              |  | /--|D             |  |-|--|   Video      |-|-< Game pad input
-| |             A|--| |  |              |  | |--|   Display    | |
-| |             D|--|-|  |              |  | | D|   Processor  | |
+| |  DAE       PE|--/ |  |           EN |  | |  |  DAE         | |
+| |           DOE|----/  |              |  | |  |              | |
+| |              |       |              |  | |  |   VDP        |-|-> Video signal output
+| |  16-bit CPU  |  /----|A     DATA    |  | | A|   Video      | |
+| |              |  | /--|D     RAM     |  |-|--|   Display    |-|-< Game pad input
+| |             A|--| |  |      32KW    |  | |--|   Processor  | |
+| |             D|--|-|  |              |  | | D|              | |
 | |            FI|  | |  |              |  | |  |            FI| |
 | +--------------+  | |  +--------------+  | |  +--------------+ |
 |               |   | |                    | |                |  |
@@ -43,11 +58,78 @@ W = 16-bit word
 1 KW = 2 KB
 A bus = 16 wire address lines
 D bus = 16 wire data lines
+PE line = 1 wire enable line for PRG ROM chip
 DOE line = 1 wire enable line for DATA ROM chip
 DAE line = 1 wire enable line for DATA RAM chip
-Both CPU can assert the DOE and DAE
-VDP can assert the DAE
-lines depending on which one is in control
+CPU can assert the PE, DOE and DAE lines
+VDP can assert the DAE line
+EN = chip enable input
+FI = frame interrupt (from VDP to CPU)
+
+CPU package: 8 lines + 16*2 = 40 pins
+address x 16
+data x 16
++5v
+gnd
+clk
+frame_int
+prgRomEnable
+dataRomEnable
+dataRamEnable
+w/r
+
+Cartridge: 5 lines + 16*2 = 37 pins
+address x 16
+data x 16
++5v
+gnd
+clk
+prgRomEnable
+dataRomEnable
+
+VDP package: 16 + 16 + 14 = 46 pins
+address x 16
+data x 16
++5v
+gnd
+clk
+frame_int
+dataRamEnable
+w/r
+reset
+video R
+video G
+video B
+vsync
+hsync
+gamepad 2 lines
+
+-------------------------------
+
+
+1987 Version
+-------------------------------
+
+4 MHz
+dual bus (separte instruction bus & data bus)
+1.920 mips cpu
+All instructions take exactly 3 cycles to execute.
+1 Fetch
+2 execute
+3 memory read/write
+But cycle 1 "Fetch" for the next instruction happens concurrently with cycle 3 "memory read/write" from the previous instruction.  So the cpu effectively executes an instruction every 2 cycles.  The fetch is always correct, because the next PC is set in cycle 2.
+The VDP can use the data bus during cycle 2 of each instruction (every other cycle).
+80 pin chips
+
+W = 16-bit word
+1 W = 2B
+1 KW = 2 KB
+A bus = 16 wire address lines
+D bus = 16 wire data lines
+DOE line = 1 wire enable line for DATA ROM chip
+DAE line = 1 wire enable line for DATA RAM chip
+CPU can assert the DOE and DAE lines
+VDP can assert the DAE line
 EN = chip enable input
 FI = frame interrupt (from VDP to CPU)
 
