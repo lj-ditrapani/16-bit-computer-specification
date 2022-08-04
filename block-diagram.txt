@@ -111,7 +111,7 @@ gamepad 2 lines
 -------------------------------
 
 4 MHz
-dual bus (separte instruction bus & data bus)
+dual bus (separate instruction bus & data bus)
 1.920 mips cpu
 All instructions take exactly 3 cycles to execute.
 1 Fetch
@@ -121,11 +121,49 @@ But cycle 1 "Fetch" for the next instruction happens concurrently with cycle 3 "
 The VDP can use the data bus during cycle 2 of each instruction (every other cycle).
 80 pin chips
 
+
+  +------------------------------------------------------------+
+  |                          Cartridge                         |
+  |  +--------------+    +--------------+                      |
+  |  |     PROM     |    |     DROM     |                      |
+  |  |     64KW     |    |     32KW     |                      |
+  |  | Machine      |    |  Data ROM    |                      |
+  |  | Instructions |    |              |                      |
+  |  +--------------+    +--------------+                      |
+  |     | |                    | |                             |
+  +-+  A| |D                  A| |D                          +-+
+    |   | |                    | |                           |
+    +---|-|--------------------|-|---------------------------+
+        | |                    | |
++-+     | |         /----------/ |                             +-+
+| |     | |         | /----------/                             | |
+| +-----|-|---------|-|----------------------------------------+ |
+|       | |         | |                                          |
+|       | |         | |                                          |
+| +--------------+  | |  +--------------+       +--------------+ |
+| |     ^ v     A|--| |  |  General     |       |   VDP        | |
+| |    PC Ins   D|--|-|  |  Purpose     |       |   Video      | |
+| |     ^ v      |  | |  |  RAM         |       |   Display    |-|-< Video signal output
+| |  16-bit CPU  |  |-|--|  32KW        |      A|   Processor  | |
+| |              |  | |--|              |  /----|              |-|-< Game pad input
+| |              |  | |  |              |  | /--|              | |
+| |FI PE DOE DAE |  | |  |            EN|  | |  |       FI DAE | |
+| +--------------+  | |  +--------------+  | | D+--------------+ |
+|  |  |  |   |      | |                    | |           |   |   |
+|  ^  V  V   V      | \--------------------/ |           V   V   |
+|                   \------------------------/                   |
+|                                                                |
+|                            Console                             |
++----------------------------------------------------------------+
+
+
 W = 16-bit word
 1 W = 2B
 1 KW = 2 KB
 A bus = 16 wire address lines
 D bus = 16 wire data lines
+
+These lines also exists as in the previous single bus diagram, but i was too lazy to reproduce.
 DOE line = 1 wire enable line for DATA ROM chip
 DAE line = 1 wire enable line for DATA RAM chip
 CPU can assert the DOE and DAE lines
@@ -163,9 +201,9 @@ frame_int
 dataRamEnable
 w/r
 reset
-video R
-video G
-video B
+video Red
+video Green
+video Blue
 vsync
 hsync
 gamepad 2 lines
