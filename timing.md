@@ -1,22 +1,12 @@
 System Timing
 =============
 
-1987 version
-------------
-
 - System execution is divided into 100 ms frames (+/- 1 ms) (10 frames-per-second)
 - The cpu is active for exactly 192K instructions per frame.
 - CPU performance is 1.92 million instructions per second (MIPS).
 
 
-1983 version
-------------
-
-Same as above except:
-- The cpu is active for exactly 96K instructions per frame.
-
-
-Potential physical implementation (1987):
+Potential physical implementation:
 -----------------------------------------
 
 - CPU runs at 4 MHz.  All CPU instructions take exactly 2 cycles.
@@ -32,11 +22,3 @@ Potential physical implementation (1987):
     --------------------------------
       cpu active              cpu off
 ```
-
-
-Potential physical implementation (1987):
------------------------------------------
-
-Same as above except:
-- All CPU instructions take exactly 4 cycles instead of 2.
-- 96K CPU instructions per frame instead of 192K.
