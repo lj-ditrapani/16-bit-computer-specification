@@ -1,116 +1,3 @@
-1983 Version
--------------------------------
-
-4 MHz
-single bus
-0.960 mips cpu
-All instructions take exactly 4 cycles to execute.
-1 Fetch
-2 execute
-3 memory read/write
-4 Idle
-The VDP can use the data bus during cycle 2 and 4 of each instruction (every other cycle).
-Uses only DIP chips of 64 pins or less
-
-
-              +-------------------------------------+
-              |     Cartridge                       |
-              |                                     |
-              |          +-----------------+        |
-              |     /----|EN   PRG ROM    A|--\     |
-              |     |    |      64KW      D|--|-\   |
-              |     |    +-----------------+  | |   |
-              |     |                         | |   |
-              |     |    +-----------------+  | |   |
-              |     | /--|EN   DATA ROM   A|--| |   |
-              |     | |  |      32KW      D|--|-|   |
-              |     | |  +-----------------+  | |   |
-              |     | |                       | |   |
-              |     | |                      A| |D  |
-              +-+ PE| |DOE                    | | +-+
-                |   | |                       | | |
-                +---|-|-----------------------|-|-+
-                    | |                      / /
-+--------------+    | |                     / /    +-------------+
-|              |    | |                    / /     |     Console |
-|              +----|-|--------------------|-|-----+             |
-|      ^            | |              V     | |     ^             |
-|      |            | |              |DAE  | |     |             |
-| +--------------+  | |  +--------------+  | |  +--------------+ |
-| |  DAE       PE|--/ |  |           EN |  | |  |  DAE         | |
-| |           DOE|----/  |              |  | |  |              | |
-| |              |       |              |  | |  |   VDP        |-|-> Video signal output
-| |  16-bit CPU  |  /----|A     DATA    |  | | A|   Video      | |
-| |              |  | /--|D     RAM     |  |-|--|   Display    |-|-< Game pad input
-| |             A|--| |  |      32KW    |  | |--|   Processor  | |
-| |             D|--|-|  |              |  | | D|              | |
-| |            FI|  | |  |              |  | |  |            FI| |
-| +--------------+  | |  +--------------+  | |  +--------------+ |
-|               |   | |                    | |                |  |
-|               ^   \-|--------------------/ |                |  |
-|                     \----------------------/                V  |
-|                                                                |
-+----------------------------------------------------------------+
-
-
-W = 16-bit word
-1 W = 2B
-1 KW = 2 KB
-A bus = 16 wire address lines
-D bus = 16 wire data lines
-PE line = 1 wire enable line for PRG ROM chip
-DOE line = 1 wire enable line for DATA ROM chip
-DAE line = 1 wire enable line for DATA RAM chip
-CPU can assert the PE, DOE and DAE lines
-VDP can assert the DAE line
-EN = chip enable input
-FI = frame interrupt (from VDP to CPU)
-
-CPU package: 9 lines + 16*2 = 41 pins
-address x 16
-data x 16
-+5v
-gnd
-clk
-frame_int
-prgRomEnable
-dataRomEnable
-dataRamEnable
-w/r ram
-reset
-
-Cartridge: 5 lines + 16*2 = 37 pins
-address x 16
-data x 16
-+5v
-gnd
-clk
-prgRomEnable
-dataRomEnable
-
-VDP package: 16 + 16 + 14 = 46 pins
-address x 16
-data x 16
-+5v
-gnd
-clk
-frame_int
-dataRamEnable
-w/r
-reset
-video R
-video G
-video B
-vsync
-hsync
-gamepad 2 lines
-
--------------------------------
-
-
-1987 Version
--------------------------------
-
 4 MHz
 dual bus (separate instruction bus & data bus)
 1.920 mips cpu
@@ -126,13 +13,13 @@ The VDP can use the data bus during cycle 2 of each instruction (every other cyc
   +------------------------------------------------------------+
   |                          Cartridge                         |
   |  +--------------+    +--------------+                      |
-  |  |     PROM     |    |     DROM     |                      |
+  |  |   PRG ROM    |    |   DATA ROM   |                      |
   |  |     64KW     |    |     32KW     |                      |
   |  | Machine      |    |  Data ROM    |                      |
-  |  | Instructions |    |              |                      |
+  |  | Instructions |    |             E|                      |
   |  +--------------+    +--------------+                      |
-  |     | |                    | |                             |
-  +-+  A| |D                  A| |D                          +-+
+  |     | |                    | |     |                       |
+  +-+  A| |D                  A| |D    V                     +-+
     |   | |                    | |                           |
     +---|-|--------------------|-|---------------------------+
         | |                    | |
@@ -142,16 +29,16 @@ The VDP can use the data bus during cycle 2 of each instruction (every other cyc
 |       | |         | |                                          |
 |       | |         | |                                          |
 | +--------------+  | |  +--------------+       +--------------+ |
-| |     ^ v     A|--| |  |  General     |       |   VDP        | |
-| |    PC Ins   D|--|-|  |  Purpose     |       |   Video      | |
+| |     ^ v     A|--| |  |              |       |   VDP        | |
+| |    PC Ins   D|--|-|  |  DATA        |       |   Video      | |
 | |     ^ v      |  | |  |  RAM         |       |   Display    |-|-< Video signal output
-| |  16-bit CPU  |  |-|--|  32KW        |      A|   Processor  | |
-| |              |  | |--|              |  /----|              |-|-< Game pad input
-| |              |  | |  |              |  | /--|              | |
-| |FI PE DOE DAE |  | |  |            EN|  | |  |       FI DAE | |
-| +--------------+  | |  +--------------+  | | D+--------------+ |
-|  |  |  |   |      | |                    | |           |   |   |
-|  ^  V  V   V      | \--------------------/ |           V   V   |
+| |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  | |
+| |              |  |-|--|A             |  /----|              |-|-< Game pad input
+| |              |  | |--|D             |  | /--|              | |
+| |FI    DOE DAE |  | |  |            EN|  | | A|       FI     | |
+| +--------------+  | |  +--------------+  | |  +--------------+ |
+|  |     |   |      | |                    | |           |       |
+|  ^     V   V      | \--------------------/ |           V       |
 |                   \------------------------/                   |
 |                                                                |
 |                            Console                             |
@@ -163,8 +50,6 @@ W = 16-bit word
 1 KW = 2 KB
 A bus = 16 wire address lines
 D bus = 16 wire data lines
-
-These lines also exists as in the previous single bus diagram, but i was too lazy to reproduce.
 DOE line = 1 wire enable line for DATA ROM chip
 DAE line = 1 wire enable line for DATA RAM chip
 CPU can assert the DOE and DAE lines
@@ -175,7 +60,7 @@ FI = frame interrupt (from VDP to CPU)
 CPU package: 8 lines + 16*3 + 15 = 71 pins
 instruction address x 16
 data address x 15
-data x 16 x 2
+data lines x 16 x 2
 +5v
 gnd
 clk
@@ -193,14 +78,13 @@ gnd
 clk
 dataRomEnable
 
-VDP package: 16 + 16 + 14 = 46 pins
-address x 16
+VDP package: 13 + 16 + 13 = 42 pins
+address x 13 (only uses 8k of the 32k of RAM)
 data x 16
 +5v
 gnd
 clk
 frame_int
-dataRamEnable
 w/r
 reset
 video Red
