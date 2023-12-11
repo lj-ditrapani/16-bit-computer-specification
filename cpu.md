@@ -7,7 +7,7 @@ Design:
 - 16-bit CPU
 - 16 X 16-bit registers
 - A word is 16 bits (2 bytes)
-- Single bus, Harvard architecture
+- Dual-bus Harvard architecture
 - 16 bit program counter (PC)
 - Separate program (PRG) and data address spaces
 - Each address space has 2^16 = 65,536 addresses (16-bit resolution)
