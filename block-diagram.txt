@@ -16,7 +16,7 @@ The VDP can use the data bus during cycle 2 of each instruction (every other cyc
   |  |   PRG ROM    |    |   DATA ROM   |                      |
   |  |     64KW     |    |     32KW     |                      |
   |  | Machine      |    |  Data ROM    |                      |
-  |  | Instructions |    |             E|                      |
+  |  | Instructions |    |            EN|                      |
   |  +--------------+    +--------------+                      |
   |     | |                    | |     |                       |
   +-+  A| |D                  A| |D    V                     +-+
@@ -30,11 +30,11 @@ The VDP can use the data bus during cycle 2 of each instruction (every other cyc
 |       | |         | |                                          |
 | +--------------+  | |  +--------------+       +--------------+ |
 | |     ^ v     A|--| |  |              |       |   VDP        | |
-| |    PC Ins   D|--|-|  |  DATA        |       |   Video      | |
-| |     ^ v      |  | |  |  RAM         |       |   Display    |-|-< Video signal output
-| |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  | |
-| |              |  |-|--|A             |  /----|              |-|-< Game pad input
-| |              |  | |--|D             |  | /--|              | |
+| |    PC Ins   D|--|-|  |  DATA        |       |   Video      |-|-> Video signal output
+| |     ^ v      |  | |  |  RAM         |       |   Display    | |
+| |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  |-|-> Audio signal output
+| |              |  |-|--|A             |  /----|              | |
+| |              |  | |--|D             |  | /--|              |-|-< Gamepad input x2
 | |FI    DOE DAE |  | |  |            EN|  | | A|       FI     | |
 | +--------------+  | |  +--------------+  | |  +--------------+ |
 |  |     |   |      | |                    | |           |       |
@@ -53,7 +53,7 @@ D bus = 16 wire data lines
 DOE line = 1 wire enable line for DATA ROM chip
 DAE line = 1 wire enable line for DATA RAM chip
 CPU can assert the DOE and DAE lines
-VDP can assert the DAE line
+When FI is high, the CPU sets DOE low and DAE high.
 EN = chip enable input
 FI = frame interrupt (from VDP to CPU)
 
@@ -78,7 +78,7 @@ gnd
 clk
 dataRomEnable
 
-VDP package: 13 + 16 + 13 = 42 pins
+VDP package: 13 + 16 + 16 = 45 pins
 address x 13 (only uses 8k of the 32k of RAM)
 data x 16
 +5v
@@ -92,4 +92,11 @@ video Green
 video Blue
 vsync
 hsync
-gamepad 2 lines
+gamepad 4 lines
+audio mono output 1 line
+
+Gamepad lines:
+- latch (shared between controllers)
+- gamepad clock (shared between controllers, different from system clock)
+- data (2x, 1 per controller)
+- reuse ground and +5V
