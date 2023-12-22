@@ -6,7 +6,8 @@ Design:
 
 - 16-bit CPU
 - 16 X 16-bit registers
-- A word is 16 bits (2 bytes)
+- We use W to represent word (akin to B representing a Byte).
+- A word is 16 bits (2 bytes).  This means 1 KW is 2 KB.
 - Dual-bus Harvard architecture
 - 16 bit program counter (PC)
 - Separate program (PRG) and data address spaces
@@ -15,9 +16,9 @@ Design:
 - 32 KW cartridge DATA ROM chip
 - 32 KW console DATA RAM chip
 - All ROM and RAM are word-addressable
-- CPU addressable ROM + RAM:  128 KWords = 256 KB = 2 M-bit
+- CPU addressable program + data:  128 KW = 256 KB = 2 M-bit
 - All instructions are 16 bits long
-- 15 instructions (4-bit op-code)
+- Instruction set contains 15 instructions (4-bit op-code)
 
 The processor instruction set architecture (ISA) can be found in
 [ISA.md](ISA.md).
