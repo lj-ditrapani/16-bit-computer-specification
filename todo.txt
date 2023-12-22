@@ -15,8 +15,30 @@ Ideas
 - Rename END to IDL?
 - Rename BRV to BRN
     - never support carry or overflow
-    - or could accomodate carry only, but not overflow
+    - or could accommodate carry only, but not overflow
     - would want carry+overflow for calculator, spread sheet, accounting, BigInt
 - Keep BRV and add BRF back in
     - to allow carry & overflow
     - could define it, but just have BRF unimplemented for a while?
+
+
+- 512 tiles: 256 bg 128 fg
+    - so 3 KW of tile ram space instead of 2 KW
+- 208 words of ram for color cells
+- Io ram for frame count down to next frame interrupt
+- Up to 60 fps
+- New frame interrupt
+- Fi start and Fi end
+- Fi start sets CPU PC to copy address. Program rom must then copy over data to io regs. Less than 3.8 ms.
+- Fi end sets CPU PC to program loop entry point address.
+- so only 4 KW of RAM space is reserved.  The rest of RAM is open for the program to use how it wants.
+- add audio
+- vdp copies over 16 color palette during vblank
+- vdp copies over 8 color cells for current scan line during hblank
+- vdp copies over current tile cell, and both tile rows (fg and bg) for the current line just-in-time to render the next 8 pixels.
+- vdp has an internal 27 word cached
+    - 16 word color palette cached
+    - 8 word color cells for current line
+    - 1 word tile cell
+    - 1 word background tile row (8 pixels)
+    - 1 word foreground tile row (8 pixels)
