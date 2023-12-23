@@ -1,13 +1,13 @@
 4 MHz
 dual bus (separate instruction bus & data bus)
-1.920 mips cpu
+2 mips cpu
 All instructions take exactly 3 cycles to execute.
-1 Fetch
-2 execute
-3 memory read/write
+- 1. Fetch
+- 2. execute
+- 3. memory read/write
 But cycle 1 "Fetch" for the next instruction happens concurrently with cycle 3 "memory read/write" from the previous instruction.  So the cpu effectively executes an instruction every 2 cycles.  The fetch is always correct, because the next PC is set in cycle 2.
 The VDP can use the data bus during cycle 2 of each instruction (every other cycle).
-80 pin chips
+Max pin-out per chip is 80 pins.
 
 
   +------------------------------------------------------------+
@@ -32,14 +32,28 @@ The VDP can use the data bus during cycle 2 of each instruction (every other cyc
 | |     ^ v     A|--| |  |              |       |   VDP        | |
 | |    PC Ins   D|--|-|  |  DATA        |       |   Video      |-|-> Video signal output
 | |     ^ v      |  | |  |  RAM         |       |   Display    | |
-| |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  |-|-> Audio signal output
+| |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  | |
 | |              |  |-|--|A             |  /----|              | |
-| |              |  | |--|D             |  | /--|              |-|-< Gamepad input x2
-| |FI    DOE DAE |  | |  |            EN|  | | A|       FI     | |
+| |              |  | |--|D             |  | /--|              | |
+| |VS/E  DOE DAE |  | |  |            EN|  | | A|       VS/E   | |
 | +--------------+  | |  +--------------+  | |  +--------------+ |
 |  |     |   |      | |                    | |           |       |
-|  ^     V   V      | \--------------------/ |           V       |
-|                   \------------------------/                   |
+|  ^     V   V      | \--------------------| |           V       |
+|                   \------------------------|                   |
+|                                          | |                   |
+|                                          | |                   |
+|                                          | |  +--------------+ |
+|                                          | |  |   APP        | |
+|                                          | |  |   Audio &    |-|-> Audio signal output
+|                                          | |  |   Peripheral | |
+|                                          | | D|   Processor  |-|-< Gamepad input x4
+|                                          | \--|              | |
+|                                          \----|              |-|<> Cassette and LinkHub
+|                                              A|              | |
+|                                               +--------------+ |
+|                                                                |
+|                                                                |
+|                                                                |
 |                                                                |
 |                            Console                             |
 +----------------------------------------------------------------+
@@ -53,9 +67,11 @@ D bus = 16 wire data lines
 DOE line = 1 wire enable line for DATA ROM chip
 DAE line = 1 wire enable line for DATA RAM chip
 CPU can assert the DOE and DAE lines
-When FI is high, the CPU sets DOE low and DAE high.
+On even CPU cycles (execute cycle), the CPU sets DOE low and DAE high.
+When the CPU is disabled, the CPU sets DOE low and DAE high.
 EN = chip enable input
-FI = frame interrupt (from VDP to CPU)
+VS = vertical blank start interrupt (from VDP to CPU)
+VE = vertical blank end interrupt (from VDP to CPU)
 
 CPU package: 8 lines + 16*3 + 15 = 71 pins
 instruction address x 16
