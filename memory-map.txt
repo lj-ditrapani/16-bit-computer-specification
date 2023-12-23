@@ -11,65 +11,28 @@ Console RAM             32 KW   $8000-$FFFF
 
 Console RAM Map
 ============================================
-General RAM             24 KW   $8000-$DFFF
-Tiles                    2 KW   $E000-$E7FF
-I/O registers            1 KW   $E800-$EBFF
-Unused/future use        1 KW   $EC00-$EFFF
-Reserved for VDP use     4 KW   $F000-$FFFF
+General RAM             28 KW   $8000-$EFFF
+Background Tiles         2 KW   $F000-$F7FF
+Foreground Tiles         1 KW   $F800-$FBFF
+I/O Memory               1 KW   $FC00-$FFFF
 
 
-RAM for I/O registers
+Details of I/O Memory
 =====================
 
 Purpose             Words   Offset  I/O
 -----------------------------------------------
-LinkHub+Disk          128   $0000   $E800-$E87F
-Gamepad                 1   $0080   $E880-$E880
-Keyboard                3   $0081   $E881-$E883
-Unused                 44   $0084   $E884-$E8AF
-Audio                  16   $00B0   $E8B0-$E8BF
-Foreground Palettes     8   $00C0   $E8C0-$E8C7
-Background Palettes     8   $00C8   $E8C8-$E8CF
-Color Cells            52   $00D0   $E8D0-$E903
-Unused                 12   $0104   $E904-$E90F
-Tile Cells            750   $0112   $E910-$EBFD
-Unused                  2   $0104   $EBFE-$EBFF
+Audio                  16   $0000   $FC00-$F00F
+Background Palettes     8   $0010   $FC10-$FC17
+Foreground Palettes     8   $0018   $FC18-$FC1F
+Color Cells           200   $0020   $FC20-$FCE7
+Unused                 24   $00E8   $FCE8-$FCFF
+Tile Cells            750   $0100   $FD00-$FFED
+Unused                  2   $03EE   $FFEE-$FFEF
+Frame skip              1   $03F0   $FFF0-$FFF0
+Unused                  7   $03F1   $FFF1-$FFF7
+Gamepad                 2   $03F8   $FFF8-$FFF9
+Keyboard                2   $03FA   $FFFA-$FFFB
+Cassette / LinkHub      4   $03FC   $FFFC-$FFFF
 
 Total: 1,024 words
-
-
-Frame Interrupt (FI)
-----------------------------
-
-The computer starts executing with the program counter
-PC set to $0000.
-At the end of the 75 ms CPU active time for each frame,
-the VDP sets the FI to high.  This causes the CPU to
-stop execution and sleep.
-At the end of the frame (after the next 25 ms VDP phase),
-the VDP sets the FI back to low.
-When the FI goes from high to low, the CPU sets the
-program counter (PC) to $0100 and starts running again.
-
-
-Reading and writing to the I/O RAM
-----------------------------------
-
-The VDP copies the output registers of the I/O registers to the VDP
-section of ram during the 25% VDP portion of each frame.
-The VDP copies the input registers from VDP section of ram to the I/O
-registers during the 25% VDP portion of each frame.
-The VDP can take up 2 two frames to copy over the tiles, so changes
-to tile ram can take an extra frame before they are reflected on
-screen.  When modifying tile ram, you should wait a frame before
-trying to use the tile in the tile cells.
-The VDP uses the reserved VDP section of ram to render the screen
-contents.
-This is a form of double buffering, allowing the CPU to freely modify
-the I/O registers without messing up the current video rendering.
-
-
-Video
------
-
-See video.md file for more details on the Video RAM I/O.
