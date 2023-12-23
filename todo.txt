@@ -42,3 +42,7 @@ Ideas
     - 1 word tile cell
     - 1 word background tile row (8 pixels)
     - 1 word foreground tile row (8 pixels)
+- APPU: audio and peripheral processing unit
+    - 6 to 16 audio registers
+    - 2 gamepad registers
+    - 2 keyboard registers
