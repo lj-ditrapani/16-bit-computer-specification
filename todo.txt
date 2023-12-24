@@ -28,21 +28,8 @@ Ideas
 - Io ram for frame count down to next frame interrupt
 - Up to 60 fps
 - New frame interrupt
-- Fi start and Fi end
-- Fi start sets CPU PC to copy address. Program rom must then copy over data to io regs. Less than 3.8 ms.
-- Fi end sets CPU PC to program loop entry point address.
+- CI cpu_interrupt and AI apu_interrupt
+- CI sets CPU PC to copy address. Program rom must then copy over data to io regs. Less than 3.8 ms.
+- AI sets CPU PC to program loop entry point address.  And pauses CPU and give APU control of bus.
 - so only 4 KW of RAM space is reserved.  The rest of RAM is open for the program to use how it wants.
 - add audio
-- vdp copies over 16 color palette during vblank
-- vdp copies over 8 color cells for current scan line during hblank
-- vdp copies over current tile cell, and both tile rows (fg and bg) for the current line just-in-time to render the next 8 pixels.
-- vdp has an internal 27 word cached
-    - 16 word color palette cached
-    - 8 word color cells for current line
-    - 1 word tile cell
-    - 1 word background tile row (8 pixels)
-    - 1 word foreground tile row (8 pixels)
-- APU: audio and peripheral unit
-    - 6 to 16 audio registers
-    - 2 gamepad registers
-    - 2 keyboard registers
