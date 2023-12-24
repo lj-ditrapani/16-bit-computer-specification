@@ -35,7 +35,7 @@ Max pin-out per chip is 80 pins.
 | |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  | |
 | |              |  |-|--|A             |  /----|              | |
 | |              |  | |--|D             |  | /--|              | |
-| |VS/E  DOE DAE |  | |  |            EN|  | | A|       VS/E   | |
+| |C/AI  DOE DAE |  | |  |            EN|  | | A|      CI/AI   | |
 | +--------------+  | |  +--------------+  | |  +--------------+ |
 |  |     |   |      | |                    | |           |       |
 |  ^     V   V      | \--------------------| |           V       |
@@ -43,16 +43,16 @@ Max pin-out per chip is 80 pins.
 |                                          | |                   |
 |                                          | |                   |
 |                                          | |  +--------------+ |
-|                                          | |  |   APP        | |
+|                                          | |  |   APU        | |
 |                                          | |  |   Audio &    |-|-> Audio signal output
 |                                          | |  |   Peripheral | |
-|                                          | | D|   Processor  |-|-< Gamepad input x4
+|                                          | | D|   Unit       |-|-< Gamepad input x4
 |                                          | \--|              | |
 |                                          \----|              |-|<> Cassette and LinkHub
-|                                              A|              | |
+|                                              A|      CI/AI   | |
 |                                               +--------------+ |
-|                                                                |
-|                                                                |
+|                                                        |       |
+|                                                        ^       |
 |                                                                |
 |                                                                |
 |                            Console                             |
@@ -67,23 +67,29 @@ D bus = 16 wire data lines
 DOE line = 1 wire enable line for DATA ROM chip
 DAE line = 1 wire enable line for DATA RAM chip
 CPU can assert the DOE and DAE lines
-On even CPU cycles (execute cycle), the CPU sets DOE low and DAE high.
-When the CPU is disabled, the CPU sets DOE low and DAE high.
-EN = chip enable input
-VS = vertical blank start interrupt (from VDP to CPU)
-VE = vertical blank end interrupt (from VDP to CPU)
+On even CPU cycles (execute cycle), the CPU does the following:
+- sets DOE low and DAE high so the vdp can access DATA RAM.
+- sets the 3 most significant bits of the address lines to access the last 4k of DATA RAM to complete the VDP address memory reads.
+- sets the memory read/write pin to read, since the vdp only reads RAM
+When the CPU is disabled, the CPU does the following
+- sets DOE low and DAE high so the APU can access DATA RAM.
+- sets the 3 most significant bits of the address lines to access the last 4k of DATA RAM to complete the APU address memory accesses.
+EN = memory chip enable input
+CI = vertical blank CPU interrupt (from VDP to CPU & APU)
+AI = vertical blank APU interrupt (from VDP to CPU & APU)
 
-CPU package: 8 lines + 16*3 + 15 = 71 pins
+CPU package: 9 lines + 16*3 + 15 = 72 pins
 instruction address x 16
 data address x 15
 data lines x 16 x 2
-+5v
-gnd
-clk
-frame_int
+high voltage
+ground
+clock
+cpu_interrupt
+apu_interrupt
 dataRomEnable
 dataRamEnable
-w/r
+memory read/write
 reset
 
 Cartridge: 4 lines + 16*4 = 68 pins
@@ -94,25 +100,39 @@ gnd
 clk
 dataRomEnable
 
-VDP package: 13 + 16 + 16 = 45 pins
-address x 13 (only uses 8k of the 32k of RAM)
+VDP package: 12 + 12 + 16 = 40 pins
+address x 12 (only uses bottom 4k of the 32k of DATA RAM)
 data x 16
-+5v
-gnd
-clk
-frame_int
-w/r
+high voltage
+ground
+clock
+cpu_interrupt
+apu_interrupt
+memory read/write
 reset
 video Red
 video Green
 video Blue
 vsync
 hsync
-gamepad 4 lines
+
+APU package: 45 pins
+address x 12 (only uses bottom 1k of the 32k of DATA RAM)
+data x 16
+high voltage
+ground
+clock
+cpu_interrupt
+apu_interrupt
+memory read/write
+reset
+gamepad 6 lines
 audio mono output 1 line
+cassette/linkhub data 1 lines
+linkhub control 2 lines
 
 Gamepad lines:
 - latch (shared between controllers)
 - gamepad clock (shared between controllers, different from system clock)
-- data (2x, 1 per controller)
+- data (4x, 1 per controller)
 - reuse ground and +5V
