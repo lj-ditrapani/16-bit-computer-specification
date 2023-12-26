@@ -1,15 +1,3 @@
-- Cycle count
-    - separate
-        - true physical implementation options
-            - copy stuff to vdp
-            - Pin out
-        - required physical specs
-            - copy stuff to vdp (what can be changed)
-        - or just don't touch stuff you shouldn't
-            - so that multiple implementations work
-    - Bus access is interleaved between CPU & VDP
-        - even clocks = CPU, odd clocks = VDP
-
 Ideas
 -----
 - Rename END to IDL?
@@ -21,15 +9,5 @@ Ideas
     - to allow carry & overflow
     - could define it, but just have BRF unimplemented for a while?
 
-
-- 512 tiles: 256 bg 128 fg
-    - so 3 KW of tile ram space instead of 2 KW
-- 208 words of ram for color cells
-- Io ram for frame count down to next frame interrupt
-- Up to 60 fps
-- New frame interrupt
-- CI cpu_interrupt and AI apu_interrupt
-- CI sets CPU PC to copy address. Program rom must then copy over data to io regs. Less than 3.8 ms.
-- AI sets CPU PC to program loop entry point address.  And pauses CPU and give APU control of bus.
-- so only 4 KW of RAM space is reserved.  The rest of RAM is open for the program to use how it wants.
+- define frame skip
 - add audio
