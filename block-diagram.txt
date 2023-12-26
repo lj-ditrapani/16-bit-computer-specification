@@ -1,6 +1,6 @@
 4 MHz
 dual bus (separate instruction bus & data bus)
-2 mips cpu
+2.6775 mips cpu
 All instructions take exactly 3 cycles to execute.
 - 1. Fetch
 - 2. execute
@@ -135,4 +135,4 @@ Gamepad lines:
 - latch (shared between controllers)
 - gamepad clock (shared between controllers, different from system clock)
 - data (4x, 1 per controller)
-- reuse ground and +5V
+- reuse system ground and +5V
