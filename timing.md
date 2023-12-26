@@ -62,7 +62,7 @@ VDP and APU internal Buffers
     - 2 word background tile row (8 pixels) (current/next)
     - 2 word foreground tile row (8 pixels) (current/next)
 - APU: audio and peripheral unit
-    - 6 to 16 audio registers
+    - 5 audio registers
     - 2 gamepad registers
     - 2 keyboard registers
     - 4 serial registers (for cassette and linkHub use)
