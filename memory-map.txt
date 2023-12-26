@@ -12,13 +12,18 @@ Console RAM             32 KW   $8000-$FFFF
 Console RAM Map
 ============================================
 General RAM             28 KW   $8000-$EFFF
-Background Tiles         2 KW   $F000-$F7FF
-Foreground Tiles         1 KW   $F800-$FBFF
-I/O Memory               1 KW   $FC00-$FFFF
+I/O Memory               4 KW   $F000-$FFFF
 
 
 Details of I/O Memory
 =====================
+Background Tiles         2 KW   $F000-$F7FF
+Foreground Tiles         1 KW   $F800-$FBFF
+Other I/O Memory         1 KW   $FC00-$FFFF
+
+
+Detail of Other I/O Memory
+==========================
 
 Purpose             Words   Offset  I/O
 -----------------------------------------------
