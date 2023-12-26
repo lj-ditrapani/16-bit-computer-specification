@@ -18,9 +18,12 @@ Specification
 - CPU:  [cpu.md](cpu.md)
 - Block Diagram: [block-diagram.txt](block-diagram.txt)
 - Memory Map:  [memory-map.txt](memory-map.txt)
-- Video:  [video.md](video.md)
-- Gamepad:  [gamepad.md](gamepad.md)
 - Timing: [timing.md](timing.md)
+- Video:  [video.md](video.md)
+- APU: [apu.md](apu.md)
+- Gamepad:  [gamepad.md](gamepad.md)
+- Audio: [audio.md](audio.md)
+- Cassette/LinkHub: [serial-io.md](serial-io.md)
 
 
 Assembly Language

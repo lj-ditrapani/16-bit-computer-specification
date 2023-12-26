@@ -10,4 +10,3 @@ Ideas
     - could define it, but just have BRF unimplemented for a while?
 
 - define frame skip
-- add audio
