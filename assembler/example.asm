@@ -2,6 +2,10 @@
 WRD init RF
 JMP RF
 
+[io-ram]
+WRD display RF
+JMP RF
+
 [main]
 # Not 1st frame.  On 2nd or later frame.
 # Normally, your game loop would go here
@@ -11,6 +15,9 @@ JMP RF
 END
 
 (init)
+END
+
+(display)
 # Register names
 .const dataR 2
 .const counter 3
@@ -30,7 +37,7 @@ INC to_addr
 LOD from_addr dataR
 STR dataR to_addr
 # set color cells to all 0
-WRD 52 counter
+WRD 200 counter
 WRD color_cells_loop loop
 WRD color_cells to_addr
 (color_cells_loop)
