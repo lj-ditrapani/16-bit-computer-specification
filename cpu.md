@@ -21,7 +21,7 @@ Design:
 - Instruction set contains 15 instructions (4-bit op-code)
 
 The processor instruction set architecture (ISA) can be found in
-[ISA.md](ISA.md).
+[isa.md](isa.md).
 
 
 Author:  Lyall Jonathan Di Trapani

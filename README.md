@@ -16,14 +16,15 @@ Specification
 ------------------------
 
 - CPU:  [cpu.md](cpu.md)
-- Block Diagram: [block-diagram.txt](block-diagram.txt)
+- ISA:  [isa.md](isa.md)
+- Block Diagram:  [block-diagram.txt](block-diagram.txt)
 - Memory Map:  [memory-map.txt](memory-map.txt)
-- Timing: [timing.md](timing.md)
+- Timing:  [timing.md](timing.md)
 - Video:  [video.md](video.md)
-- APU: [apu.md](apu.md)
+- APU:  [apu.md](apu.md)
 - Gamepad:  [gamepad.md](gamepad.md)
-- Audio: [audio.md](audio.md)
-- Cassette/LinkHub: [serial-io.md](serial-io.md)
+- Audio:  [audio.md](audio.md)
+- Cassette/LinkHub:  [serial-io.md](serial-io.md)
 
 
 Assembly Language
