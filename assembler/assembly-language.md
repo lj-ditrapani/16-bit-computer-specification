@@ -58,7 +58,7 @@ io-ram: a memory address in ROM.  The PC is set to this address when the CPU int
 This is the address from where your program knows it is allowed to write into the IO RAM (the last 4 KW of DATA RAM).
 
 ```
-io-ram $0100
+io-ram $0080
 ```
 
 Main: a memory address in ROM.  The PC is set to this address when the APU interrupt is triggered (during vertical blank).
