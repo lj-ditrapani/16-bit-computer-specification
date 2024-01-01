@@ -317,9 +317,10 @@ DEC     Decrement contents of register by 1
 NOT     Invert bits of source register and save to destination register
 JMP     Unconditional jump to address in register
 SPC     Add 3 to current program counter (PC) and save result to register
+ZER     Zero register; set register value to 0.
 ```
 
-The table below provides examples of the 7 pseudo instructions with
+The table below provides examples of the 9 pseudo instructions with
 the corresponding translated real instructions in the right column.
 Assume PC is $1980 for the SPC instruction translation.
 
@@ -334,6 +335,7 @@ DEC R3        |   SBI R3 1 R3
 NOT R1 R2     |   NOR R1 R1 R2
 JMP R3        |   BRV R0 NZP R3
 SPC R5        |   HBY $19 R5    LBY $83 R5
+ZER R0        |   ZER R0 R0 R0
 ```
 
 
