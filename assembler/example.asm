@@ -15,9 +15,20 @@ JMP RF
 END
 
 (init)
+.const first_frame_flag $8000
+WRD first_frame_flag RF
+WRD 1 R1
+STR R1 RF
 END
 
 (display)
+WRD first-frame RF
+WRD first_frame_flag RE
+LOD RE R1
+BRV R1 P RF
+END
+
+(first-frame)
 # Register names
 .const dataR 2
 .const counter 3
@@ -27,6 +38,12 @@ END
 .const func 8
 .const loop 9
 .const return $A
+# Clear first_frame_flag
+ZER R1
+STR R1 RE
+# Set frame skip to 0 (run at 60 fps)
+WRD frame_skip RE
+STR R1 RE
 # Copy colors over to background_palette 0
 WRD colors from_addr
 WRD background_palettes to_addr
@@ -73,7 +90,7 @@ WRD write_tile func
 
 # set source & dest registers for blank tile
 WRD blank_tile from_addr
-CPY tiles to_addr
+WRD background_tiles to_addr
 SPC return
 JMP func
 
