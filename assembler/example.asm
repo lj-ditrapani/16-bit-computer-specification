@@ -44,6 +44,20 @@ STR R1 RE
 # Set frame skip to 0 (run at 60 fps)
 WRD frame_skip RE
 STR R1 RE
+# Set serial I/O command to 'do nothing' (cassette/hubLink)
+WRD cassette RE
+STR R1 RE
+# Mute audio
+WRD audio RE
+STR R1 RE
+INC RE
+STR R1 RE
+INC RE
+STR R1 RE
+INC RE
+STR R1 RE
+INC RE
+STR R1 RE
 # Copy colors over to background_palette 0
 WRD colors from_addr
 WRD background_palettes to_addr
@@ -77,10 +91,10 @@ BRV counter P loop
 WRD 373 temp
 WRD tile_cells to_addr
 ADD temp to_addr
-# ASCII letter H
+# ASCII letter H (72 = $48)
 WRD $48 dataR
 STR dataR to_addr
-# ASCII letter I
+# ASCII letter I (73 = $49)
 INC to_addr
 INC dataR
 STR dataR to_addr
@@ -97,16 +111,16 @@ JMP func
 # set source & dest registers for H tile
 WRD h_tile from_addr
 # ascii H = 72
-# $F000 + (8 * 72) = 62016
-WRD 62016 to_addr
+# $F000 + (8 * 72) = 62016 = $F240
+WRD $F240 to_addr
 SPC return
 JMP func
 
 # set source & dest registers for I tile
 WRD i_tile from_addr
 # ascii I = 73
-# $F000 + (8 * 73) = 62024
-WRD 62024 to_addr
+# $F000 + (8 * 73) = 62024 = $F248
+WRD $F248 to_addr
 SPC return
 JMP func
 
