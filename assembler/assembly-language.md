@@ -238,7 +238,7 @@ SBI  R i4  R
 AND  R  R  R
 ORR  R  R  R
 XOR  R  R  R
-ROR  R  R  R
+NOR  R  R  R
 SHF  R  D  A  R
 BRV  R  V  R
 BRF  F  R
