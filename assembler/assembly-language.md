@@ -222,7 +222,7 @@ Instructions
 ------------
 
 The instructions define the instructions that go into the cartridge ROM.
-These are the actual 15 hardware instructions.  They map 1-to-1 to the real
+These are the actual 16 hardware instructions.  They map 1-to-1 to the real
 CPU instructions. (See ISA.md for instruction definition and details.)
 
 ```
@@ -240,7 +240,8 @@ ORR  R  R  R
 XOR  R  R  R
 ROR  R  R  R
 SHF  R  D  A  R
-BRV  R  C  R
+BRV  R  V  R
+BRF  F  R
 
 Legend
 ---------------------------------------------------------------------
@@ -249,7 +250,8 @@ i8                  8-bit unsigned integer
 R                   Register number 0-15 (R0-R9 & RA-RF are symbols)
 D                   Direction (L or R)
 A                   Shift amount (1-8)
-C                   any combination of [NZP]
+V                   any combination of [NZP]
+F                   any single character of [-CV]
 ---------------------------------------------------------------------
 ```
 
@@ -295,6 +297,13 @@ SHF R5 R 7 R0   #  $D5E0
 
 If value in R7 is negative or zero, PC = value in RB
 BRV R7 NZ RB    #  $E7B6
+
+If both carry and overflow flags are **NOT** set, jump to address in RB
+BRF - RB        #  $F0B0
+If carry flag is set, jump to address in RB
+BRF C RB        #  $F0B1
+If overflow flag is set, jump to address in RB
+BRF V RB        #  $F0B2
 ```
 
 

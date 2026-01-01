@@ -21,7 +21,7 @@ Instruction Meaning
     C NOR    Nor: logical nor two values
     D SHF    Shift: shift bits in register in direction and by amount
     E BRV    Branch on value (negative, zero, positive)
-    F ---    Not used
+    F BRF    Branch on flags (carry or overflow)
 
 
 Instruction operation
@@ -42,7 +42,7 @@ Instruction operation
     C NOR    RS1 nor RS2 -> RD
     D SHF    RS1 shifted by immd4 -> RD
     E BRV    if (RS1 matches NZP) then (RS2 -> PC)
-    F ---    Not used
+    F BRF    if (C or V is set) then (RS2 -> PC)
 
 
     Legend:
@@ -58,6 +58,7 @@ Instruction operation
 
 Shift, zero fill
 
+    Carry contains bit of last bit shifted out
     4-bit immd4 format:  DAAA
     D is direction:  0 left, 1 right
     AAA is (amount - 1)
@@ -85,6 +86,23 @@ positive respectively.
     0000    never jump (no operation; NOP)
 
 
+### BRF ###
+
+The 4th nibble in a BRF instruction is the condF (condition) nibble.  The two
+most significant bits are unused.  The other 2 bits represent the state of the
+overflow, and carry flags.
+
+    00VC    check the overflow (V), and carry (C) flags
+    0000    jump if carry and overflow are *NOT* set
+    0010    jump if overflow set (regardless of carry)
+    0001    jump if carry set (regardless of overflow)
+    0011    jump if overflow or carry is set
+
+Normally, you want to handle carry or overflow situations differently, hence
+0010 and 0001.
+If you are interested in ensuring NO exceptions then use 0000.
+
+
 Instruction format
 ------------------
 
@@ -104,8 +122,8 @@ Instruction format
     B XOR    - RRW-   RS1 RS2  RD
     C NOR    - RRW-   RS1 RS2  RD
     D SHF    - R-W-   RS1  DA  RD
-    E BRV    - RR-W   RS1 RS2  cond
-    F ---    - ----
+    E BRV    - RR-W   RS1 RS2  condV
+    F BRF    - -R-W     0 RS2  condF
 
 
     Legend:
@@ -120,4 +138,5 @@ Instruction format
        UC   Unsigned constant (1st or 2nd nibble)
         0   Always zero, unused
        DA   Direction and amount to shift bits
-     cond   Value condition bits 0NZP
+    condV   Value condition bits 0NZP
+    condF   Flag condition bits 00VC

@@ -18,7 +18,7 @@ Design:
 - All ROM and RAM are word-addressable
 - CPU addressable program + data:  128 KW = 256 KB = 2 M-bit
 - All instructions are 16 bits long
-- Instruction set contains 15 instructions (4-bit op-code)
+- Instruction set contains 16 instructions (4-bit op-code)
 
 The processor instruction set architecture (ISA) can be found in
 [isa.md](isa.md).
