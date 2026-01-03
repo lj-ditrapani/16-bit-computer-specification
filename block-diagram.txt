@@ -46,10 +46,10 @@ Max pin-out per chip is 80 pins.
 |                                          | |  |   APU        | |
 |                                          | |  |   Audio &    |-|-> Audio signal output
 |                                          | |  |   Peripheral | |
-|                                          | | D|   Unit       |-|-< Gamepad input x4
+|                                          | | A|   Unit       |-|-< Gamepad input x4
 |                                          | \--|              | |
 |                                          \----|              |-|<> Cassette and LinkHub
-|                                              A|      CI/AI   | |
+|                                              D|      CI/AI   | |
 |                                               +--------------+ |
 |                                                        |       |
 |                                                        ^       |
