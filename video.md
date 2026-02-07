@@ -11,13 +11,16 @@ Overview
 The Video Display Processor (VDP) is responsible
 for generating the video signal.
 
-- 240 x 200 pixel screen
+- 320 x 200 2-layer pixel screen or 640 x 200 1-layer pixel screen
 - Tile set: (8 x 8, 2 bpp)
-    - 256 background tiles
-    - 128 foreground tiles
-- 2 layers:
-    - Background layer: 30 x 25 cells per frame
-    - Foreground layer: 30 x 25 cells per frame
+    - 128 background only tiles
+    - 128 shared (background or foreground) tiles
+    - 96 foreground only tiles
+- 2 layers (in 320 x 200 mode):
+    - Background layer: 40 x 25 cells per frame
+    - Foreground layer: 40 x 25 cells per frame
+- 1 layer (in 640 x 200 mode):
+    - Background layer: 80 x 25 cells per frame
 - Colors are 6-bits with (2:2:2) RGB color format
 - Up to 28 simultaneous colors on screen
 
@@ -28,12 +31,13 @@ Video RAM
 ```
 Words   Purpose                 Description
 ------------------------------------------------------------------------------
+1,024   Background Tiles        128 8 x 8 2 bpp tiles (8 W / tile)
+1,024   Shared Tiles            128 8 x 8 2 bpp tiles (8 W / tile)
+  768   Foreground Tiles         96 8 x 8 2 bpp tiles (8 W / tile)
+  250   Color Cells             15 x 13 grid; 4 bits/cell; 4 words per row x 13
+1,000   Tile Cells              30 x 25 cells x 1 word
     8   Background Palettes     16 6-bit colors; 4 groups of 4 colors
     8   Foregroud Palettes      16 6-bit colors; 4 groups of 4 colors
-  200   Color Cells             15 x 13 grid; 4 bits/cell; 4 words per row x 13
-  750   Tile Cells              30 x 25 cells x 1 word
-2,048   Background Tiles        256 8 x 8 2 bpp tiles (8 W / tile)
-1,024   Foreground Tiles        128 8 x 8 2 bpp tiles (8 W / tile)
 
 Total: 4,038 words
 ```

@@ -1,7 +1,7 @@
 Serial IO
 =========
 
-Serial communication is handled by the APU.
+Serial communication is handled by the SPD.
 Devices that connect to the serial port are the cassette drive and the LinkHub.  Only one can be connected at a time.
 The serial port is just a standard TRRS audio jack.
 
@@ -30,7 +30,7 @@ The software should then write to the cassette control RAM address signaling the
 LinkHub
 -------
 
-The LinkHub allows up to 4 ljd computers to communicate with each other.  This allows programs to be written that would run on up-to 4 machines, allowing each user to see their own private screen.  Since, each console supports up to 4 controllers, up to 16 players could play the same game.  Of course, each screen would be shared by each group of 4 players.
+The LinkHub allows up to 4 ljd computers to communicate with each other.  This allows programs to be written that would run on up-to 4 machines, allowing each user to see their own private screen.  Since, each console supports up to 3 controllers when LinkHub is in use, up to 12 players could play the same game.  Of course, each screen would be shared by each group of 3 players.
 
 Each machine can only transmit or receive 4 Bytes (2 words) per frame.
 Each of the 4 connections to the LinkHub device are labeled as:
@@ -39,5 +39,5 @@ Each of the 4 connections to the LinkHub device are labeled as:
 - node 2
 - node 3
 
-The software program that wants to support the LinkHub is expected to allow the user to specify the want use the LinkHub.
+The software program that wants to support the LinkHub is expected to allow the user to specify they want use the LinkHub.
 The software is then expected to prompt the user with gamepad 1 to enter the port of the LinkHub the console is connected to.

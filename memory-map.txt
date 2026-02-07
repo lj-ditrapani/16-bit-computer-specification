@@ -33,10 +33,9 @@ Foreground Palettes     8   $0018   $FC18-$FC1F
 Color Cells           200   $0020   $FC20-$FCE7
 Unused                 24   $00E8   $FCE8-$FCFF
 Tile Cells            750   $0100   $FD00-$FFED
-Unused                  2   $03EE   $FFEE-$FFEF
-Frame skip              1   $03F0   $FFF0-$FFF0
-Unused                  7   $03F1   $FFF1-$FFF7
-Gamepad                 2   $03F8   $FFF8-$FFF9
+Unused                 10   $03EE   $FFEE-$FFF7
+SPI control             1   $03F8   $FFF8-$FFF8
+Gamepad                 1   $03F9   $FFF9-$FFF9
 Keyboard                2   $03FA   $FFFA-$FFFB
 Cassette / LinkHub      4   $03FC   $FFFC-$FFFF
 

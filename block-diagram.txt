@@ -64,9 +64,6 @@ W = 16-bit word
 1 KW = 2 KB
 A bus = 16 wire address lines
 D bus = 16 wire data lines
-DOE line = 1 wire enable line for DATA ROM chip
-DAE line = 1 wire enable line for DATA RAM chip
-CPU can assert the DOE and DAE lines
 On even CPU cycles (execute cycle), the CPU does the following:
 - sets DOE low and DAE high so the vdp can access DATA RAM.
 - sets the 3 most significant bits of the address lines to access the last 4k of DATA RAM to complete the VDP address memory reads.
@@ -78,61 +75,73 @@ EN = memory chip enable input
 CI = vertical blank CPU interrupt (from VDP to CPU & APU)
 AI = vertical blank APU interrupt (from VDP to CPU & APU)
 
-CPU package: 9 lines + 16*3 + 15 = 72 pins
-instruction address x 16
-data address x 15
-data lines x 16 x 2
+CPU package: 12 lines + 16*2 = 44 pins PLCC
+address x 16
+data lines x 16
 high voltage
 ground
 clock
-cpu_interrupt
-apu_interrupt
-dataRomEnable
-dataRamEnable
-memory read/write
 reset
+PGR rom enable (high on Instruction fetch cycles)
+Data rom enable (high if device is default and NOT A15)
+Data ram enable (high if device is default and A15)
+Video ram enable (high if device is vram and NOT device access disabled)
+VDP enable (high if device is VDP and NOT device access disabled)
+APU/SIO enable (high if device is APU/SIO and NOT device access disabled)
+memory read/write (high on 3rd instruction cycle if STR instruction, else low)
+device access disable input (set high by vdp during rendering)
 
-Cartridge: 4 lines + 16*4 = 68 pins
-address x 16 x 2
-data x 16 x 2
+Cartridge: 5 lines + 16*2 = 37 pins
+address x 16
+data x 16
 +5v
 gnd
 clk
 dataRomEnable
+pgrRomEnable
 
-VDP package: 12 + 12 + 16 = 40 pins
-address x 12 (only uses bottom 4k of the 32k of DATA RAM)
+VDP package: 14 + 12 + 16 = 42 pins PLCC
+address x 12 (only reads 4k of Video RAM)
 data x 16
 high voltage
 ground
 clock
-cpu_interrupt
-apu_interrupt
-memory read/write
 reset
-video Red
-video Green
-video Blue
-vsync
-hsync
+read/write input (from cpu)
+RGB x 8
+  - red x 2
+  - green x 2
+  - blue x 2
+  - hsync
+  - vsync
+device access disable output (set high by vdp during rendering)
 
-APU package: 45 pins
-address x 12 (only uses bottom 1k of the 32k of DATA RAM)
+APU package: 18 + 4 + 16 = 38 pins
+address x 4 (APU has 5 write-only registers, SPP has 8 read/write registers)
 data x 16
 high voltage
 ground
 clock
-cpu_interrupt
-apu_interrupt
-memory read/write
 reset
-gamepad 6 lines
 audio mono output 1 line
-cassette/linkhub data 1 lines
-linkhub control 2 lines
+gamepad 6 lines
+keyboard 1 line
+SIO-specific pins:
+  Pin 3: Data Input (Serial In)
+  Pin 5: Data Output (Serial Out)
+  Pin 7: Command
+  Pin 8: Motor Control (for drives)
+  Pin 11: Audio Input (for tape drives)
+  Pin 13: Interrupt
 
-Gamepad lines:
+Gamepad and keyboard lines:
 - latch (shared between controllers)
 - gamepad clock (shared between controllers, different from system clock)
 - data (4x, 1 per controller)
 - reuse system ground and +5V
+
+Bus segmenter (2 chips, one for address bus and one for data bus): 3 + 16x2 = 35 pins
+address or data x 16
+high voltage
+ground
+device access disable input (set high by vdp during rendering, segments bus into 2)
