@@ -6,37 +6,28 @@ Cartridge Program ROM   64 KW   $0000-$FFFF
 Data Map                Size    Addresses
 ============================================
 Cartridge Data ROM      32 KW   $0000-$7FFF
-Console RAM             32 KW   $8000-$FFFF
+Console System RAM      32 KW   $8000-$FFFF
 
 
-Console RAM Map
-============================================
-General RAM             28 KW   $8000-$EFFF
-I/O Memory               4 KW   $F000-$FFFF
+Console 4KW Video RAM Map
+=========================
+Background Tiles         1 KW   $000-$3FF
+Shared Tiles             1 KW   $400-$7FF
+Foreground Tiles         1 KW   $800-$AFF
+Color Cells             250 W   $B00-$BF9
+Tile Cells             1000 W   $C00-$FE7
 
 
-Details of I/O Memory
-=====================
-Background Tiles         2 KW   $F000-$F7FF
-Foreground Tiles         1 KW   $F800-$FBFF
-Other I/O Memory         1 KW   $FC00-$FFFF
+VDP Register Map
+================
+Background Palettes      8      $0-$7
+Foreground Palettes      8      $8-$F
 
 
-Detail of Other I/O Memory
-==========================
-
-Purpose             Words   Offset  I/O
------------------------------------------------
-Audio                  16   $0000   $FC00-$F00F
-Background Palettes     8   $0010   $FC10-$FC17
-Foreground Palettes     8   $0018   $FC18-$FC1F
-Color Cells           200   $0020   $FC20-$FCE7
-Unused                 24   $00E8   $FCE8-$FCFF
-Tile Cells            750   $0100   $FD00-$FFED
-Unused                 10   $03EE   $FFEE-$FFF7
-SPI control             1   $03F8   $FFF8-$FFF8
-Gamepad                 1   $03F9   $FFF9-$FFF9
-Keyboard                2   $03FA   $FFFA-$FFFB
-Cassette / LinkHub      4   $03FC   $FFFC-$FFFF
-
-Total: 1,024 words
+APU/SPP Register Map
+====================
+Audio                   8       $0-$7
+Gamepad                 2       $8-$9
+Keyboard                2       $A-$B
+SPP Control             1       $C-$C
+Serial Data             3       $D-$F
