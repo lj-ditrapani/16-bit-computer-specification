@@ -92,6 +92,8 @@ device enable lines x 8
 - Video ram enable
 - VDP enable
 - APU enable
+Or device address is 3 lines
+and have a device address decoder 3 in -> & 8 out
 
 Cartridge: 5 lines + 16*2 = 37 pins
 Cartridge: 7 lines + 16*2 = 39 pins

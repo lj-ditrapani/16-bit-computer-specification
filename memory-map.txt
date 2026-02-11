@@ -24,8 +24,9 @@ Tile Cells             1000 W   $C00-$FE7
 
 VDP Register Map
 ================
-Background Palettes      8      $0-$7
-Foreground Palettes      8      $8-$F
+Background Palettes      8      $00-$07
+Foreground Palettes      8      $08-$0F
+Display Mode             1      $10-$10
 
 
 APU/SPP Register Map
