@@ -1,13 +1,11 @@
-4 MHz
-dual bus (separate instruction bus & data bus)
-2.6775 mips cpu
+single bus that can be segmented in two
 All instructions take exactly 3 cycles to execute.
 - 1. Fetch
 - 2. execute
 - 3. memory read/write
-But cycle 1 "Fetch" for the next instruction happens concurrently with cycle 3 "memory read/write" from the previous instruction.  So the cpu effectively executes an instruction every 2 cycles.  The fetch is always correct, because the next PC is set in cycle 2.
-The VDP can use the data bus during cycle 2 of each instruction (every other cycle).
-Max pin-out per chip is 80 pins.
+DRAM refresh can happen on execute cycles driven by cpu.
+The VDP can read VRAM when the bus is segmented. This happens during rendering.
+Max pin-out per chip is 44 or 46 pins.
 
 
   +------------------------------------------------------------+
@@ -76,22 +74,27 @@ CI = vertical blank CPU interrupt (from VDP to CPU & APU)
 AI = vertical blank APU interrupt (from VDP to CPU & APU)
 
 CPU package: 12 lines + 16*2 = 44 pins PLCC
+CPU package: 14 lines + 16*2 = 46 pins
 address x 16
 data lines x 16
 high voltage
 ground
 clock
 reset
-PGR rom enable (high on Instruction fetch cycles)
-Data rom enable (high if device is default and NOT A15)
-Data ram enable (high if device is default and A15)
-Video ram enable (high if device is vram and NOT device access disabled)
-VDP enable (high if device is VDP and NOT device access disabled)
-APU/SIO enable (high if device is APU/SIO and NOT device access disabled)
 memory read/write (high on 3rd instruction cycle if STR instruction, else low)
-device access disable input (set high by vdp during rendering)
+interrupt (set high by vdp during rendering, active low)
+device enable lines x 8
+- PGR rom enable (high on Instruction fetch cycles)
+- Data rom 1 enable
+- Data rom 2 enable
+- Data rom 3 enable
+- Data ram enable
+- Video ram enable
+- VDP enable
+- APU enable
 
 Cartridge: 5 lines + 16*2 = 37 pins
+Cartridge: 7 lines + 16*2 = 39 pins
 address x 16
 data x 16
 +5v
@@ -99,6 +102,8 @@ gnd
 clk
 dataRomEnable
 pgrRomEnable
+- Data rom 2 enable
+- Data rom 3 enable
 
 VDP package: 14 + 12 + 16 = 42 pins PLCC
 address x 12 (only reads 4k of Video RAM)
@@ -107,14 +112,13 @@ high voltage
 ground
 clock
 reset
-read/write input (from cpu)
 RGB x 8
   - red x 2
   - green x 2
   - blue x 2
   - hsync
   - vsync
-device access disable output (set high by vdp during rendering)
+rendering interrupt (set high by vdp during rendering)
 
 APU package: 18 + 4 + 16 = 38 pins
 address x 4 (APU has 5 write-only registers, SPP has 8 read/write registers)
@@ -144,4 +148,15 @@ Bus segmenter (2 chips, one for address bus and one for data bus): 3 + 16x2 = 35
 address or data x 16
 high voltage
 ground
-device access disable input (set high by vdp during rendering, segments bus into 2)
+segment input (the VDP rendering interrupt, set high by vdp during rendering, segments bus into 2)
+
+Device control: 9 pins
+high voltage
+ground
+Video ram enable input
+VDP enable input
+APU enable input
+rendering interrupt input (set high by vdp during rendering, when high, VRAM is high, vdp an apu are low, otherwise, pass-through)
+Video ram enable output
+VDP enable output
+APU enable output

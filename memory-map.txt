@@ -3,10 +3,14 @@ Program Map             Size    Addresses
 Cartridge Program ROM   64 KW   $0000-$FFFF
 
 
-Data Map                Size    Addresses
+Data ROM Map            Size    Addresses
 ============================================
-Cartridge Data ROM      32 KW   $0000-$7FFF
-Console System RAM      32 KW   $8000-$FFFF
+Cartridge Data ROM      64 KW   $0000-$FFFF
+
+
+Data ROM Map            Size    Addresses
+============================================
+Console System RAM      32 KW   $0000-$7FFF
 
 
 Console 4KW Video RAM Map

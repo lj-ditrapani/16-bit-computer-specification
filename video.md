@@ -36,10 +36,15 @@ Words   Purpose                 Description
   768   Foreground Tiles         96 8 x 8 2 bpp tiles (8 W / tile)
   250   Color Cells             15 x 13 grid; 4 bits/cell; 4 words per row x 13
 1,000   Tile Cells              30 x 25 cells x 1 word
+```
+
+
+VDP Registers (write-only)
+--------------------------
+
+```
     8   Background Palettes     16 6-bit colors; 4 groups of 4 colors
     8   Foregroud Palettes      16 6-bit colors; 4 groups of 4 colors
-
-Total: 4,038 words
 ```
 
 
@@ -76,6 +81,8 @@ The colors are labeled in order, from left to right, 0-3.
 
 The 3 colors take up 2 16-bit words in memory:
 
+These are unused in 1-layer high-resolution 640 x 200 mode.
+
 ```
 Size: 2 words
 
@@ -94,8 +101,10 @@ Size: 2 words
 Color Cells
 -----------
 
-The screen is split into a 30 x 25 grid of 8 x 8 pixel regions
+The screen is split into a grid of 8 x 8 pixel regions
 called color cells.
+In 2-layer 320 x 200 mode, the grid is 40 x 25 cells.
+In 1-layer 640 x 200 mode, the grid is 80 x 25 cells.
 One tile cell fits in each color cell.
 The color cell determines which foreground color palette and which
 background color palette is active for the 8 x 8 color cell.
@@ -114,14 +123,16 @@ Four color cell definitions fit in one word.
 ---------------------------------
 ```
 
-There are 30 color cells per row.
-A row of color cells needs 8 words.  There are 25 rows.  So 8 * 25 = 200 words.
+There are 40 color cells per row.
+A row of color cells needs 10 words.  There are 25 rows.  So 10 * 25 = 250 words.
 
 
 Tile Cell
 ---------
 
-The screen is split into a 30 x 25 grid of 8 x 8 pixel regions called tile cells.
+The screen is split into grid of 8 x 8 pixel regions called tile cells.
+In 2-layer 320 x 200 mode, the grid is 40 x 25 cells.
+In 1-layer 640 x 200 mode, the grid is 80 x 25 cells.
 A background tile and foreground tile is selected for each cell.
 A tile cell contains a background tile index followed by a foreground tile index.
 Each index is a one byte value that points to a single tile in the

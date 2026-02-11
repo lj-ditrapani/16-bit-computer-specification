@@ -16,8 +16,8 @@ Potential physical implementation:
 -----------------------------------------
 
 - CPU runs at 157.5 / 22 MHz = ~7.15909 MHz.  All CPU instructions take 4 or 6 cycles.  Instructions that access data memory (LOD and STR) take 6 cycles.  All other 14 instructions take 4 cycles.  There is no pipe-lining.
-- The VDP sets the "device access disable output" line to high to segment the bus and signal the CPU the bus is segmented, the CPU can no longer access devices (VRAM, VDP, APU/SPP).  It sets the line low to unify the bus and signal the CPU it can once again access devices, including VRAM and the VDP.
-- The VDP sets the "device access disable output" line to high during the 200 visible scan line rendering.  It keeps the line low during the 62 blank lines.
+- The VDP sets the "rendering output" line to high to segment the bus and signal the CPU the bus is segmented, the CPU can no longer access the following devices: VRAM, VDP, APU/SPP.  It sets the line low to unify the bus and signal the CPU it can once again access the devices.
+- The VDP sets the "rendering output" line to high during the 200 visible scan line rendering.  It keeps the line low during the 62 blank lines.
 - VDP pixel clock is the master clock.  So a pixel period is ~69.841 ns.  The VDP can read 4 memory words for every 8 pixels because it has exclusive access to video RAM during the 200 line rendering.
 
 ```
@@ -28,14 +28,16 @@ Potential physical implementation:
     ---------------------------------------
     |       12.739 ms           | 3949 us | <- duration
     ---------------------------------------
-      cpu no device access       cpu
-      vdp renders frame          access
-                                 devices
+      cpu no VDP/VRAM/APU        cpu access
+      access                     VDP/VRAM/APU
+      vdp renders frame          VDP blank/hblank
 ```
 
 
-The computer starts executing with the program counter
+The CPU starts executing with the program counter
 PC set to $0000.
+
+When the CPU sees the interrupt line go low, if the CPU is HALTed, the PC is set to PC + 1, and the CPU proceeds with execution.
 
 
 VDP and APU internal Buffers
@@ -53,7 +55,7 @@ During rendering:
     - 2 word background tile row (8 pixels) (current/next)
     - 2 word foreground tile row (8 pixels) (current/next)
 - APU: audio and peripheral unit
-    - 5 audio registers
+    - 5 to 8 audio registers
     - 2 gamepad registers
     - 2 keyboard registers
     - 4 serial registers (for cassette, floppy and linkHub use)
