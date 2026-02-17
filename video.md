@@ -13,9 +13,8 @@ for generating the video signal.
 
 - 320 x 200 2-layer pixel screen or 640 x 200 1-layer pixel screen
 - Tile set: (8 x 8, 2 bpp)
-    - 128 background only tiles
-    - 128 shared (background or foreground) tiles
-    - 96 foreground only tiles
+    - 256 background tiles
+    - 256 foreground tiles
 - 2 layers (in 320 x 200 mode):
     - Background layer: 40 x 25 cells per frame
     - Foreground layer: 40 x 25 cells per frame
@@ -31,9 +30,8 @@ Video RAM
 ```
 Words   Purpose                 Description
 ------------------------------------------------------------------------------
-1,024   Background Tiles        128 8 x 8 2 bpp tiles (8 W / tile)
-1,024   Shared Tiles            128 8 x 8 2 bpp tiles (8 W / tile)
-  768   Foreground Tiles         96 8 x 8 2 bpp tiles (8 W / tile)
+2,048   Background Tiles        256 8 x 8 2 bpp tiles (8 W / tile)
+2,048   Foreground Tiles        256 8 x 8 2 bpp tiles (8 W / tile)
   250   Color Cells             15 x 13 grid; 4 bits/cell; 4 words per row x 13
 1,000   Tile Cells              30 x 25 cells x 1 word
 ```
@@ -137,8 +135,6 @@ A background tile and foreground tile is selected for each cell.
 A tile cell contains a background tile index followed by a foreground tile index.
 Each index is a one byte value that points to a single tile in the
 respective background/foreground tile set.
-Since there are only 128 foreground tiles, the most significant bit in
-the foreground index is ignored.
 
 ```
 Size:  1 word

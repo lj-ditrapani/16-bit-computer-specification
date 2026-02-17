@@ -4,14 +4,19 @@ The ljd 16-bit computer specification
 
 A complete cartridge-based 16-bit computer
 with the following:
-- 72 KB RAM
+- 64 KB RAM
+- 16 KB VRAM
 - Color display
 - Gamepad input
 
-Cartridge (3 sizes):
+Cartridge sizes:
+- 32 KB ROM
+- 48 KB ROM
 - 64 KB ROM
 - 128 KB ROM
 - 256 KB ROM
+- 384 KB ROM
+- 512 KB ROM
 
 
 Specification

@@ -18,7 +18,7 @@ Potential physical implementation:
 - CPU runs at 157.5 / 22 MHz = ~7.15909 MHz.  All CPU instructions take 4 or 6 cycles.  Instructions that access data memory (LOD and STR) take 6 cycles.  All other 14 instructions take 4 cycles.  There is no pipe-lining.
 - The VDP sets the "rendering output" line to high to segment the bus and signal the CPU the bus is segmented, the CPU can no longer access the following devices: VRAM, VDP, APU/SPP.  It sets the line low to unify the bus and signal the CPU it can once again access the devices.
 - The VDP sets the "rendering output" line to high during the 200 visible scan line rendering.  It keeps the line low during the 62 blank lines.
-- VDP pixel clock is the master clock.  So a pixel period is ~69.841 ns.  The VDP can read 4 memory words for every 8 pixels because it has exclusive access to video RAM during the 200 line rendering.
+- VDP pixel clock is the master clock.  So a pixel period is ~69.841 ns.  The VDP can read 4 memory words for every 16 pixels* because it has exclusive access to video RAM during the 200 line rendering. *(16 pixels in high-res, 8 pixels in low-res)
 
 ```
        16.6881 ms frame

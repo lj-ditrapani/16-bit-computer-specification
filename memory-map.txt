@@ -13,13 +13,12 @@ Data ROM Map            Size    Addresses
 Console System RAM      32 KW   $0000-$7FFF
 
 
-Console 4KW Video RAM Map
+Console 8KW Video RAM Map
 =========================
-Background Tiles         1 KW   $000-$3FF
-Shared Tiles             1 KW   $400-$7FF
-Foreground Tiles         1 KW   $800-$AFF
-Color Cells             250 W   $B00-$BF9
-Tile Cells             1000 W   $C00-$FE7
+Background Tiles         2 KW   $0000-$07FF
+Foreground Tiles         2 KW   $0800-$0FFF
+Tile Cells             1000 W   $1000-$13E7
+Color Cells             250 W   $1400-$14F9
 
 
 VDP Register Map

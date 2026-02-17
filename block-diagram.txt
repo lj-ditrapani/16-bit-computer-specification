@@ -1,8 +1,8 @@
 single bus that can be segmented in two
-All instructions take exactly 3 cycles to execute.
+Instructions take either 2 or 3 cycles of 279 ns to execute.
 - 1. Fetch
 - 2. execute
-- 3. memory read/write
+- 3. memory read/write (only for LOD or STR instructions)
 DRAM refresh can happen on execute cycles driven by cpu.
 The VDP can read VRAM when the bus is segmented. This happens during rendering.
 Max pin-out per chip is 44 or 46 pins.
@@ -11,8 +11,8 @@ Max pin-out per chip is 44 or 46 pins.
   +------------------------------------------------------------+
   |                          Cartridge                         |
   |  +--------------+    +--------------+                      |
-  |  |   PRG ROM    |    |   DATA ROM   |                      |
-  |  |     64KW     |    |     32KW     |                      |
+  |  |   PRG ROM    |    |   DATA ROM   |  up to 3x DROM chips |
+  |  |     64KW     |    |     64KW     |                      |
   |  | Machine      |    |  Data ROM    |                      |
   |  | Instructions |    |            EN|                      |
   |  +--------------+    +--------------+                      |
@@ -21,11 +21,11 @@ Max pin-out per chip is 44 or 46 pins.
     |   | |                    | |                           |
     +---|-|--------------------|-|---------------------------+
         | |                    | |
-+-+     | |         /----------/ |                             +-+
-| |     | |         | /----------/                             | |
-| +-----|-|---------|-|----------------------------------------+ |
-|       | |         | |                                          |
-|       | |         | |                                          |
++-+     \----------------------/ |                             +-+
+| |       \---------|------------/                             | |
+| +-----------------|-|----------------------------------------+ |
+|                   | |                                          |
+|                   | |                                          |
 | +--------------+  | |  +--------------+       +--------------+ |
 | |     ^ v     A|--| |  |              |       |   VDP        | |
 | |    PC Ins   D|--|-|  |  DATA        |       |   Video      |-|-> Video signal output
@@ -33,24 +33,24 @@ Max pin-out per chip is 44 or 46 pins.
 | |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  | |
 | |              |  |-|--|A             |  /----|              | |
 | |              |  | |--|D             |  | /--|              | |
-| |C/AI  DOE DAE |  | |  |            EN|  | | A|      CI/AI   | |
+| |I     EN      |  | |  |            EN|  | | A|        I   EN| |
 | +--------------+  | |  +--------------+  | |  +--------------+ |
-|  |     |   |      | |                    | |           |       |
-|  ^     V   V      | \--------------------| |           V       |
-|                   \------------------------|                   |
-|                                          | |                   |
-|                                          | |                   |
-|                                          | |  +--------------+ |
-|                                          | |  |   APU        | |
-|                                          | |  |   Audio &    |-|-> Audio signal output
-|                                          | |  |   Peripheral | |
-|                                          | | A|   Unit       |-|-< Gamepad input x4
-|                                          | \--|              | |
-|                                          \----|              |-|<> Cassette and LinkHub
-|                                              D|      CI/AI   | |
-|                                               +--------------+ |
-|                                                        |       |
-|                                                        ^       |
+|  |     |          | |                    | |           |       |
+|  ^     V          | \--------------------| |           V       |
+|                   \-----------|------------|                   |
+|                             | |          | |                   |
+|                             | |          | |                   |
+|                        +--------------+  | |  +--------------+ |
+|                        |   A  D       |  | |  |   APU        | |
+|                        |  Video       |  | |  |   Audio &    |-|-> Audio signal output
+|                        |  RAM         |  | |  |   Peripheral | |
+|                        |  8KW         |  | | A|   Unit       |-|-< Gamepad input x4
+|                        |              |  | \--|              | |
+|                        |              |  \----|              |-|<> Cassette and LinkHub
+|                        |            EN|      D|            EN| |
+|                        +--------------+       +--------------+ |
+|                                                                |
+|                                                                |
 |                                                                |
 |                                                                |
 |                            Console                             |
@@ -62,19 +62,10 @@ W = 16-bit word
 1 KW = 2 KB
 A bus = 16 wire address lines
 D bus = 16 wire data lines
-On even CPU cycles (execute cycle), the CPU does the following:
-- sets DOE low and DAE high so the vdp can access DATA RAM.
-- sets the 3 most significant bits of the address lines to access the last 4k of DATA RAM to complete the VDP address memory reads.
-- sets the memory read/write pin to read, since the vdp only reads RAM
-When the CPU is disabled, the CPU does the following
-- sets DOE low and DAE high so the APU can access DATA RAM.
-- sets the 3 most significant bits of the address lines to access the last 4k of DATA RAM to complete the APU address memory accesses.
-EN = memory chip enable input
-CI = vertical blank CPU interrupt (from VDP to CPU & APU)
-AI = vertical blank APU interrupt (from VDP to CPU & APU)
+EN = chip enable input, driven by CPU 8 device enable lines
+I = vertical blank CPU interrupt (from VDP to CPU & segmenter)
 
-CPU package: 12 lines + 16*2 = 44 pins PLCC
-CPU package: 14 lines + 16*2 = 46 pins
+CPU package: 15 lines + 16*2 = 47 pins
 address x 16
 data lines x 16
 high voltage
@@ -82,6 +73,7 @@ ground
 clock
 reset
 memory read/write (high on 3rd instruction cycle if STR instruction, else low)
+memory output enable
 interrupt (set high by vdp during rendering, active low)
 device enable lines x 8
 - PGR rom enable (high on Instruction fetch cycles)
@@ -92,8 +84,6 @@ device enable lines x 8
 - Video ram enable
 - VDP enable
 - APU enable
-Or device address is 3 lines
-and have a device address decoder 3 in -> & 8 out
 
 Cartridge: 5 lines + 16*2 = 37 pins
 Cartridge: 7 lines + 16*2 = 39 pins
