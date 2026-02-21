@@ -9,14 +9,8 @@ with the following:
 - Color display
 - Gamepad input
 
-Cartridge sizes:
-- 32 KB ROM
-- 48 KB ROM
-- 64 KB ROM
-- 128 KB ROM
-- 256 KB ROM
-- 384 KB ROM
-- 512 KB ROM
+Cartridge sizes (total ROM:
+- 32 KB - 512 KB
 
 
 Specification
@@ -28,6 +22,7 @@ Specification
 - Memory Map:  [memory-map.txt](memory-map.txt)
 - Timing:  [timing.md](timing.md)
 - Video:  [video.md](video.md)
+- Cartridge: [cartridge.md](cartridge.md)
 - APU:  [apu.md](apu.md)
 - Gamepad:  [gamepad.md](gamepad.md)
 - Audio:  [audio.md](audio.md)
