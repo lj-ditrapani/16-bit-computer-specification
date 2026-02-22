@@ -65,6 +65,11 @@ D bus = 16 wire data lines
 EN = chip enable input, driven by CPU 8 device enable lines
 I = vertical blank CPU interrupt (from VDP to CPU & segmenter)
 
+Data RAM is made of 2 chips of NEC µPD43256 (or Hitachi HM62256) 150 ns SRAM 32K x 8-bit wired in parallel to produce a 32K x 16-bit memory.
+This would have likely cost around $30 USD in bulk at the start of 1985.
+Video RAM is made of 2 chips of Hitachi HM6264 150 ns SRAM 8K x 8-bit wired in parallel to produce a 8K x 16-bit memory.
+This would have likely cost around $8 USD in bulk at the start of 1985.
+
 CPU package: 15 lines + 16*2 = 47 pins
 address x 16
 data lines x 16
