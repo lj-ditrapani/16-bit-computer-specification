@@ -54,36 +54,34 @@ For CPU registers (defined as 0-15):
 R0-R9 & RA-RF
 ```
 
-io-ram: a memory address in ROM.  The PC is set to this address when the CPU interrupt is triggered (during vertical blank).
-This is the address from where your program knows it is allowed to write into the IO RAM (the last 4 KW of DATA RAM).
-
-```
-io-ram $0080
-```
-
-Main: a memory address in ROM.  The PC is set to this address when the APU interrupt is triggered (during vertical blank).
-This is the address of the main loop of your program.
-
-```
-main $0100
-```
-
-The starting addresse of special areas in RAM (defined according to the memory map):
+The starting addresse of special areas in memory (defined according to the memory map):
 
 ```
 background_tiles
 foreground_tiles
-audio
-background_palettes
-foreground_palettes
 color_cells
 tile_cells
-frame_skip
+background_palettes
+foreground_palettes
+audio
 gamepad
 keyboard
 cassette
 linkhub
 serial
+```
+
+Device names used for LOD and STR instructions
+
+```
+PGR   0
+DROM1 1
+DROM2 2
+DROM3 3
+DRAM  4
+VRAM  5
+VDP   6
+APU   7
 ```
 
 
@@ -161,63 +159,6 @@ Labels do not generate any actual machine code.
 ```
 
 
-Io-ram Marker
--------------
-
-The io-ram marker is fixed at address $0080.
-Use the io-ram marker to increase the assembler's memory address counter
-to $0080.  $0080 is the entry to your io-ram update code.
-This code should only be executed when the CPU interrupt is set high
-which forces the PC to address $0080.
-You should not write to IO ram at any other time. 
-ROM cells that are skipped because of the io-ram marker are zero-filled.
-The io-ram marker must appear at or before address $0080.
-The io-ram marker cannot appear after address $0080.
-The io-ram marker must appear before the main loop marker.
-The io-ram marker looks like a label, except it uses [] instead of ().
-
-```
-# Intialization code
-# ...
-
-[io-ram]
-# copy tiles cells to IO RAM
-# write other stuff to IO RAM
-
-
-[main]
-# Main loop code
-# ...
-```
-
-
-Main Loop Marker
-----------------
-
-The main loop marker is fixed at address $0100.
-Use the main loop marker to increase the assembler's memory address counter
-to $0100.  $0100 is the entry to the main loop of your program.
-ROM cells that are skipped because of the main loop marker are zero-filled.
-The main loop marker must appear after the io-ram marker.
-The main loop marker must appear at or before address $0100.
-The main loop marker cannot appear after address $0100.
-The main loop marker looks like a label, except it uses [] instead of ().
-
-```
-# Intialization code
-# ...
-
-[io-ram]
-# copy tiles cells to IO RAM
-# write other stuff to IO RAM
-
-
-[main]
-# Main loop code
-# ...
-```
-
-
 Instructions
 ------------
 
@@ -227,24 +168,24 @@ CPU instructions. (See ISA.md for instruction definition and details.)
 
 ```
 END
-HBY i8  R
-LBY i8  R
-LOD  R  R
-STR  R  R
-ADD  R  R  R
-SUB  R  R  R
-ADI  R i4  R
-SBI  R i4  R
-AND  R  R  R
-ORR  R  R  R
-XOR  R  R  R
-NOR  R  R  R
-SHF  R  D  A  R
-BRV  R  V  R
-BRF  F  R
+HBY  i8  R
+LBY  i8  R
+LOD DEV  R  R
+STR DEV  R  R
+ADD   R  R  R
+SUB   R  R  R
+ADI   R i4  R
+SBI   R i4  R
+AND   R  R  R
+ORR   R  R  R
+XOR   R  R  R
+NOR   R  R  R
+SHF   R  D  A  R
+BRV   R  V  R
+BRF   F  R
 
 Legend
----------------------------------------------------------------------
+----------------------------------------------------------------------------
 i4                  4-bit unsigned integer
 i8                  8-bit unsigned integer
 R                   Register number 0-15 (R0-R9 & RA-RF are symbols)
@@ -252,7 +193,8 @@ D                   Direction (L or R)
 A                   Shift amount (1-8)
 V                   any combination of [NZP]
 F                   any single character of [-CV]
----------------------------------------------------------------------
+DEV                 a 3-bit unsigned integer representing one of the devices
+----------------------------------------------------------------------------
 ```
 
 
