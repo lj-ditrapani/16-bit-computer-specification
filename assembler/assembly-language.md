@@ -155,6 +155,7 @@ The value of a label is the ROM memory address of the line below it
 One label per line
 
 Use a label to name an address to be used for jumps/branches.
+Use a label to name data defined immediatly after it for use with WRD+LOD insrtuctions.
 Labels do not generate any actual machine code.
 ```
 
@@ -294,7 +295,7 @@ Data Commands
 -------------
 
 The data commands allow the programmer to easily define values in the
-cartridge DATA ROM.  There are 4 data commands.
+cartridge PGR or DATA ROM.  There are 4 data commands.
 
 Data commands:
 - .word
@@ -302,13 +303,8 @@ Data commands:
 - .fill-array
 - .str
 
-A data command takes a name argument as its first parameter.
-The name is entered into the symbol table as a key that maps to the current
-data ROM address.  This allows the data ROM cell address to be used like a
-variable in place of instruction arguments.
-To prevent an entry into the symbol table, set the name to `_`.
-If the name is `_`, then nothing is entered
-into the symbol table.
+You can use a preceding label to give the address of the data a name.
+This allows you to easily use the label in a WRD instruction followed by a LOD.
 
 
 ## .word ##
@@ -316,14 +312,11 @@ Sets the current address in the data ROM to specified 16-bit value.
 The value can be a symbol defined in the symbol table.
 
 ```
-.word name initValue    # put initValue at current address in data ROM
-                        # & SymbolTable[name] maps to current data ROM address
+.word initValue       # put initValue at current address in data ROM
 
-.word x 42              # Data ROM cell at current address contains 42
-                        # & SymbolTable[x] maps to current data ROM address
+.word 42              # Data ROM cell at current address contains 42
 
-.word _ 99              # The value at current address is 99, but nothing is
-                        # added to the symbol table
+.word 99              # The value at current address is 99
 ```
 
 
@@ -331,31 +324,33 @@ The value can be a symbol defined in the symbol table.
 Array reserves multiple consecutive 16-bit slots in data ROM and sets the
 slots to specific values.  The values are all listed on the same line.
 ```
-.array name [list of whitespace delimited unsigned integers]
-.array my_ints 1 2 3
-.array beep %0101_1100 $FEED $FACE 42
+.array [list of whitespace delimited unsigned integers]
+.array 1 2 3
+.array %0101_1100 $FEED $FACE 42
 # Array with 8 hex values
-.array long $F0 $F1 $F2 $F3     # First 4 words
-.array _    $F4 $F5 $F6 $F7     # Last 4 words
+.array $F0 $F1 $F2 $F3     # First 4 words
+.array $F4 $F5 $F6 $F7     # Last 4 words
 # Array with 9 mixed-representation numbers; 3 per line.
-.array foo %0101_0000_1111_1010 $FEED 16
-.array _   %1111_0000_1111_1010 $FACE 32
-.array _   %0000_1111_1111_0101 $BACE 64
+.array %0101_0000_1111_1010 $FEED 16
+.array %1111_0000_1111_1010 $FACE 32
+.array %0000_1111_1111_0101 $BACE 64
 ```
 
 
 ## .fill-array ##
 Format:
 ```
-.fill-array name size fill
+.fill-array size fill
 ```
 
 Examples:
 ```
-.fill-array my_array 16 0    # my_array now refers to first address of
-                            # 16-element array initialized to all zeros
-.fill-array costs 4 $FF      # Creates an array named costs of 4 values of 255
-.fill-array _ 5 7            # Creates unnamed array of 5 values of 7
+(my_array)
+.fill-array 16 0      # my_array now refers to first address of
+                      # 16-element array initialized to all zeros
+(costs)
+.fill-array 4 $FF     # Creates an array named costs of 4 values of 255
+.fill-array 5 7       # Creates unnamed array of 5 values of 7
 ```
 Size and fill represent 16-bit numbers.
 If size is a symbol, it must be a pre-defined symbol, a previously defined
@@ -378,21 +373,58 @@ There is no null terminating character in the binary.
 
 ```
 # The string "Hello World" set to the hello symbol
-.str hello Hello World
+(hello)
+.str Hello World
 # The symbol points to the next word in memory
 # The string "Hello Joe" can be referred to by greet symbol
-.str greet Hello Joe
+(greet)
+.str Hello Joe
 # You can use " in strings
-.str _ She said "hi"
+.str She said "hi"
 # Entering a long string
-.str line1 This is the first sentence of
-.str line2 the story.
-.str line3 This is the second sentence
-.str line4 of the story.
+(line1)
+.str This is the first sentence of
+(line2)
+.str the story.
+(line3)
+.str This is the second sentence
+(line4)
+.str of the story.
 ```
 
-The .str command, name, and the string must fit on a single line.
-The string length must be less than or equal to 30 (the screen width).
+The .str command and the string must fit on a single line.
+The string length must be less than or equal to 80 (the max screen width in high-res mode).
 You cannot embed newlines in a .str string.
 You should break up text into the individual lines as you would
 like to display them in the program.
+
+
+Sections
+========
+
+
+## ROM Layout ##
+
+The first line of the file must be the ROM layout.  It is delimited by angle brackets and contains the number of 16-bit addresses available for each ROM bank.  Valid sizes or 16K, 32K, and 64K.  Each bank definition is separated by a colon.  All 4 banks must be defined.  Unused/unpopulated banks should have 0K.
+
+Examples:
+```
+# only PGR ROM
+<PGR 16K:DATA1 0K:DATA2 0K:DATA3 0K>
+# Full PGR ROM and 1 full DATA1 ROM
+<PGR 64K:DATA1 64K:DATA2 0K:DATA3 0K>
+# Maxed-out catridge
+<PGR 64:DATA1 64K:DATA2 64K:DATA3 64K>
+```
+
+
+## Section Markers ##
+
+Each section must be marked with section marker.  Section makers must appear in order.  Don't declare sections that are unused/unpopulated.  A section marker is the name of the ROM bank enclosed in square brackets.  Only the `[PGR]` section may contain CPU instructions.  Data Commands may appear an any section.
+
+```
+[PGR]
+[DATA1]
+[DATA2]
+[DATA3]
+```

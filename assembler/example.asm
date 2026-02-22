@@ -1,3 +1,6 @@
+<PGR 16K:DATA1 0K:DATA2 0K:DATA3 0K>
+
+[PGR]
 # 1st frame, run one-time initialization code
 # Register names
 .const dataR 2
@@ -110,8 +113,6 @@ INC to_addr
 DEC counter
 BRV counter NP loop
 JMP return
-
-[data1]
 
 (colors)
 #    Dark blue | Magenta
