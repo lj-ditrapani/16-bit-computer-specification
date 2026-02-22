@@ -1,68 +1,61 @@
 System Timing
 =============
 
-- Console outputs RGB for an IBM CGA monitor.
-- System execution is divided into 16.6833 ms frames (60 frames per 1.001 second)
-- Each scan line takes 63.6768 us (there are 262 scan lines in a non-interlaced frame; aka field)
+- Console outputs 64-color digital RGB for an IBM EGA compatible monitor (Oct 1984).
+- Master clock is 157.5 MHz / 11 = ~14.31818 MHz (common master clock for early 1980s).
+  - ~69.841 ns period
+- Each scan line takes 912 clock cycles, or ~63.69523 us
+- There are 262 scan lines in a non-interlaced frame; aka field. A frame takes ~16.6881 ms total.
 - The vdp only renders on the middle 200 visible scan lines.
-- The vdp allows cpu and apu access IO RAM during 60 of the blank scan lines, a total time of 3.820 ms.
-- The vdp uses the last 2 scan lines of vblank to prepare to render the next frame.
-- On frames where IO is performed, the cpu is active for 34,440 instructions per frame (202 scan lines).
-- For frames where frame skip is on (no IO is performed), the cpu is active for the full frame, 44,670 instructions.
-- CPU performance is 2.6775 million instructions per second (MIPS).
+- The vdp The bus is segmented in 2 during vdp rendering so the vdp has exclusive access to the video ram during this time.
+- The vdp unifies the bus to allow the cpu access to Video RAM during the 62 blank scan lines, a total time of ~3.94910 ms.
+- CPU performance is between 1.33875 and 1.78977 million instructions per second (MIPS).
 
 
 Potential physical implementation:
 -----------------------------------------
 
-- CPU runs at 60*262*341/1.001 MHz (~5.355164 MHz).  All CPU instructions take exactly 3 cycles, but the fetch cycle from the current instruction and the memory access cycle of the previous instruction happen concurrently, so the throughput is 1 instruction every 2 cycles.
-- The VDP is always active.
-- The VDP uses the CPU interrupt line (CI) to tell the CPU to jump to video copy address.
-- The VDP uses the APU interrupt line (AI) to tell the CPU to sleep and the APU it can use the data bus.  This also signals the CPU to set the PC to the main loop address while it sleeps.
-- Once CI and AI both go low again, the CPU can resume to run as normal, starting at the main loop address.
-- VDP pixel clock matches CPU speed, at ~5.355164 MHz.  So a pixel period is 186.735 ns.  The VDP can read 4 memory words for every 8 pixels.
+- CPU runs at 157.5 / 22 MHz = ~7.15909 MHz.  All CPU instructions take 4 or 6 cycles.  Instructions that access data memory (LOD and STR) take 6 cycles.  All other 14 instructions take 4 cycles.  There is no pipe-lining.
+- The VDP sets the "rendering output" line to high to segment the bus and signal the CPU the bus is segmented, the CPU can no longer access the following devices: VRAM, VDP, APU/SPP.  It sets the line low to unify the bus and signal the CPU it can once again access the devices.
+- The VDP sets the "rendering output" line to high during the 200 visible scan line rendering.  It keeps the line low during the 62 blank lines.
+- VDP pixel clock is the master clock.  So a pixel period is ~69.841 ns.  The VDP can read 4 memory words for every 16 pixels* because it has exclusive access to video RAM during the 200 line rendering. *(16 pixels in high-res, 8 pixels in low-res)
 
 ```
-       16.6833 ms frame
-    -----------------------------------------------
-    |  CI and AI low            | CI high | AI high <- interrupt lines
-    -----------------------------------------------
-    |  202                      | 59      | 1     | <- scan lines per section
-    -----------------------------------------------
-    |        12.863 ms          | 3756 us | 63 us | <- duration
-    -----------------------------------------------
-      cpu normal                 cpu         apu
-      vpd renders frame          write       access
-                                 I/O RAM     I/O RAM
+       16.6881 ms frame
+    ---------------------------------------
+    ---------------------------------------
+    |         200               | 62      | <- scan lines per section
+    ---------------------------------------
+    |       12.739 ms           | 3949 us | <- duration
+    ---------------------------------------
+      cpu no VDP/VRAM/APU        cpu access
+      access                     VDP/VRAM/APU
+      vdp renders frame          VDP blank/hblank
 ```
 
 
-CPU and APU Interrupts (CI/AI)
-----------------------------
-
-The computer starts executing with the program counter
+The CPU starts executing with the program counter
 PC set to $0000.
-On frames that are not skipped (controlled by the CPU by setting the frame skip memory address), the CPU can run as normal for 12.86 ms (34,440 instructions), while the VDP prepares (2 scan lines) and renders the 200 scan lines of the frame (total 202 scan lines).
-At the end of the CPU active time for the frame,
-the VDP sets the CI to high.  This causes the CPU PC to be set to the video copy address ($0080).
-The CPU can then read and write to the last 4k of DATA RAM where VDP and APU memory resides for 3,820 us, (10,227 instructions).
-The VDP then sets the AI (APU interrupt) line high.  This causes the CPU to sleep and set its PC to the main loop address.  The APU can now read and write to the last 1k of DATA RAM for the next 50 us.
-After this the VDP sets both the CI and AI lines low again.  The cpu resumes at the main loop address and the vdp gets ready to render the next frame of 200 scan lines.
+
+When the CPU sees the interrupt line go low, if the CPU is HALTed, the PC is set to PC + 1, and the CPU proceeds with execution.
 
 
 VDP and APU internal Buffers
 ----------------------------
 
-- vdp copies over 16 color palette during vblank.  This happens during the 61st vblank line, after the APU has finished accessing DATA RAM.
-- vdp copies over current tile cell, both tile rows (fg and bg), and the color cell for the current line just-in-time to render the next 8 pixels.  This happens while rendering the previous 8 pixels.  The VDP can read exactly 4 memory words from RAM every 8 pixels.
+- The CPU can write to the VDP the 16 color palette during vblank (unified bus).
+During rendering:
+- vdp copies over current tile cell, both tile rows (fg and bg or 2 bg), and the color cell for the current line just-in-time to render the next 16 pixels.  This happens while rendering the previous 16 pixels.  The VDP can read exactly 4 memory words from RAM every 16 pixels.
+- In 1-layer high-res 640 x 200 mode, the VDP treats the tile cell as 2 side-by-side tiles.  Giving us 16 horizontal pixels across the 2 background tiles.
+- In 2-layes low-res 320 x 200 mode, the VDP treats the tile cell as an fg and bg tile.  Giving us 8 horizontal pixels.  Each pixel is emitted twice (in other words, output for 2 clock cycles), so it takes 16 pixel clocks to render the 8 pixels.
 - vdp has an internal 24 word cached
-    - 16 word color palette cached (for entire frame)
+    - 16 word color palette cache (for entire frame)
     - 2 word color cell (current/next)
     - 2 word tile cell (current/next)
     - 2 word background tile row (8 pixels) (current/next)
     - 2 word foreground tile row (8 pixels) (current/next)
 - APU: audio and peripheral unit
-    - 5 audio registers
+    - 5 to 8 audio registers
     - 2 gamepad registers
     - 2 keyboard registers
-    - 4 serial registers (for cassette and linkHub use)
+    - 4 serial registers (for cassette, floppy and linkHub use)

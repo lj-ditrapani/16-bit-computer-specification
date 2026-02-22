@@ -4,7 +4,7 @@ Audio
 Audio output is handled by the APU.
 The APU contains a Programmable Sound Generator (PSG)
 similar in capability to the
-Texas Instruments SN76489
+General Instrument AY-3-8910
 except the APU has a 4th oscillator that can be used as a 4th square
 wave or provided as an oscillator for the noise channel to generate
 periodic noise.
@@ -20,7 +20,7 @@ The APU has 5 internal registers that control the sound of each channel:
 There are 4 square wave registers, one for each channel.
 ```
 -----------------------------------
-| 4 bit volume | 10 bit frequency |
+| 4 bit volume | 12 bit frequency |
 -----------------------------------
 ```
 

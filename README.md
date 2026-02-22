@@ -5,11 +5,12 @@ The ljd 16-bit computer specification
 A complete cartridge-based 16-bit computer
 with the following:
 - 64 KB RAM
+- 16 KB VRAM
 - Color display
 - Gamepad input
 
-Cartridge:
-- 192 KB ROM
+Cartridge sizes (total ROM:
+- 32 KB - 512 KB
 
 
 Specification
@@ -21,6 +22,7 @@ Specification
 - Memory Map:  [memory-map.txt](memory-map.txt)
 - Timing:  [timing.md](timing.md)
 - Video:  [video.md](video.md)
+- Cartridge: [cartridge.md](cartridge.md)
 - APU:  [apu.md](apu.md)
 - Gamepad:  [gamepad.md](gamepad.md)
 - Audio:  [audio.md](audio.md)

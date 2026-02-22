@@ -1,34 +1,7 @@
-# 1st frame, so jump to one-time initialization code
-WRD init RF
-JMP RF
+<PGR 16K:DATA1 0K:DATA2 0K:DATA3 0K>
 
-[io-ram]
-WRD display RF
-JMP RF
-
-[main]
-# Not 1st frame.  On 2nd or later frame.
-# Normally, your game loop would go here
-# Check the gamepad input from the active I/O register
-# Update game state based on input
-# Update tile cells based on new state
-END
-
-(init)
-.const first_frame_flag $8000
-WRD first_frame_flag RF
-WRD 1 R1
-STR R1 RF
-END
-
-(display)
-WRD first-frame RF
-WRD first_frame_flag RE
-LOD RE R1
-BRV R1 P RF
-END
-
-(first-frame)
+[PGR]
+# 1st frame, run one-time initialization code
 # Register names
 .const dataR 2
 .const counter 3
@@ -38,31 +11,22 @@ END
 .const func 8
 .const loop 9
 .const return $A
-# Clear first_frame_flag
-ZER R1
-STR R1 RE
-# Set frame skip to 0 (run at 60 fps)
-WRD frame_skip RE
-STR R1 RE
-# Set serial I/O command to 'do nothing' (cassette/hubLink)
-WRD cassette RE
-STR R1 RE
 # Mute audio
 WRD audio RE
-STR R1 RE
+STR APU R1 RE
 INC RE
-STR R1 RE
+STR APU R1 RE
 INC RE
-STR R1 RE
+STR APU R1 RE
 INC RE
-STR R1 RE
+STR APU R1 RE
 INC RE
-STR R1 RE
+STR APU R1 RE
 # Copy colors over to background_palette 0
 WRD colors from_addr
 WRD background_palettes to_addr
-LOD from_addr dataR
-STR dataR to_addr
+LOD VDP from_addr dataR
+STR VDP dataR to_addr
 INC from_addr
 INC to_addr
 LOD from_addr dataR
@@ -125,6 +89,15 @@ SPC return
 JMP func
 
 END
+
+(main)
+# Normally, your game loop would go here
+# Update video RAM with next screen
+# - Update tile cells based on last state
+# Check the gamepad input from the APU
+# Update game state based on input so it is ready for next frame
+END
+JMP main
 
 # Expects from_addr register to be set to source address (tile in ROM)
 # Expects to_addr register to be set to destination address (tile in RAM)
