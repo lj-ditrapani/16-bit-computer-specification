@@ -30,8 +30,8 @@ Instruction operation
     0 END
     1 HBY    immd8 -> RD[15-08]
     2 LBY    immd8 -> RD[07-00]
-    3 LOD    <device> ram[RS1] -> RD
-    4 STR    <device> RS2 -> ram[RS1]
+    3 LOD    <device> mem[RS1] -> RD
+    4 STR    <device> RS3 -> mem[RS1]
     5 ADD    RS1 +   RS2 -> RD
     6 SUB    RS1 -   RS2 -> RD
     7 ADI    RS1 + immd4 -> RD
@@ -47,12 +47,13 @@ Instruction operation
 
     Legend:
     -----------------------------------------
-    device  a 3-bit number
-    immd8   8-bit immediate value
-    immd4   4-bit immediate value
-      RS1   Source register (2nd nibble)
-      RS2   Source register (3rd nibble)
-       RD   Destination register (4th nibble)
+    device   a 3-bit number
+     immd8   8-bit immediate value
+     immd4   4-bit immediate value
+       RS1   Source register (2nd nibble)
+       RS2   Source register (3rd nibble)
+       RS3   Source register (4th nibble)
+        RD   Destination register (4th nibble)
 
 
 ### SHF ###
@@ -107,34 +108,35 @@ If you are interested in ensuring NO exceptions then use 0000.
 Instruction format
 ------------------
 
-            Mm Reg     01  02  03
-    --------------------------------
-    0 END    - ----     0   0   0
-    1 HBY    - --W-    UC  UC  RD
-    2 LBY    - --W-    UC  UC  RD
-    3 LOD    R R-W-   RS1 DEV  RD
-    4 STR    W RR--   RS1 RS2  DEV
-    5 ADD    - RRW-   RS1 RS2  RD
-    6 SUB    - RRW-   RS1 RS2  RD
-    7 ADI    - R-W-   RS1  UC  RD
-    8 SBI    - R-W-   RS1  UC  RD
-    9 AND    - RRW-   RS1 RS2  RD
-    A ORR    - RRW-   RS1 RS2  RD
-    B XOR    - RRW-   RS1 RS2  RD
-    C NOR    - RRW-   RS1 RS2  RD
-    D SHF    - R-W-   RS1  DA  RD
-    E BRV    - RR-W   RS1 RS2  condV
-    F BRF    - -R-W     0 RS2  condF
+            Mm Reg     01     02  03
+    ----------------------------------
+    0 END    - ----     0      0   0
+    1 HBY    - --W-    UC     UC  RD
+    2 LBY    - --W-    UC     UC  RD
+    3 LOD    R R-W-   RS1    DEV  RD
+    4 STR    W R-R-   RS1    DEV  RS3
+    5 ADD    - RRW-   RS1    RS2  RD
+    6 SUB    - RRW-   RS1    RS2  RD
+    7 ADI    - R-W-   RS1     UC  RD
+    8 SBI    - R-W-   RS1     UC  RD
+    9 AND    - RRW-   RS1    RS2  RD
+    A ORR    - RRW-   RS1    RS2  RD
+    B XOR    - RRW-   RS1    RS2  RD
+    C NOR    - RRW-   RS1    RS2  RD
+    D SHF    - R-W-   RS1     DA  RD
+    E BRV    - R-RW   RS1  condV  RS3
+    F BRF    - --RW     0  condF  RS3
 
 
     Legend:
     ---------------------------------------------------------------------
        Mm   Memory access:    R = read, W = write, - = not accessed
       Reg   Register access:  R = read, W = write, - = not accessed
-            The four register access columns correspond to RS1 RS2 RD PC
+            The four register access columns correspond to RS1 RS2 RS3/RD PC
       DEV   3-bit number that selects which the "device enable" line to activate
       RS1   Source register 1 (2nd nibble)
       RS2   Source register 2 (3rd nibble)
+      RS3   Source register 3 (4th nibble)
        RD   Destination register (4th nibble)
        PC   Program counter (instruction pointer)
        UC   Unsigned constant (1st or 2nd nibble)
