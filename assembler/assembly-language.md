@@ -65,23 +65,19 @@ background_palettes
 foreground_palettes
 audio
 gamepad
-keyboard
-cassette
-linkhub
-serial
 ```
 
 Device names used for LOD and STR instructions
 
 ```
-PGR   0
-DROM1 1
-DROM2 2
-DROM3 3
-DRAM  4
-VRAM  5
-VDP   6
-APU   7
+pgr   0
+drom1 1
+drom2 2
+drom3 3
+dram  4
+vram  5
+vdp   6
+apu   7
 ```
 
 
@@ -94,7 +90,6 @@ Each line in an assembly file consists of one of the following:
 - Comment
 - Const Command
 - Label
-- Main Loop Marker
 - Instruction
 - Pseudo Instructions
 - Data Command
@@ -405,7 +400,13 @@ Sections
 
 ## ROM Layout ##
 
-The first line of the file must be the ROM layout.  It is delimited by angle brackets and contains the number of 16-bit addresses available for each ROM bank.  Valid sizes or 16K, 32K, and 64K.  Each bank definition is separated by a colon.  All 4 banks must be defined.  Unused/unpopulated banks should have 0K.
+The first line of the file must be the ROM layout.
+It is delimited by angle brackets and contains the number of 16-bit addresses
+available for each ROM bank.  Valid sizes or 16K, 32K, and 64K.
+Each bank definition is separated by a colon.
+All 4 banks must be defined.
+Unused/unpopulated banks should have 0K.
+`PGR` is always non-zero/populated.
 
 Examples:
 ```
@@ -420,7 +421,13 @@ Examples:
 
 ## Section Markers ##
 
-Each section must be marked with section marker.  Section makers must appear in order.  Don't declare sections that are unused/unpopulated.  A section marker is the name of the ROM bank enclosed in square brackets.  Only the `[PGR]` section may contain CPU instructions.  Data Commands may appear an any section.
+Each section must be marked with section marker.
+Section makers must appear in order.
+Don't declare sections that are unused/unpopulated.
+A section marker is the name of the ROM bank enclosed in square brackets.
+Only the `[PGR]` section may contain CPU instructions.
+Data Commands may appear an any section.
+The `[PGR]` section is mandatory.
 
 ```
 [PGR]

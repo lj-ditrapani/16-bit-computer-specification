@@ -11,32 +11,37 @@
 .const func 8
 .const loop 9
 .const return $A
+
+# wait for vdp interrupt
+END
+# now we know the bus is unified for the next 60 scan lines
+
 # Mute audio
 WRD audio RE
-STR APU R1 RE
+STR apu R1 RE
 INC RE
-STR APU R1 RE
+STR apu R1 RE
 INC RE
-STR APU R1 RE
+STR apu R1 RE
 INC RE
-STR APU R1 RE
+STR apu R1 RE
 INC RE
-STR APU R1 RE
+STR apu R1 RE
 # Copy colors over to background_palette 0
 WRD colors from_addr
 WRD background_palettes to_addr
-LOD VDP from_addr dataR
-STR VDP dataR to_addr
+LOD pgr from_addr dataR
+STR vdp dataR to_addr
 INC from_addr
 INC to_addr
-LOD from_addr dataR
-STR dataR to_addr
+LOD pgr from_addr dataR
+STR vdp dataR to_addr
 # set color cells to all 0
 WRD 200 counter
 WRD color_cells_loop loop
 WRD color_cells to_addr
 (color_cells_loop)
-STR R0 to_addr
+STR vram R0 to_addr
 INC to_addr
 DEC counter
 BRV counter P loop
@@ -45,7 +50,7 @@ WRD 750 counter
 WRD tile_cells_loop loop
 WRD tile_cells to_addr
 (tile_cells_loop)
-STR R0 to_addr
+STR vram R0 to_addr
 INC to_addr
 DEC counter
 BRV counter P loop
@@ -57,11 +62,11 @@ WRD tile_cells to_addr
 ADD temp to_addr
 # ASCII letter H (72 = $48)
 WRD $48 dataR
-STR dataR to_addr
+STR vram dataR to_addr
 # ASCII letter I (73 = $49)
 INC to_addr
 INC dataR
-STR dataR to_addr
+STR vram dataR to_addr
 
 # set tiles 0 = blank, ascii H, I
 WRD write_tile func
@@ -106,8 +111,8 @@ JMP main
 ADI R0 8 counter
 WRD tile_loop loop
 (tile_loop)
-LOD from_addr dataR
-STR dataR to_addr
+LOD pgr from_addr dataR
+STR vram dataR to_addr
 INC from_addr
 INC to_addr
 DEC counter
