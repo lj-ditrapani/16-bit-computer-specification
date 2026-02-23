@@ -282,7 +282,7 @@ DEC R3        |   SBI R3 1 R3
 NOT R1 R2     |   NOR R1 R1 R2
 JMP R3        |   BRV R0 NZP R3
 SPC R5        |   HBY $19 R5    LBY $83 R5
-ZER R0        |   SUB R0 R0 R0
+ZER R0        |   XOR R0 R0 R0
 ```
 
 
