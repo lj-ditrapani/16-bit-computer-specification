@@ -207,11 +207,11 @@ Set low byte of R5 to 16
 LBY $10 R5      #  $2105
 LBY 16 R5       #  $2105
 
-Load R3 with value at memory address in R9
-LOD R9 R3       #  $3903
+Load R3 with value at memory address in R9 in Data ROM bank 1
+LOD drom1 R9 R3       #  $3903
 
-Store the value of R1 at the memory address in RF
-STR R1 RF       #  $4F10
+Store the value of R1 at the memory address in RF in Data RAM
+STR dram R1 RF       #  $4F10
 
 Add value in RE to value in R6 and store in RA
 ADD RE R6 RA    #  $5E6A
@@ -282,7 +282,7 @@ DEC R3        |   SBI R3 1 R3
 NOT R1 R2     |   NOR R1 R1 R2
 JMP R3        |   BRV R0 NZP R3
 SPC R5        |   HBY $19 R5    LBY $83 R5
-ZER R0        |   ZER R0 R0 R0
+ZER R0        |   SUB R0 R0 R0
 ```
 
 
