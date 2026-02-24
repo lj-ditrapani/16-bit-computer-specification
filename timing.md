@@ -47,7 +47,7 @@ VDP and APU internal Buffers
 During rendering:
 - vdp copies over current tile cell, both tile rows (fg and bg or 2 bg), and the color cell for the current line just-in-time to render the next 16 pixels.  This happens while rendering the previous 16 pixels.  The VDP can read exactly 4 memory words from RAM every 16 pixels.
 - In 1-layer high-res 640 x 200 mode, the VDP treats the tile cell as 2 side-by-side tiles.  Giving us 16 horizontal pixels across the 2 background tiles.
-- In 2-layes low-res 320 x 200 mode, the VDP treats the tile cell as an fg and bg tile.  Giving us 8 horizontal pixels.  Each pixel is emitted twice (in other words, output for 2 clock cycles), so it takes 16 pixel clocks to render the 8 pixels.
+- In 2-layer low-res 320 x 200 mode, the VDP treats the tile cell as an fg and bg tile.  Giving us 8 horizontal pixels.  Each pixel is emitted twice (in other words, output for 2 clock cycles), so it takes 16 pixel clocks to render the 8 pixels.
 - vdp has an internal 24 word cached
     - 16 word color palette cache (for entire frame)
     - 2 word color cell (current/next)

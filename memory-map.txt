@@ -17,8 +17,8 @@ Console 8KW Video RAM Map
 =========================
 Background Tiles         2 KW   $0000-$07FF
 Foreground Tiles         2 KW   $0800-$0FFF
-Tile Cells             1000 W   $1000-$13E7
-Color Cells             250 W   $1400-$14F9
+Tile Cells             1000 W   $1800-$1BE7
+Color Cells             250 W   $1F00-$1FF9
 
 
 VDP Register Map

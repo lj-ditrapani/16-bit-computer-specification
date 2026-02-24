@@ -42,7 +42,7 @@ Instruction operation
     C NOR    RS1 nor RS2 -> RD
     D SHF    RS1 shifted by immd4 -> RD
     E BRV    if (RS1 matches NZP) then (RS2 -> PC)
-    F BRF    if (C or V is set) then (RS2 -> PC)
+    F BRF    if (C or V is set) then (RS3 -> PC)
 
 
     Legend:

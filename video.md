@@ -32,8 +32,8 @@ Words   Purpose                 Description
 ------------------------------------------------------------------------------
 2,048   Background Tiles        256 8 x 8 2 bpp tiles (8 W / tile)
 2,048   Foreground Tiles        256 8 x 8 2 bpp tiles (8 W / tile)
-  250   Color Cells             15 x 13 grid; 4 bits/cell; 4 words per row x 13
-1,000   Tile Cells              30 x 25 cells x 1 word
+  250   Color Cells             40 x 25 grid; 4 bits/cell; 10 words per row x 25
+1,000   Tile Cells              40 x 25 cells x 1 word
 ```
 
 
@@ -42,7 +42,7 @@ VDP Registers (write-only)
 
 ```
     8   Background Palettes     16 6-bit colors; 4 groups of 4 colors
-    8   Foregroud Palettes      16 6-bit colors; 4 groups of 4 colors
+    8   Foreground Palettes     16 6-bit colors; 4 groups of 4 colors
 ```
 
 
@@ -104,9 +104,11 @@ called color cells.
 In 2-layer 320 x 200 mode, the grid is 40 x 25 cells.
 In 1-layer 640 x 200 mode, the grid is 80 x 25 cells.
 One tile cell fits in each color cell.
-The color cell determines which foreground color palette and which
-background color palette is active for the 8 x 8 color cell.
+The in 2-layer mode, color cell determines which foreground
+color palette and which background color palette is active
+for the 8 x 8 color cell.
 
+2-layer 320 x 200 mode
 ```
 Size 1/4 word (= 4 bits)
 
@@ -124,6 +126,10 @@ Four color cell definitions fit in one word.
 There are 40 color cells per row.
 A row of color cells needs 10 words.  There are 25 rows.  So 10 * 25 = 250 words.
 
+In 1-layer high-res mode, a color cell only defines a single 2 bit background
+palette.  This means there are 8 color cells per word.
+So only 250 words are needed in 1-layer mode.
+
 
 Tile Cell
 ---------
@@ -136,12 +142,27 @@ A tile cell contains a background tile index followed by a foreground tile index
 Each index is a one byte value that points to a single tile in the
 respective background/foreground tile set.
 
+Regardless of mode, we only need 1,000 words to define all the tile cells.
+In 2-layer mode, each word can hold 1 tile cell, but there are half as many.
+In 1-layer mode, each word can hold 2 tile cells, but there are twice as many.
+
+2-layer mode
 ```
 Size:  1 word
 
  F E D C B A 9 8 7 6 5 4 3 2 1 0
 ---------------------------------
 |  bg index     |   fg index    |
+---------------------------------
+```
+
+1-layer mode
+```
+Size:  1 word
+
+ F E D C B A 9 8 7 6 5 4 3 2 1 0
+---------------------------------
+|  bg index     |   bg index    |
 ---------------------------------
 ```
 
