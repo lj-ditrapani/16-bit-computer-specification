@@ -31,4 +31,4 @@ Number of banks | Addressable words | Max size in KB | Data ROM Chip Count
   3             | 192K x 16-bit     | 384 KB         | 6
 ```
 
-This allows cartridges to get larger has the price of ROM chips fall over the years.
+This allows cartridges to get larger as the price of ROM chips fall over the years.

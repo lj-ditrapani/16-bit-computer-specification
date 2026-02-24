@@ -54,6 +54,7 @@ During rendering:
     - 2 word tile cell (current/next)
     - 2 word background tile row (8 pixels) (current/next)
     - 2 word foreground tile row (8 pixels) (current/next)
+      - note: in 1-layer mode this is used for the 2nd background tile
 - APU: audio and peripheral unit
     - 5 to 8 audio registers
     - 2 gamepad registers

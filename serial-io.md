@@ -1,7 +1,7 @@
 Serial IO
 =========
 
-Serial communication is handled by the SPD.
+Serial communication is handled by the APU.
 Devices that connect to the serial port are the cassette drive and the LinkHub.  Only one can be connected at a time.
 The serial port is just a standard TRRS audio jack.
 
@@ -12,15 +12,15 @@ Cassette
 A standard audio cassette recorder with tone and volume control and an aux audio port can be connected to the console's serial TRRS port.  Software can use this a external storage.  This can be useful for saving game progression.  But also for storing user created content.
 
 When the software wants to write data to the cassette, it should write the 2 words of data it wants to save into the cassette data RAM addresses.  Then it must prompt the user to do the following:
-- plugin the cassette recorder with a cassette inserted
+- plug in the cassette recorder with a cassette inserted
 - rewind the cassette to the beginning (but past the blank header, if any)
 - press record on the cassette recorder
 - press any key on the gamepad
-The software should then write to the cassette control RAM address signaling the APU it wants to write to the serial output.  On the next vertical blank period, when the VDP signals the APU with the APU interrupt line (AI), the APU will read the cassette control RAM and the cassette data RAM and then write the 2 words over the serial line, bit-by-bit, which will make there way to the cassette recorder and onto the data cassette.  This will take the entire next frame to complete.  If the software wants to write more data, it can continue to send 2 words per frame until complete.  When completed, the software should notify the user that it is finished and prompt the user to stop the cassette recorder.
+The software should then write to the cassette control RAM address signaling the APU it wants to write to the serial output.  On the next vertical blank period, when the VDP signals the APU with the APU interrupt line (AI), the APU will read the cassette control RAM and the cassette data RAM and then write the 2 words over the serial line, bit-by-bit, which will make their way to the cassette recorder and onto the data cassette.  This will take the entire next frame to complete.  If the software wants to write more data, it can continue to send 2 words per frame until complete.  When completed, the software should notify the user that it is finished and prompt the user to stop the cassette recorder.
 
 The process for reading data from a cassette is similar.
 When the software wants to read data from the cassette it must prompt the user to do the following:
-- plugin the cassette recorder with the data cassette inserted.
+- plug in the cassette recorder with the data cassette inserted.
 - rewind the cassette to the beginning (but past the blank header, if any)
 - press play by itself on the cassette recorder
 - press any key on the gamepad

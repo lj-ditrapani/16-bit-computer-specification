@@ -12,7 +12,7 @@ Instruction Meaning
     3 LOD    Load: load value from device at address into register
     4 STR    Store: store value into address on device
     5 ADD    Add: add two values
-    6 SUB    Subtract: subtract two value
+    6 SUB    Subtract: subtract two values
     7 ADI    Add 4-bit immediate
     8 SBI    Subtract 4-bit immediate
     9 AND    And: logical and two values
@@ -41,7 +41,7 @@ Instruction operation
     B XOR    RS1 xor RS2 -> RD
     C NOR    RS1 nor RS2 -> RD
     D SHF    RS1 shifted by immd4 -> RD
-    E BRV    if (RS1 matches NZP) then (RS2 -> PC)
+    E BRV    if (RS1 matches NZP) then (RS3 -> PC)
     F BRF    if (C or V is set) then (RS3 -> PC)
 
 

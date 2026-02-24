@@ -104,7 +104,7 @@ called color cells.
 In 2-layer 320 x 200 mode, the grid is 40 x 25 cells.
 In 1-layer 640 x 200 mode, the grid is 80 x 25 cells.
 One tile cell fits in each color cell.
-The in 2-layer mode, color cell determines which foreground
+In 2-layer mode, color cell determines which foreground
 color palette and which background color palette is active
 for the 8 x 8 color cell.
 

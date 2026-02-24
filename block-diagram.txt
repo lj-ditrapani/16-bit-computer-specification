@@ -90,15 +90,14 @@ device enable lines x 8
 - VDP enable
 - APU enable
 
-Cartridge: 5 lines + 16*2 = 37 pins
 Cartridge: 7 lines + 16*2 = 39 pins
 address x 16
 data x 16
 +5v
 gnd
 clk
-dataRomEnable
-pgrRomEnable
+- PGR rom enable
+- Data rom 1 enable
 - Data rom 2 enable
 - Data rom 3 enable
 
@@ -118,7 +117,7 @@ RGB x 8
 rendering interrupt (set high by vdp during rendering)
 
 APU package: 18 + 4 + 16 = 38 pins
-address x 4 (APU has 5 write-only registers, SPP has 8 read/write registers)
+address x 4 (APU has 5 write-only registers, SIO has 8 read/write registers)
 data x 16
 high voltage
 ground

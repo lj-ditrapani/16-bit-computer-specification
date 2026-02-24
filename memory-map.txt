@@ -28,8 +28,8 @@ Foreground Palettes      8      $08-$0F
 Display Mode             1      $10-$10
 
 
-APU/SPP Register Map
-====================
+APU Register Map
+================
 Audio                   8       $0-$7
 Gamepad                 2       $8-$9
 Keyboard                2       $A-$B
