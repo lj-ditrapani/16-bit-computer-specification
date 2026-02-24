@@ -7,7 +7,7 @@ System Timing
 - Each scan line takes 912 clock cycles, or ~63.69523 us
 - There are 262 scan lines in a non-interlaced frame; aka field. A frame takes ~16.6881 ms total.
 - The vdp only renders on the middle 200 visible scan lines.
-- The vdp The bus is segmented in 2 during vdp rendering so the vdp has exclusive access to the video ram during this time.
+- The bus is segmented in 2 during vdp rendering so the vdp has exclusive access to the video ram during this time.
 - The vdp unifies the bus to allow the cpu access to Video RAM during the 62 blank scan lines, a total time of ~3.94910 ms.
 - CPU performance is between 1.33875 and 1.78977 million instructions per second (MIPS).
 
@@ -15,10 +15,20 @@ System Timing
 Potential physical implementation:
 -----------------------------------------
 
-- CPU runs at 157.5 / 22 MHz = ~7.15909 MHz.  All CPU instructions take 4 or 6 cycles.  Instructions that access data memory (LOD and STR) take 6 cycles.  All other 14 instructions take 4 cycles.  There is no pipe-lining.
-- The VDP sets the "rendering output" line to high to segment the bus and signal the CPU the bus is segmented, the CPU can no longer access the following devices: VRAM, VDP, APU/SPP.  It sets the line low to unify the bus and signal the CPU it can once again access the devices.
-- The VDP sets the "rendering output" line to high during the 200 visible scan line rendering.  It keeps the line low during the 62 blank lines.
-- VDP pixel clock is the master clock.  So a pixel period is ~69.841 ns.  The VDP can read 4 memory words for every 16 pixels* because it has exclusive access to video RAM during the 200 line rendering. *(16 pixels in high-res, 8 pixels in low-res)
+- CPU runs at 157.5 / 22 MHz = ~7.15909 MHz.
+  All CPU instructions take 4 or 6 cycles.
+  Instructions that access data memory (LOD and STR) take 6 cycles.
+  All other 14 instructions take 4 cycles.  There is no pipelining.
+- The VDP sets the "rendering output" line to high to segment the bus and signal
+  the CPU the bus is segmented, the CPU can no longer access the following
+  devices: VRAM, VDP, APU.
+  It sets the line low to unify the bus and signal the CPU it can once again access the devices.
+- The VDP sets the "rendering output" line to high during the 200 visible scan line rendering.
+  It keeps the line low during the 62 blank lines.
+- VDP pixel clock is the master clock.  So a pixel period is ~69.841 ns.
+  The VDP can read 4 memory words for every 16 pixels* because it has exclusive
+  access to video RAM during the 200 line rendering.
+  *(16 pixels in high-res, 8 pixels in low-res)
 
 ```
        16.6881 ms frame

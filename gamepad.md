@@ -50,11 +50,11 @@ A physical implementation could follow the Nintendo Entertainment System approac
 
 The controller would need an 8-bit parallel to serial shift register that could read in and save the state
 of the 8 buttons.
-The VDP would send the latch signal when it wants to controller to save
+The VDP would send the latch signal when it wants the controller to save
 its button press state.
 And then it would read the first bit/button press off of the data line.
 Next it would cycle the clock line.  The clock would go to the shift
 register "shift" pin, which would shift the bits over, making the next
 bit/button press available on the data line.  The VDP could then read
 the next bit and then repeat the clock/read process six more times until
-all 8 bits area read.
+all 8 bits are read.

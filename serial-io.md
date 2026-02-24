@@ -9,7 +9,7 @@ The serial port is just a standard TRRS audio jack.
 Cassette
 --------
 
-A standard audio cassette recorder with tone and volume control and an aux audio port can be connected to the console's serial TRRS port.  Software can use this a external storage.  This can be useful for saving game progression.  But also for storing user created content.
+A standard audio cassette recorder with tone and volume control and an aux audio port can be connected to the console's serial TRRS port.  Software can use this as external storage.  This can be useful for saving game progression.  But also for storing user created content.
 
 When the software wants to write data to the cassette, it should write the 2 words of data it wants to save into the cassette data RAM addresses.  Then it must prompt the user to do the following:
 - plug in the cassette recorder with a cassette inserted
@@ -30,7 +30,12 @@ The software should then write to the cassette control RAM address signaling the
 LinkHub
 -------
 
-The LinkHub allows up to 4 ljd computers to communicate with each other.  This allows programs to be written that would run on up-to 4 machines, allowing each user to see their own private screen.  Since, each console supports up to 3 controllers when LinkHub is in use, up to 12 players could play the same game.  Of course, each screen would be shared by each group of 3 players.
+The LinkHub allows up to 4 ljd computers to communicate with each other.
+This allows programs to be written that would run on up to 4 machines,
+allowing each user to see their own private screen.
+Since each console supports up to 3 controllers when LinkHub is in use,
+up to 12 players could play the same game.
+Of course, each screen would be shared by each group of 3 players.
 
 Each machine can only transmit or receive 4 Bytes (2 words) per frame.
 Each of the 4 connections to the LinkHub device are labeled as:
@@ -39,5 +44,7 @@ Each of the 4 connections to the LinkHub device are labeled as:
 - node 2
 - node 3
 
-The software program that wants to support the LinkHub is expected to allow the user to specify they want use the LinkHub.
-The software is then expected to prompt the user with gamepad 1 to enter the port of the LinkHub the console is connected to.
+The software program that wants to support the LinkHub is expected to allow
+the user to specify that they want to use the LinkHub.
+The software is then expected to prompt the user with gamepad 1 to enter the
+port of the LinkHub the console is connected to.

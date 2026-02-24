@@ -117,7 +117,7 @@ RGB x 8
 rendering interrupt (set high by vdp during rendering)
 
 APU package: 18 + 4 + 16 = 38 pins
-address x 4 (APU has 5 write-only registers, SIO has 8 read/write registers)
+address x 4 (APU has 5 write-only registers, Serial has 8 read/write registers)
 data x 16
 high voltage
 ground
@@ -126,7 +126,7 @@ reset
 audio mono output 1 line
 gamepad 6 lines
 keyboard 1 line
-SIO-specific pins:
+Serial-specific pins:
   Pin 3: Data Input (Serial In)
   Pin 5: Data Output (Serial Out)
   Pin 7: Command
@@ -152,7 +152,7 @@ ground
 Video ram enable input
 VDP enable input
 APU enable input
-rendering interrupt input (set high by vdp during rendering, when high, VRAM is high, vdp an apu are low, otherwise, pass-through)
+rendering interrupt input (set high by vdp during rendering, when high, VRAM is high, vdp and apu are low, otherwise, pass-through)
 Video ram enable output
 VDP enable output
 APU enable output

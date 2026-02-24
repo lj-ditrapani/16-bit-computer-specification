@@ -33,5 +33,5 @@ APU Register Map
 Audio                   8       $0-$7
 Gamepad                 2       $8-$9
 Keyboard                2       $A-$B
-SPP Control             1       $C-$C
+Serial Control          1       $C-$C
 Serial Data             3       $D-$F

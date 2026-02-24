@@ -1,7 +1,7 @@
 Cartridge
 =========
 
-A cartridge is made up of 1 to four pairs of ROM chips.  Each chips has 8 data pins.
+A cartridge is made up of 1 to four pairs of ROM chips.  Each chip has 8 data pins.
 A pair of ROM chips is 2 chips of the same capacity paired together to create a 16-bit data path.
 The first pair is for the Program (PGR) ROM.  The PGR ROM is the only ROM bank used for CPU instructions (though it may also contain data).
 
