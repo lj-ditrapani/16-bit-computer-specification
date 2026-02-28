@@ -16,8 +16,8 @@ Max pin-out per chip is 44 or 46 pins.
   |  | Machine      |    |  Data ROM    |                      |
   |  | Instructions |    |            EN|                      |
   |  +--------------+    +--------------+                      |
-  |     | |                    | |     |                       |
-  +-+  A| |D                  A| |D    V                     +-+
+  |     | |                    | |                             |
+  +-+  A| |D                  A| |D                          +-+
     |   | |                    | |                           |
     +---|-|--------------------|-|---------------------------+
         | |                    | |
@@ -33,7 +33,7 @@ Max pin-out per chip is 44 or 46 pins.
 | |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  | |
 | |              |  |-|--|A             |  /----|              | |
 | |              |  | |--|D             |  | /--|              | |
-| |I     EN      |  | |  |            EN|  | | A|        I   EN| |
+| |I     EN x 8  |  | |  |            EN|  | | A|        I   EN| |
 | +--------------+  | |  +--------------+  | |  +--------------+ |
 |  |     |          | |                    | |           |       |
 |  ^     V          | \--------------------| |           V       |
@@ -70,7 +70,7 @@ This would have likely cost around $30 USD in bulk at the start of 1985.
 Video RAM is made of 2 chips of Hitachi HM6264 150 ns SRAM 8K x 8-bit wired in parallel to produce a 8K x 16-bit memory.
 This would have likely cost around $8 USD in bulk at the start of 1985.
 
-CPU package: 15 lines + 16*2 = 47 pins
+CPU package: 15 lines + 16*2 = 47 pins (48-pin dip)
 address x 16
 data lines x 16
 high voltage
@@ -90,19 +90,19 @@ device enable lines x 8
 - VDP enable
 - APU enable
 
-Cartridge: 7 lines + 16*2 = 39 pins
+Cartridge: 7 lines + 16*2 = 39 pins (40-pin dip)
 address x 16
 data x 16
 +5v
 gnd
 clk
-- PGR rom enable
-- Data rom 1 enable
-- Data rom 2 enable
-- Data rom 3 enable
+PGR rom enable
+Data rom 1 enable
+Data rom 2 enable
+Data rom 3 enable
 
-VDP package: 14 + 12 + 16 = 42 pins PLCC
-address x 12 (only reads 4k of Video RAM)
+VDP package: 16 + 13 + 16 = 45 pins (48-pin dip)
+address x 13 (only reads 8k of Video RAM)
 data x 16
 high voltage
 ground
@@ -114,9 +114,16 @@ RGB x 8
   - blue x 2
   - hsync
   - vsync
-rendering interrupt (set high by vdp during rendering)
+rendering interrupt output (set high by vdp during rendering)
+vdp enable input (from cpu)
+vram enable input (from cpu)
+vram enable output
 
-APU package: 18 + 4 + 16 = 38 pins
+The VDP passes-through the vram enable input when not rendering.
+The VDP ignores the 2 enable inputs when rendering.
+The VDP takes control of the vram via the vram enable output when rendering.
+
+APU package: 19 + 4 + 16 = 39 pins (40-pin dip)
 address x 4 (APU has 5 write-only registers, Serial has 8 read/write registers)
 data x 16
 high voltage
@@ -133,6 +140,7 @@ Serial-specific pins:
   Pin 8: Motor Control (for drives)
   Pin 11: Audio Input (for tape drives)
   Pin 13: Interrupt
+APU enable input
 
 Gamepad and keyboard lines:
 - latch (shared between controllers)
@@ -140,19 +148,8 @@ Gamepad and keyboard lines:
 - data (4x, 1 per controller)
 - reuse system ground and +5V
 
-Bus segmenter (2 chips, one for address bus and one for data bus): 3 + 16x2 = 35 pins
+Bus segmenter (2 chips, one for address bus and one for data bus): 3 + 16x2 = 35 pins (40-pin dip)
 address or data x 16
 high voltage
 ground
 segment input (the VDP rendering interrupt, set high by vdp during rendering, segments bus into 2)
-
-Device control: 9 pins
-high voltage
-ground
-Video ram enable input
-VDP enable input
-APU enable input
-rendering interrupt input (set high by vdp during rendering, when high, VRAM is high, vdp and apu are low, otherwise, pass-through)
-Video ram enable output
-VDP enable output
-APU enable output
