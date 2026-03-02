@@ -78,7 +78,7 @@ high voltage
 ground
 clock
 reset
-memory read/write (high on 3rd instruction cycle if STR instruction, else low)
+memory read/write output (high on 3rd instruction cycle if STR instruction, else low)
 memory output enable
 interrupt (set high by vdp during rendering, active low)
 device enable lines x 8
