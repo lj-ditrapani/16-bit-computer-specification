@@ -102,9 +102,11 @@ Data rom 1 enable
 Data rom 2 enable
 Data rom 3 enable
 
-VDP package: 16 + 13 + 16 = 45 pins (48-pin dip)
-address x 13 (only reads 8k of Video RAM)
-data x 16
+VDP package: 1 + 16 + 13 + 16 + 18 = 64 pins (64-pin dip)
+CPU address x 1 (0 = set address, 1 = write color register)
+CPU data input x 16
+VRAM address x 13 (only reads 8k of Video RAM)
+VRAM data x 16
 high voltage
 ground
 clock
@@ -119,10 +121,11 @@ rendering interrupt output (set high by vdp during rendering)
 vdp enable input (from cpu)
 vram enable input (from cpu)
 vram enable output
+vram write output
+vdp write input
 
-The VDP passes-through the vram enable input when not rendering.
 The VDP ignores the 2 enable inputs when rendering.
-The VDP takes control of the vram via the vram enable output when rendering.
+The VDP auto-increments the address register value.
 
 APU package: 19 + 4 + 16 = 39 pins (40-pin dip)
 address x 4 (APU has 5 write-only registers, Serial has 8 read/write registers)
@@ -148,9 +151,3 @@ Gamepad and keyboard lines:
 - gamepad clock (shared between controllers, different from system clock)
 - data (4x, 1 per controller)
 - reuse system ground and +5V
-
-Bus segmenter (2 chips, one for address bus and one for data bus): 3 + 16x2 = 35 pins (40-pin dip)
-address or data x 16
-high voltage
-ground
-segment input (the VDP rendering interrupt, set high by vdp during rendering, segments bus into 2)
