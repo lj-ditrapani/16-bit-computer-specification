@@ -17,7 +17,7 @@ APU PSG 4 sound channels (or "voices"):
 
 The APU has 4 internal 16-bit registers that control the sound of each channel.
 
-There are 3 square wave registers, one for each channel.
+There are 3 square wave registers, one for each square channel.
 ```
 ----------------------------------------
 | 4 bit attenuation | 12 bit frequency |

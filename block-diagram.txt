@@ -88,7 +88,7 @@ device enable lines x 8
 - VDP enable
 - APU enable
 
-Cartridge: 7 lines + 16*2 = 39 pins (40-pin dip)
+Cartridge: 8 lines + 16*2 = 40 pins
 address x 16
 data x 16
 +5v
@@ -98,9 +98,10 @@ PGR rom enable
 Data rom 1 enable
 Data rom 2 enable
 Data rom 3 enable
+Write/read
 
-VDP package: 1 + 16 + 13 + 16 + 18 = 64 pins (64-pin dip)
-CPU address x 1 (0 = set address, 1 = write color register)
+VDP package: 2 + 16 + 13 + 16 + 17 = 64 pins (64-pin dip)
+CPU address x 2 (00 = set address, 01 = write color register, 10 = write mode register)
 CPU data input x 16
 VRAM address x 13 (only reads 8k of Video RAM)
 VRAM data x 16
@@ -114,12 +115,11 @@ RGB x 8
   - blue x 2
   - hsync
   - vsync
-rendering interrupt output (set high by vdp during rendering)
-vdp enable input (from cpu)
-vram enable input (from cpu)
-vram enable output
-vram write output
-vdp write input
+rendering interrupt output (set high by VDP during rendering)
+VDP enable input (from CPU)
+VRAM enable input (from CPU)
+VRAM enable output
+VRAM write output
 
 The VDP ignores the 2 enable inputs when rendering.
 The VDP auto-increments the address register value.
