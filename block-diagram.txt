@@ -1,11 +1,8 @@
-single bus that can be segmented in two
 Instructions take either 2 or 3 cycles of 279 ns to execute.
 - 1. Fetch
 - 2. execute
 - 3. memory read/write (only for LOD or STR instructions)
-DRAM refresh can happen on execute cycles driven by cpu.
-The VDP can read VRAM when the bus is segmented. This happens during rendering.
-Max pin-out per chip is 44 or 46 pins.
+Only the VDP can directly access the VRAM with its own dedicated bus.
 
 
   +------------------------------------------------------------+
@@ -27,30 +24,30 @@ Max pin-out per chip is 44 or 46 pins.
 |                   | |                                          |
 |                   | |                                          |
 | +--------------+  | |  +--------------+       +--------------+ |
-| |     ^ v     A|--| |  |              |       |   VDP        | |
-| |    PC Ins   D|--|-|  |  DATA        |       |   Video      |-|-> Video signal output
-| |     ^ v      |  | |  |  RAM         |       |   Display    | |
-| |  16-bit CPU  |  | |  |  32KW        |      D|   Processor  | |
-| |              |  |-|--|A             |  /----|              | |
-| |              |  | |--|D             |  | /--|              | |
-| |I     EN x 8  |  | |  |            EN|  | | A|        I   EN| |
+| |             A|--| |  |              |       |   APU        | |
+| |             D|--|-|  |  DATA        |       |   Audio &    |-|-> Audio signal output
+| |              |  | |  |  RAM         |       |   Peripheral | |
+| |  16-bit CPU  |  | |  |  32KW        |       |   Unit       |-|-< Gamepad input x4
+| |              |  |-|--|A             |  /----|D             | |
+| |              |  | |--|D             |  | /--|A             |-|<> Serial IO
+| |I     EN x 8  |  | |  |            EN|  | |  |            EN| |
 | +--------------+  | |  +--------------+  | |  +--------------+ |
-|  |     |          | |                    | |           |       |
-|  ^     V          | \--------------------| |           V       |
-|                   \-----------|------------|                   |
-|                             | |          | |                   |
-|                             | |          | |                   |
-|                        +--------------+  | |  +--------------+ |
-|                        |   A  D       |  | |  |   APU        | |
-|                        |  Video       |  | |  |   Audio &    |-|-> Audio signal output
-|                        |  RAM         |  | |  |   Peripheral | |
-|                        |  8KW         |  | | A|   Unit       |-|-< Gamepad input x4
-|                        |              |  | \--|              | |
-|                        |              |  \----|              |-|<> Cassette and LinkHub
-|                        |            EN|      D|            EN| |
+|  |     |          | |                    | |                   |
+|  ^     V          | \--------------------|-|---------\         |
+|                   \------------------------|-------\ |         |
+|                                                    | |         |
+|                                                   A| |D        |
 |                        +--------------+       +--------------+ |
-|                                                                |
-|                                                                |
+|                        |              |       |   VDP        | |
+|                        |  Video       |       |   Video      |-|-> Video signal output
+|                        |  RAM        A|-------|A  Display    | |
+|                        |  8KW        D|-------|D  Processor  | |
+|                        |              |       |              | |
+|                        |              |       |              | |
+|                        |            EN|       |        I   EN| |
+|                        +--------------+       +--------------+ |
+|                                                        |       |
+|                                                        V       |
 |                                                                |
 |                                                                |
 |                            Console                             |
@@ -63,7 +60,7 @@ W = 16-bit word
 A bus = 16 wire address lines
 D bus = 16 wire data lines
 EN = chip enable input, driven by CPU 8 device enable lines
-I = vertical blank CPU interrupt (from VDP to CPU & segmenter)
+I = vertical blank CPU interrupt (from VDP to CPU)
 
 Data RAM is made of 2 chips of NEC µPD43256 (or Hitachi HM62256) 150 ns SRAM 32K x 8-bit wired in parallel to produce a 32K x 16-bit memory.
 This would have likely cost around $30 USD in bulk at the start of 1985.
