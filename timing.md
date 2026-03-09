@@ -7,8 +7,10 @@ System Timing
 - Each scan line takes 912 clock cycles, or ~63.69523 us
 - There are 262 scan lines in a non-interlaced frame; aka field. A frame takes ~16.6881 ms total.
 - The vdp only renders on the middle 200 visible scan lines.
-- The bus is segmented in 2 during vdp rendering so the vdp has exclusive access to the video ram during this time.
-- The vdp unifies the bus to allow the cpu access to Video RAM during the 62 blank scan lines, a total time of ~3.94910 ms.
+- The VDP has exclusive direct access to the video ram.
+- The VDP ignores the CPU while rendering the 200 scan lines (it ignores the VDP and VRAM enable input lines).
+- The VDP obeys the CPU's commands during the 62 blank scan lines, a total time of ~3.94910 ms.
+  During this time, the CPU can set the VDP rendering mode, set the colors and write to VRAM through the VDP.
 - CPU performance is between 1.33875 and 1.78977 million instructions per second (MIPS).
 
 
@@ -19,10 +21,8 @@ Potential physical implementation:
   All CPU instructions take 4 or 6 cycles.
   Instructions that access data memory (LOD and STR) take 6 cycles.
   All other 14 instructions take 4 cycles.  There is no pipelining.
-- The VDP sets the "rendering output" line to high to segment the bus and signal
-  the CPU the bus is segmented, the CPU can no longer access the following
-  devices: VRAM, VDP, APU.
-  It sets the line low to unify the bus and signal the CPU it can once again access the devices.
+- The VDP sets the "rendering output" line to low to signal
+  the CPU the VDP is not rendering and is available to receive commands from the CPU.
 - The VDP sets the "rendering output" line to high during the 200 visible scan line rendering.
   It keeps the line low during the 62 blank lines.
 - VDP pixel clock is the master clock.  So a pixel period is ~69.841 ns.
@@ -38,9 +38,9 @@ Potential physical implementation:
     ---------------------------------------
     |       12.739 ms           | 3949 us | <- duration
     ---------------------------------------
-      cpu no VDP/VRAM/APU        cpu access
-      access                     VDP/VRAM/APU
-      vdp renders frame          VDP blank/hblank
+      CPU no VDP/VRAM            CPU access
+      access                     VDP/VRAM
+      VDP renders frame          VDP blank/hblank
 ```
 
 
@@ -53,7 +53,7 @@ When the CPU sees the interrupt line go low, if the CPU is HALTed, the PC is set
 VDP and APU internal Buffers
 ----------------------------
 
-- The CPU can write to the VDP the 16 color palette during vblank (unified bus).
+- The CPU can write to the VDP the 16 color palette during vblank (interrupt low).
 During rendering:
 - vdp copies over current tile cell, both tile rows (fg and bg or 2 bg), and the color cell for the current line just-in-time to render the next 16 pixels.  This happens while rendering the previous 16 pixels.  The VDP can read exactly 4 memory words from RAM every 16 pixels.
 - In 1-layer high-res 640 x 200 mode, the VDP treats the tile cell as 2 side-by-side tiles.  Giving us 16 horizontal pixels across the 2 background tiles.
@@ -66,7 +66,7 @@ During rendering:
     - 2 word foreground tile row (8 pixels) (current/next)
       - note: in 1-layer mode this is used for the 2nd background tile
 - APU: audio and peripheral unit
-    - 5 to 8 audio registers
-    - 2 gamepad registers
+    - 4 audio registers (4 more reserved for potential future expansion)
+    - 2 gamepad registers (for 4 gamepads)
     - 2 keyboard registers
     - 4 serial registers (for cassette, floppy and linkHub use)
